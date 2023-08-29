@@ -205,6 +205,13 @@ class Cluster:
                 logging.exception(f"Failed to retrieve {resource}")
                 pass
         return resources
+    
+    def get_carbon_intensity(self) -> float:
+        carbon_intensity: float = {}
+        # TODO: Add how to query carbon intensity
+        # TODO: In the request, there should be the geolocation of the tier 2 instance
+        
+        return carbon_intensity
 
     def _active_peers(self, lease_duration: int) -> Sequence[WireguardKey]:
         try:

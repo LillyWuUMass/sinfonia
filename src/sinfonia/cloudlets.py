@@ -76,6 +76,12 @@ CLOUDLET_SCHEMA = {
             "type": "object",
             "additionalProperties": {"type": "number", "format": "float"},
         },
+         "carbon_intensity": {
+            "description": "Carbon intensity of the Tier 2 instance",
+            "type": "number",
+            "format": "float",
+            "$ref": "#/$defs/carbonintensity",
+        },
     },
     "required": ["endpoint"],
     "$defs": {
@@ -92,6 +98,11 @@ CLOUDLET_SCHEMA = {
             "type": "string",
             # "format": "ipaddress/netmask",
         },
+        "carbonintensity": {
+            "type": "number",
+            "minimum": 0,  # The range [0, 1500] is based on Electricity Maps. The range in Watttime is [0, 100]
+            "maximum": 1500,  
+        }, 
         "latitude": {
             "type": "number",
             "minimum": -90,
@@ -138,6 +149,7 @@ class Cloudlet:
     accepted_clients: NetworkList
     rejected_clients: NetworkList
     resources: dict[str, float]
+    carbon_intensity: float
     api_version: int
     last_update: pendulum.DateTime | None
 
@@ -152,6 +164,7 @@ class Cloudlet:
         accepted_clients: NetworkList | None = None,
         rejected_clients: NetworkList | None = None,
         resources: dict[str, float] | None = None,
+        carbon_intensity: float | None = None,
         last_update: pendulum.DateTime | None = None,
     ) -> Cloudlet:
         # default name to hostname of cloudlet url
@@ -192,6 +205,9 @@ class Cloudlet:
         if resources is None:
             resources = {}
 
+        if carbon_intensity is None:
+            carbon_intensity = {}
+
         return cls(
             uuid,
             endpoint,
@@ -201,6 +217,7 @@ class Cloudlet:
             [ip_interface(network).network for network in accepted_clients],
             [ip_interface(network).network for network in rejected_clients],
             resources,
+            carbon_intensity,
             api_version,
             last_update,
         )
@@ -216,6 +233,7 @@ class Cloudlet:
         accepted_clients: NetworkList | None = None,
         rejected_clients: NetworkList | None = None,
         resources: dict[str, float] | None = None,
+        carbon_intensity: float | None = None,
     ) -> Cloudlet:
         if locations is not None or location is not None:
             geolocations = [GeoLocation.from_tuple(coord) for coord in locations or []]
@@ -234,6 +252,7 @@ class Cloudlet:
             accepted_clients=accepted_clients,
             rejected_clients=rejected_clients,
             resources=resources,
+            carbon_intensity=carbon_intensity,
         )
 
     @classmethod
@@ -246,6 +265,7 @@ class Cloudlet:
         accepted_clients = request_body.get("accepted_clients")
         rejected_clients = request_body.get("rejected_clients")
         resources = request_body.get("resources")
+        carbon_intensity = request_body.get("carbon_intensity")
 
         return cls.new(
             uuid,
@@ -254,6 +274,7 @@ class Cloudlet:
             accepted_clients=accepted_clients,
             rejected_clients=rejected_clients,
             resources=resources,
+            carbon_intensity=carbon_intensity,
             last_update=pendulum.now(),
         )
 
@@ -323,6 +344,7 @@ class Cloudlet:
             accepted_clients=[str(client) for client in self.accepted_clients],
             rejected_clients=[str(client) for client in self.rejected_clients],
             resources=self.resources,
+            carbon_intensity=self.carbon_intensity,
         )
         if self.last_update is not None:
             summary["last_update"] = str(self.last_update)
