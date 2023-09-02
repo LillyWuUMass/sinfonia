@@ -41,6 +41,7 @@ RESOURCE_QUERIES = {
     "gpu_ratio": "sum(DCGM_FI_DEV_GPU_UTIL) / count(DCGM_FI_DEV_GPU_UTIL)",
 }
 
+
 LEASE_DURATION = 300  # seconds
 
 
@@ -206,10 +207,12 @@ class Cluster:
                 pass
         return resources
     
-    def get_carbon_intensity(self) -> float:
-        carbon_intensity: float = {}
-        # TODO: Add how to query carbon intensity
-        # TODO: In the request, there should be the geolocation of the tier 2 instance
+    def get_carbon_intensity(self) -> dict[str, float]:
+        carbon_metrics: dict[str, float] = {}
+        
+        carbon_metrics = 
+        
+
         
         return carbon_intensity
 
