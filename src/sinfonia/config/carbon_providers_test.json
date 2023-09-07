@@ -1,17 +1,7 @@
 {
     "CarbonMetrics": ["carbon_intensity", "margin_carbon_intensity"],
     "CarbonProviders": [
-        {
-            "name": "WattTime",
-            "credential": {"username": "asouza", "password": "123Change/"},
-            "urls": {
-                "login": "https://api2.watttime.org/v2/login", 
-                "carbon_intensity": "",
-                "margin_carbon_intensity": "https://api2.watttime.org/v2/index"
-
-            }
-
-        },
+        
         {
             "name": "ElectricityMap",
             "credential": {"token": "XABnrjqhe6lq2Q2nAl64FnvLwzlzqxXn"},
