@@ -1,7 +1,6 @@
 '''
 Query realtime carbon metrics (carbon intensity, marginal carbon intensity) 
 for a given coordinator (longitue and latitue).
-The supported providers are: WattTime, ElectricityMap, and Singularity
 '''
 from attr import define
 import requests
@@ -16,7 +15,11 @@ logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 CONFIG_PATH_RELATIVE_PATH = "config/carbon_providers.json"
+
 CARBON_METRICS = ["carbon_intensity", "marginal_carbon_intensity"]
+
+CARBON_PROVIDERS = ["WattTime", "ElectricityMap", "Singularity"]
+
 
 WATTTIME_URLS = {
     "carbon_intensity": "",
@@ -24,9 +27,10 @@ WATTTIME_URLS = {
 }
 
 ELECTRICITYMAP_URLS = {
-    "carbon_intensity": "https://api.electricitymap.org/v3/carbon-intensity/latest",
+    "carbon_intensity": "https://api-access.electricitymaps.com/2w97h07rvxvuaa1g/carbon-intensity/latest",
     "marginal_carbon_intensity": "", # Not supported
 }
+
 
 SINGULARITY_URLS = {
     "carbon_intensity": "https://api.singularity.energy/v2/consumed/carbon-intensity/latest",
@@ -46,14 +50,12 @@ class CarbonMetrics:
     """
     longitude: float 
     latitude: float
-    carbon_provider: str
-    carbon_metrics: dict[str, float]
           
-    @carbon_metrics.validator
-    def _valid_carbon_metrics(self, _attribute, value):
-        for key, value in self.carbon_metrics.iteritems():
-            if not 0.0 <= float(value) <= 1500.0: #TODO: The bound need to update
-                raise ValueError("carbon metric {} out of bounds".format(key))  
+    # @carbon_metrics.validator
+    # def _valid_carbon_metrics(self, _attribute, value):
+    #     for key, value in self.carbon_metrics.iteritems():
+    #         if not 0.0 <= float(value) <= 1500.0: #TODO: The bound need to update
+    #             raise ValueError("carbon metric {} out of bounds".format(key))  
  
     @staticmethod
     def load_credentials(provider:str) -> list:
@@ -75,7 +77,7 @@ class CarbonMetrics:
             
         elif provider == "ElectricityMap":
             token = data['ElectricityMap']['token']
-            credentials.append(token)
+            credentials.append(token) 
             
         elif provider == "Singularity":
             token = data['Singularity']['token']
@@ -92,28 +94,29 @@ class CarbonMetrics:
         """ 
         try:
             response = requests.get(url, params=params, headers=headers)
+            print(response)
             response.raise_for_status()
+            assert response.status_code == 200
             result = response.json()
-            assert result.status_code == 200
+            print(result)
             return result
         
         except (RequestException, AssertionError, ValueError):
-            logging.exception("Failed to query url: {}".format(url))
+            logging.exception(f"Failed to query url: {url}")
             return None
 
     def _get_region(self) -> str:
-        """Get the region based on longitude and latitude.
-        This is needed since Singularity only supports Region in its API
-        We use WattTime's API to get the region since only it has the API so far.
+        """Get the region based on longitude and latitude using WattTime's API.
         """ 
         provider = "WattTime"
         credentials = self.load_credentials(provider)
         token = self._get_watttime_token(credentials)
         region_url = 'https://api2.watttime.org/v2/ba-from-loc'
         headers = {'Authorization': 'Bearer {}'.format(token)}
-        params = {"longitude": self.longitude, "latitude": self.latitude}
+        params = {"longitude": str(self.longitude), "latitude": str(self.latitude)}
         
-        result = self._url_query(region_url, headers, params)
+        result = self.url_query(region_url, headers=headers, params=params)
+        
         region = result['abbrev'] #TODO: Need to check the output and decide the key manually
         
         return region
@@ -127,8 +130,8 @@ class CarbonMetrics:
         try:
             response = requests.get(login_url, auth=HTTPBasicAuth(credentials[0], credentials[1]))
             response.raise_for_status()
-            result = response.json()
-            assert result.status_code == 200
+            assert response.status_code == 200
+            result = response.json()         
             token = result['token']
             return token
         
@@ -137,7 +140,7 @@ class CarbonMetrics:
             return None
 
 
-    def from_watttime(self) -> dict:
+    def from_watttime(self, region) -> dict:
         """Get carbon metrics from WattTime.
         Raise ValueError if when no valid carbon metric is found.
         Note: 
@@ -151,21 +154,22 @@ class CarbonMetrics:
         if token is None:
             raise ValueError("WattTime API token is required")
         headers = {'Authorization': 'Bearer {}'.format(token)}
-        params = {"longitude": self.longitude, "latitude": self.latitude}
+        params = {"ba": region}
         
         metrics = {}
         for metric_type in CARBON_METRICS:
+            metrics[metric_type] = None
             url = WATTTIME_URLS[metric_type]
             if url == "":
                 logger.warning("WattTime: metric {} not supported".format(metric_type))
-                pass
+                continue
 
             result = self.url_query(url, headers, params)
             if result is None:
                 logging.exception("WattTime: failed to retrieve metric {}".format(metric_type))
                 metric = None
             else:
-                metric = result['moer']
+                metric = float(result['moer'])
             metrics[metric_type] = metric
         return metrics
     
@@ -174,19 +178,20 @@ class CarbonMetrics:
         Raise ValueError if when no valid carbon intensity is found.
         """
         provider = "ElectricityMap"
-        token = self.load_credentials(provider)
+        token = self.load_credentials(provider)[0]
         
         if token is None:
             raise ValueError("ElectricityMap API token is required")
         headers = {"auth-token": token}
-        params = {"longitude": self.longitude, "latitude": self.latitude}
+        params = {"lon": str(self.longitude), "lat": str(self.latitude)}
         
         metrics = {}
         for metric_type in CARBON_METRICS:
+            metrics[metric_type] = None
             url = ELECTRICITYMAP_URLS[metric_type]
             if url == "":
                 logger.warning("ElectricityMap: metric {} not supported".format(metric_type))
-                pass
+                continue
 
             result = self.url_query(url, headers, params)
             if result is None:
@@ -194,9 +199,9 @@ class CarbonMetrics:
                 metric = None
             else:
                 if metric_type == "carbon_intensity":
-                    metric = result["carbonIntensity"]
+                    metric = float(result["carbonIntensity"])
                 elif metric_type == "marginal_carbon_intensity":
-                    metric = result["marginalCarbonIntensity"]
+                    metric = float(result["marginalCarbonIntensity"])
             metrics[metric_type] = metric 
         return metrics
   
@@ -205,7 +210,7 @@ class CarbonMetrics:
         Only region but not longitude and latitude is supported
         """        
         provider = "Singularity"
-        token = self.load_credentials(provider)
+        token = self.load_credentials(provider)[0]
         
         if token is None:
             raise ValueError("Singularity API token is required")
@@ -232,18 +237,26 @@ class CarbonMetrics:
             metrics[metric_type] = metric
         return metrics
 
-    def get_carbon_metrics(self):
-        """ Retrieve carbon metrics for a given provider """
-        
-        provider = self.carbon_provider
-        if provider == "WattTime":
-            self.carbon_metrics = self.from_watttime()
-        elif provider == "ElectricityMap":
-            self.carbon_metrics = self.from_electricitymap()
-        elif provider == "Singularity":
-            self.carbon_metrics = self.from_singularity
-        else:
-            raise ValueError("Provider {} is not supported".format(provider))
+    def get_carbon_metrics(self) -> dict[str] | None:
+        """ Retrieve carbon metrics from providers: WattTime, ElectricityMap, and Singularity
+        """  
+        region = self._get_region()
+        carbon_metrics = {}
+        for provider in CARBON_PROVIDERS:
+            if provider == "WattTime":
+                carbon_metrics = self.from_watttime(region)
+                logging.info(f"Carbon metrics from {provider} are: {carbon_metrics}")
+            elif provider == "ElectricityMap":
+                carbon_metrics = self.from_electricitymap()
+                logging.info(f"Carbon metrics from {provider} are: {carbon_metrics}")
+            elif provider == "Singularity":
+                carbon_metrics = self.from_singularity()
+                logging.info(f"Carbon metrics from {provider} are: {carbon_metrics}")
+            else:
+                raise ValueError("Provider {} is not supported".format(provider))
+            
+        return carbon_metrics
 
-                
-        
+# testing
+obj = CarbonMetrics(longitude=-72.519, latitude=42.372)
+obj.get_carbon_metrics()
