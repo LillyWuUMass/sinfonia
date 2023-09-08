@@ -117,11 +117,6 @@ components:
           additionalProperties:
             type: number
             format: float
-        carbon_intensity:
-          type: number
-          format: float
-          items:
-            "$ref": "#/components/schemas/CarbonIntensity"            
         locations:
           type: array
           items:
@@ -148,9 +143,6 @@ components:
     NetworkAddress:
       type: string
       #format: ip_mask
-    CarbonIntensity:
-      type: number
-      format: float
     WireguardConfig:
       type: object
       required:

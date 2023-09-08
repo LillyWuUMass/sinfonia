@@ -32,6 +32,7 @@ from yarl import URL
 
 from .deployment import CLIENT_NETWORK, Deployment
 from .deployment_recipe import DeploymentRecipe
+from .geo_carbon import CarbonMetrics, get_carbon_metrics
 
 RESOURCE_QUERIES = {
     "cpu_ratio": 'sum(rate(node_cpu_seconds_total{mode!="idle"}[1m])) / sum(node:node_num_cpu:sum)',  # noqa
@@ -40,7 +41,6 @@ RESOURCE_QUERIES = {
     "net_tx_rate": "instance:node_network_transmit_bytes_excluding_lo:rate5m",
     "gpu_ratio": "sum(DCGM_FI_DEV_GPU_UTIL) / count(DCGM_FI_DEV_GPU_UTIL)",
 }
-
 
 LEASE_DURATION = 300  # seconds
 
@@ -205,16 +205,14 @@ class Cluster:
             except (RequestException, AssertionError, ValueError):
                 logging.exception(f"Failed to retrieve {resource}")
                 pass
-        return resources
-    
-    def get_carbon_intensity(self) -> dict[str, float]:
-        carbon_metrics: dict[str, float] = {}
-        
-        carbon_metrics = 
-        
 
-        
-        return carbon_intensity
+        # Add carbon metrics to resources
+        # TODO: Need to fix how to get the coordinates
+        carbon_obj = CarbonMetrics(latitude=self.coordinates[0], longitude=self.coordinates[1])
+        carbon_metrics = carbon_obj.get_carbon_metrics()
+        resources.update(carbon_metrics)
+
+        return resources
 
     def _active_peers(self, lease_duration: int) -> Sequence[WireguardKey]:
         try:

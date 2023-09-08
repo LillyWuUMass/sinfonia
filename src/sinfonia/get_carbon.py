@@ -26,8 +26,8 @@ class CarbonMetrics:
         longitude: the longitude of the cloudlet
         latitude: the latitude of the cloudlet
     """
-    longitude: float = field()
     latitude: float = field()
+    longitude: float = field()
 
     # Validators for latitude and longitude
     @latitude.validator
@@ -98,7 +98,7 @@ class CarbonMetrics:
             logging.exception("Failed to get token from WattTime")
             return None
 
-    def from_watttime(self, metric_types:list, credential:dict, urls:dict) -> dict:
+    def from_watttime(self, metric_types:list, credential:dict, urls:dict) -> dict[str, float]:
         """
         Get carbon metrics from WattTime using coordinates.
         Note: 
@@ -132,7 +132,7 @@ class CarbonMetrics:
 
         return metrics
 
-    def from_electricitymap(self, metric_types:list, credential:dict, urls:dict) -> dict:
+    def from_electricitymap(self, metric_types:list, credential:dict, urls:dict) -> dict[str, float]:
         """Get carbon intensity from ElectricityMap using coordinates."""
         token = credential.get("token")
         headers = {"auth-token": token}
@@ -158,7 +158,7 @@ class CarbonMetrics:
 
         return metrics
 
-    def get_carbon_metrics(self) -> dict:
+    def get_carbon_metrics(self) -> dict[str, float]:
         """ Retrieve carbon metrics from providers: WattTime, ElectricityMap"""
         carbon_metrics = {}
         wt_metrics = {}
@@ -182,6 +182,3 @@ class CarbonMetrics:
         logger.info(f"Carbon metrics are {carbon_metrics}")
         return carbon_metrics
 
-# testing
-# obj = CarbonMetrics(longitude=-72.519, latitude=42.372)
-# obj.get_carbon_metrics()

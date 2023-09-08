@@ -4,7 +4,7 @@
         
         {
             "name": "ElectricityMap",
-            "credential": {"token": "XABnrjqhe6lq2Q2nAl64FnvLwzlzqxXn"},
+            "credential": {"token": "<YOUR_TOKEN>"},
             "urls": {
                 "carbon_intensity": "https://api-access.electricitymaps.com/2w97h07rvxvuaa1g/carbon-intensity/latest",
                 "margin_carbon_intensity": ""

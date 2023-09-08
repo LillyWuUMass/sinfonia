@@ -3,7 +3,7 @@
     "CarbonProviders": [
         {
             "name": "WattTime",
-            "credential": {"username": "asouza", "password": "123Change/"},
+            "credential": {"username": "<YOUR_USERNAME>", "password": "<YOUR_PASSWORD>"},
             "urls": {
                 "login": "https://api2.watttime.org/v2/login", 
                 "carbon_intensity": "",
@@ -14,7 +14,7 @@
         },
         {
             "name": "ElectricityMap",
-            "credential": {"token": "XABnrjqhe6lq2Q2nAl64FnvLwzlzqxXn"},
+            "credential": {"token": "<YOUR_TOKEN>"},
             "urls": {
                 "carbon_intensity": "https://api-access.electricitymaps.com/2w97h07rvxvuaa1g/carbon-intensity/latest",
                 "margin_carbon_intensity": ""

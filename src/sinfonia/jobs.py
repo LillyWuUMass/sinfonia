@@ -71,10 +71,8 @@ def report_to_tier1_endpoints():
 
     cluster = config["K8S_CLUSTER"]
     resources = cluster.get_resources()
+
     logging.info("Got %s", str(resources))
-    
-    carbon_intensity = cluster.get_carbon_intensity()
-    logging.info("Got carbon intensity %s", str(carbon_intensity))
 
     for tier1_url in config["TIER1_URLS"]:
         tier1_endpoint = URL(tier1_url) / "api/v1/cloudlets/"
@@ -85,7 +83,6 @@ def report_to_tier1_endpoints():
                     "uuid": str(tier2_uuid),
                     "endpoint": str(tier2_endpoint),
                     "resources": resources,
-                    "carbon_intensity": carbon_intensity,
                 },
             )
         except RequestException:
