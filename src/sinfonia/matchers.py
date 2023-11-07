@@ -148,7 +148,7 @@ def match_carbon_intensity(
     """Yields cloudlet recommendations based on lowest carbon intensity level"""
 
     # Sort cloudlets by lowest carbon intensity level
-    sorted(cloudlets, key=lambda cloudlet: cloudlet.resources['carbon_intensity'])
+    sorted(cloudlets, key=lambda c: c.resources['carbon_intensity'])
 
     # Yielding cloudlets
     for cloudlet in cloudlets:
