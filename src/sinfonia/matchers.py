@@ -138,3 +138,20 @@ def match_random(
         logger.info("random (%s)", cloudlet.name)
         cloudlets.remove(cloudlet)
         yield cloudlet
+
+
+def match_carbon_intensity(
+    _client_info: ClientInfo,
+    _deployment_recipe: DeploymentRecipe,
+    cloudlets: list[Cloudlet],
+) -> Iterator[Cloudlet]:
+    """Yields cloudlet recommendations based on lowest carbon intensity level"""
+
+    # Sort cloudlets by lowest carbon intensity level
+    sorted(cloudlets, key=lambda cloudlet: cloudlet.resources['carbon_intensity'])
+
+    # Yielding cloudlets
+    for cloudlet in cloudlets:
+        logger.info(f"[carbon_intensity] {cloudlet.name} {cloudlet.resources['carbon_intensity']} grams")
+        cloudlets.remove(cloudlet)
+        yield cloudlet
