@@ -152,6 +152,6 @@ def match_carbon_intensity(
 
     # Yielding cloudlets
     for cloudlet in cloudlets:
-        logger.info(f"[carbon_intensity] {cloudlet.name} {cloudlet.resources['carbon_intensity']} grams")
+        logger.info(f"[carbon_intensity] {cloudlet.name} {cloudlet.resources['carbon_intensity']} gCO2/kWh")
         cloudlets.remove(cloudlet)
         yield cloudlet
