@@ -13,8 +13,11 @@ by defining 'sinfonia_tier1_matchers' setuptools entry points.
 
 from __future__ import annotations
 
+import csv
 import logging
+import os
 import random
+import time
 from operator import itemgetter
 from typing import Callable, Iterator, List, Sequence
 
@@ -24,9 +27,13 @@ from .client_info import ClientInfo
 from .cloudlets import Cloudlet
 from .deployment_recipe import DeploymentRecipe
 
+
 logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+CURRENT_PATH = os.path.abspath(__file__)
+PROJECT_PATH = os.path.dirname(CURRENT_PATH)
+LOG_PATH = f"{PROJECT_PATH}/{logs}"
 
 # Type definition for a Sinfonia Tier1 match function
 Tier1MatchFunction = Callable[
@@ -140,6 +147,24 @@ def match_random(
         yield cloudlet
 
 
+def _append_to_csv(path: str, header: List[Any], row: List[Any]):
+    os.makedirs(path, exists_ok=True)
+
+    # If CSV file does not exist then create one and append header
+    if os.path.exists(path):
+        with open(path, mode='w', newline='') as file:
+            writer = csv.writer(file)
+            writer.write(header)
+
+    with open(path, mode='a', newline='') as file:
+        writer = csv.writer(file)
+        writer.write(row)
+
+
+CARBON_INTENSITY_LOG_FILE_PATH = f"{LOG_PATH}/carbon_intensity.csv"
+CARBON_INTENSITY_CSV_HEADER = ['timestamp', 'names', 'carbon_intensity_gco2_per_kwh']
+
+
 def match_carbon_intensity(
     _client_info: ClientInfo,
     _deployment_recipe: DeploymentRecipe,
@@ -150,7 +175,18 @@ def match_carbon_intensity(
     # Sort cloudlets by lowest carbon intensity level
     sorted(cloudlets, key=lambda c: c.resources['carbon_intensity'])
 
-    # Yielding cloudlets
+    # Append decision to persistent log
+    # This is for debugging purposes only
+    timestamp = int(time.time())
+    names = [c.name for c in cloudlets]
+    carbon_intensity = [c.resources['carbon_intensity'] for c in cloudlets]
+    _append_to_csv(
+        path=CARBON_INTENSITY_LOG_FILE_PATH,
+        header=CARBON_INTENSITY_CSV_HEADER,
+        row=[timestamp, names, carbon_intensity]
+    )
+
+    # Yield cloudlets
     for cloudlet in cloudlets:
         logger.info(f"[carbon_intensity] {cloudlet.name} {cloudlet.resources['carbon_intensity']} gCO2/kWh")
         cloudlets.remove(cloudlet)
