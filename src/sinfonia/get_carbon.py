@@ -8,13 +8,15 @@ import requests
 from requests.auth import HTTPBasicAuth
 from requests.exceptions import RequestException
 from attr import define, field
+import rapl
+import time
 
 # Configure logging
 logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Constants: configure fine and supported providers
-CONFIG_PATH_RELATIVE_PATH = "config/carbon_providers.json" # Credentials of carbon providers
+CONFIG_PATH = "src/sinfonia/config/carbon_providers.json" # Credentials of carbon providers
 CARBON_PROVIDERS = ["WattTime", "ElectricityMap"] # Only these two providers are supported
 
 # Define the CarbonMetrics class using attr
@@ -50,7 +52,7 @@ class CarbonMetrics:
             urls: urls of carbon metrics of the provider
         """
         try:
-            with open(CONFIG_PATH_RELATIVE_PATH, "r", encoding="utf-8") as file:
+            with open(CONFIG_PATH, "r", encoding="utf-8") as file:
                 data = json.load(file)
             metric_types = data.get("CarbonMetrics", [])
             carbon_providers = data.get("CarbonProviders", [])
@@ -128,7 +130,8 @@ class CarbonMetrics:
                 logger.exception(f"WattTime: failed to retrieve metric {metric_type}")
             else:
                 logger.info(f"WattTime: result of metric {metric_type}: {result}")
-                metrics[metric_type] = float(result.get("moer", None))
+                metrics[metric_type] = float(result.get("moer", 0.0))
+                # "moer" is available only for PRO subscriptions.
 
         return metrics
 
@@ -181,4 +184,24 @@ class CarbonMetrics:
 
         logger.info(f"Carbon metrics are {carbon_metrics}")
         return carbon_metrics
+
+    def get_energy_consumption(self) -> [float, float]:
+        """ Get the average power and energy consumption using rapl"""
+        s1 = rapl.RAPLMonitor.sample()
+        # Some work that you want to measure.
+        time.sleep(1)
+        s2 = rapl.RAPLMonitor.sample()
+
+        # Take the difference of the samples
+        diff = s2 - s1
+
+        # Compute the power
+        total_avg_power = 0
+        for d in diff.domains:
+            domain = diff.domains[d]
+            total_avg_power += diff.average_power(package=domain.name)
+
+        energy_consumption = (total_avg_power)/1000
+
+        return total_avg_power, energy_consumption
 

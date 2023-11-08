@@ -15,6 +15,8 @@ from connexion import NoContent
 from connexion.exceptions import ProblemException
 from flask import current_app, request
 from flask.views import MethodView
+import csv
+from time import time
 
 from .client_info import ClientInfo
 from .cloudlets import Cloudlet
@@ -28,6 +30,8 @@ logger = logging.getLogger(__name__)
 # don't try to deploy to more than MAX_RESULTS cloudlets at a time
 MAX_RESULTS = 3
 
+# Whenever a cloudlet reports to tier1, the carbon metrics are appended to this csv
+CLOUDLET_CARBON_HISTORY_CSV = "src/sinfonia/cloudlets_carbon_history.csv"
 
 class CloudletsView(MethodView):
     def post(self):
@@ -36,6 +40,10 @@ class CloudletsView(MethodView):
             return "Bad Request, missing UUID", 400
 
         cloudlet = Cloudlet.new_from_api(body)
+        with open(CLOUDLET_CARBON_HISTORY_CSV, 'a') as file:
+            csv_writer = csv.writer(file)
+            resources = cloudlet.resources
+            csv_writer.writerow([time(), cloudlet.uuid, resources["carbon_intensity"], resources["energy_consumption"], resources["carbon_emission"]])
         cloudlets = current_app.config["cloudlets"]
         cloudlets[cloudlet.uuid] = cloudlet
         return NoContent, 204

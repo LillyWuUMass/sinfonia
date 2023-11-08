@@ -29,10 +29,13 @@ from plumbum.commands.processes import ProcessExecutionError
 from requests.exceptions import RequestException
 from wireguard_tools import WireguardKey
 from yarl import URL
+from io import StringIO
 
 from .deployment import CLIENT_NETWORK, Deployment
 from .deployment_recipe import DeploymentRecipe
-from .geo_carbon import CarbonMetrics, get_carbon_metrics
+from .get_carbon import CarbonMetrics
+from .geo_location import GeoLocation
+from .cloudlets import load
 
 RESOURCE_QUERIES = {
     "cpu_ratio": 'sum(rate(node_cpu_seconds_total{mode!="idle"}[1m])) / sum(node:node_num_cpu:sum)',  # noqa
@@ -207,11 +210,14 @@ class Cluster:
                 pass
 
         # Add carbon metrics to resources
-        # TODO: Need to fix how to get the coordinates
-        carbon_obj = CarbonMetrics(latitude=self.coordinates[0], longitude=self.coordinates[1])
-        carbon_metrics = carbon_obj.get_carbon_metrics()
-        resources.update(carbon_metrics)
-
+        cloudlet = load(StringIO("endpoint: http://obelix.cs.umass.edu:5000/api/v1/deploy"))[0]
+        location = cloudlet.locations[0]
+        carbon_obj = CarbonMetrics(latitude=location.latitude, longitude=location.longitude)
+        carbon_metrics = carbon_obj.get_carbon_metrics() # gCO2/KWH
+        avg_power, energy_consumption = carbon_obj.get_energy_consumption() # energy in KJ
+        resources["carbon_intensity"] = carbon_metrics["carbon_intensity"]
+        resources["energy_consumption"] = energy_consumption
+        resources["carbon_emission"] = carbon_metrics["carbon_intensity"]*energy_consumption/3600 # gCO2
         return resources
 
     def _active_peers(self, lease_duration: int) -> Sequence[WireguardKey]:

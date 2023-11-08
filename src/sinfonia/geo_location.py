@@ -15,6 +15,7 @@ from ipaddress import IPv4Address, IPv6Address, ip_address
 import geopy.distance
 from attrs import define, field
 from flask import current_app, request
+from geolite2 import geolite2
 
 
 @define
@@ -48,7 +49,8 @@ class GeoLocation:
         """Get geolocation from ip address.
         Raises ValueError when no valid location is found for the IP address.
         """
-        geolite2_reader = current_app.config["geolite2_reader"]
+        # geolite2_reader = current_app.config["geolite2_reader"]
+        geolite2_reader = geolite2.reader()
         try:
             address = ip_address(ipaddress)
             match = geolite2_reader.get(str(address))
