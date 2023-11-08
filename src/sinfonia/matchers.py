@@ -33,7 +33,7 @@ logger = logging.getLogger(__name__)
 
 CURRENT_PATH = os.path.abspath(__file__)
 PROJECT_PATH = os.path.dirname(CURRENT_PATH)
-LOG_PATH = f"{PROJECT_PATH}/{logs}"
+LOG_PATH = f"{PROJECT_PATH}/logs"
 
 # Type definition for a Sinfonia Tier1 match function
 Tier1MatchFunction = Callable[
