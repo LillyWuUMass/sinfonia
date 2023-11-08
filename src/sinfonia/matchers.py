@@ -148,13 +148,19 @@ def match_random(
 
 
 def _append_to_csv(path: str, header: List[Any], row: List[Any]):
-    os.makedirs(path, exists_ok=True)
+    """Append a row to a CSV file"""
+    # Create logs folder if it does not exist
+    os.makedirs(LOG_PATH, exists_ok=True)
 
     # If CSV file does not exist then create one and append header
     if os.path.exists(path):
         with open(path, mode='w', newline='') as file:
             writer = csv.writer(file)
             writer.write(header)
+
+    # Check that the given row has the correct number of elements
+    if len(header) != len(row):
+        raise Exception(f"Row contains incorrect number of elements. Expected {len(header)} found {len(row)}")
 
     with open(path, mode='a', newline='') as file:
         writer = csv.writer(file)
