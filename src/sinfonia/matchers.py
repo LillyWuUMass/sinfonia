@@ -35,6 +35,9 @@ CURRENT_PATH = os.path.abspath(__file__)
 PROJECT_PATH = os.path.dirname(CURRENT_PATH)
 LOG_PATH = f"{PROJECT_PATH}/logs"
 
+CARBON_INTENSITY_LOG_FILE_PATH = f"{LOG_PATH}/carbon_intensity.csv"
+CARBON_INTENSITY_CSV_HEADER = ['timestamp', 'names', 'carbon_intensity_gco2_per_kwh']
+
 # Type definition for a Sinfonia Tier1 match function
 Tier1MatchFunction = Callable[
     [ClientInfo, DeploymentRecipe, List[Cloudlet]], Iterator[Cloudlet]
@@ -162,13 +165,10 @@ def _append_to_csv(path: str, header: List[Any], row: List[Any]):
     if len(header) != len(row):
         raise Exception(f"Row contains incorrect number of elements. Expected {len(header)} found {len(row)}")
 
+    # Append row to CSV
     with open(path, mode='a', newline='') as file:
         writer = csv.writer(file)
         writer.write(row)
-
-
-CARBON_INTENSITY_LOG_FILE_PATH = f"{LOG_PATH}/carbon_intensity.csv"
-CARBON_INTENSITY_CSV_HEADER = ['timestamp', 'names', 'carbon_intensity_gco2_per_kwh']
 
 
 def match_carbon_intensity(
