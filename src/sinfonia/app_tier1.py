@@ -41,7 +41,13 @@ from .openapi import load_spec
 
 class Tier1DefaultConfig:
     CLOUDLETS: str | Path | None = None
-    MATCHERS: list[str] = ["network", "location", "random"]
+
+    # MATCHERS serve as filter
+    # Default is network -> location -> random -> cloudlet recommendations
+    # We are setting match carbon as the single filter
+    # MATCHERS declaration can be found in poetry's pyproject.toml
+    # MATCHERS: list[str] = ["network", "location", "random"]
+    MATCHERS: list[str] = ["carbon-intensity"]
     RECIPES: str | Path | URL = "RECIPES"
 
     # These are initialized by the wsgi app factory from the config

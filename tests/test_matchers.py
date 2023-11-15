@@ -149,7 +149,7 @@ class TestMatchers:
                 assert cloudlet in aws_cloudlets
                 assert cloudlet not in cloudlets
             assert len(cloudlets) == 0
-
+            
     def test_tier1_best_match(
         self, aws_cloudlets, deployment_recipe, flask_app, example_wgkey
     ):

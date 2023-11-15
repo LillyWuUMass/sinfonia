@@ -19,7 +19,7 @@ import os
 import random
 import time
 from operator import itemgetter
-from typing import Callable, Iterator, List, Sequence
+from typing import Callable, Iterator, List, Sequence, Any
 
 from importlib_metadata import EntryPoint, entry_points
 
@@ -153,13 +153,13 @@ def match_random(
 def _append_to_csv(path: str, header: List[Any], row: List[Any]):
     """Append a row to a CSV file"""
     # Create logs folder if it does not exist
-    os.makedirs(LOG_PATH, exists_ok=True)
+    os.makedirs(LOG_PATH, exist_ok=True)
 
     # If CSV file does not exist then create one and append header
     if os.path.exists(path):
         with open(path, mode='w', newline='') as file:
             writer = csv.writer(file)
-            writer.write(header)
+            writer.writerow(header)
 
     # Check that the given row has the correct number of elements
     if len(header) != len(row):
@@ -168,7 +168,7 @@ def _append_to_csv(path: str, header: List[Any], row: List[Any]):
     # Append row to CSV
     with open(path, mode='a', newline='') as file:
         writer = csv.writer(file)
-        writer.write(row)
+        writer.writerow(row)
 
 
 def match_carbon_intensity(
@@ -179,13 +179,13 @@ def match_carbon_intensity(
     """Yields cloudlet recommendations based on lowest carbon intensity level"""
 
     # Sort cloudlets by lowest carbon intensity level
-    sorted(cloudlets, key=lambda c: c.resources['carbon_intensity'])
+    sorted(cloudlets, key=lambda c: c.resources['carbon-intensity'])
 
     # Append decision to persistent log
     # This is for debugging purposes only
     timestamp = int(time.time())
     names = [c.name for c in cloudlets]
-    carbon_intensity = [c.resources['carbon_intensity'] for c in cloudlets]
+    carbon_intensity = [c.resources['carbon-intensity'] for c in cloudlets]
     _append_to_csv(
         path=CARBON_INTENSITY_LOG_FILE_PATH,
         header=CARBON_INTENSITY_CSV_HEADER,
@@ -194,6 +194,6 @@ def match_carbon_intensity(
 
     # Yield cloudlets
     for cloudlet in cloudlets:
-        logger.info(f"[carbon_intensity] {cloudlet.name} {cloudlet.resources['carbon_intensity']} gCO2/kWh")
+        logger.info(f"[carbon-intensity] {cloudlet.name} {cloudlet.resources['carbon_intensity']} gCO2/kWh")
         cloudlets.remove(cloudlet)
         yield cloudlet
