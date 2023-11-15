@@ -4,6 +4,7 @@ Query real-time carbon metrics of a given coordinator (longitue and latitue).
 
 import json
 import logging
+from typing import Dict
 import requests
 from requests.auth import HTTPBasicAuth
 from requests.exceptions import RequestException
@@ -43,7 +44,7 @@ class CarbonMetrics:
             raise ValueError("latitude out of bounds")
 
     @staticmethod
-    def load_config(provider:str) -> [list, dict, dict]:
+    def load_config(provider:str) -> [list, Dict, Dict]:
         """
         Load the carbon types and providers' credentials from a configuration file
         Return: 
@@ -71,7 +72,7 @@ class CarbonMetrics:
             return None, None, None
 
     @staticmethod
-    def url_query(url:str, headers:dict, params:dict) -> dict:
+    def url_query(url:str, headers:Dict, params:Dict) -> Dict:
         """Query a URL with headers and parameters."""
         try:
             response = requests.get(url, params=params, headers=headers, timeout=3)
@@ -100,7 +101,7 @@ class CarbonMetrics:
             logging.exception("Failed to get token from WattTime")
             return None
 
-    def from_watttime(self, metric_types:list, credential:dict, urls:dict) -> dict[str, float]:
+    def from_watttime(self, metric_types:list, credential:Dict, urls:Dict) -> Dict[str, float]:
         """
         Get carbon metrics from WattTime using coordinates.
         Note: 
@@ -135,7 +136,7 @@ class CarbonMetrics:
 
         return metrics
 
-    def from_electricitymap(self, metric_types:list, credential:dict, urls:dict) -> dict[str, float]:
+    def from_electricitymap(self, metric_types:list, credential:Dict, urls:Dict) -> Dict[str, float]:
         """Get carbon intensity from ElectricityMap using coordinates."""
         token = credential.get("token")
         headers = {"auth-token": token}
@@ -161,7 +162,7 @@ class CarbonMetrics:
 
         return metrics
 
-    def get_carbon_metrics(self) -> dict[str, float]:
+    def get_carbon_metrics(self) -> Dict[str, float]:
         """ Retrieve carbon metrics from providers: WattTime, ElectricityMap"""
         carbon_metrics = {}
         wt_metrics = {}

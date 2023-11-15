@@ -43,7 +43,9 @@ class CloudletsView(MethodView):
         with open(CLOUDLET_CARBON_HISTORY_CSV, 'a') as file:
             csv_writer = csv.writer(file)
             resources = cloudlet.resources
-            csv_writer.writerow([time(), cloudlet.uuid, resources["carbon_intensity"], resources["energy_consumption"], resources["carbon_emission"]])
+            csv_writer.writerow([time(), cloudlet.uuid, resources["carbon_intensity"] if "carbon_intensity" in resources else 0, 
+                                 resources["energy_consumption"] if "energy_consumption" in resources else 0,
+                                 resources["carbon_emission"] if "carbon_emission" in resources else 0])
         cloudlets = current_app.config["cloudlets"]
         cloudlets[cloudlet.uuid] = cloudlet
         return NoContent, 204

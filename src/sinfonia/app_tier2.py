@@ -49,6 +49,18 @@ class Tier2DefaultConfig:
     # deployment_repository: DeploymentRepository | None = None     # RECIPES
     # K8S_CLUSTER : Cluster | None = None   # KUBECONFIG KUBECONTEXT PROMETHEUS
 
+# class Tier2DefaultConfig:
+#     RECIPES: str | Path | URL = "RECIPES"
+#     KUBECONFIG: str = "/etc/rancher/k3s/k3s.yaml"
+#     KUBECONTEXT: str = ""
+#     PROMETHEUS: str = "http://10.43.211.0:9090" #"http://kube-prometheus-stack-prometheus.monitoring:9090"
+#     TIER1_URLS: list[str] = ["http://192.168.245.11:5000"]
+#     TIER2_URL: str | None = "http://obelix14"
+
+#     # These are initialized by the wsgi app factory from the config
+#     # UUID: UUID
+#     # deployment_repository: DeploymentRepository | None = None     # RECIPES
+#     # K8S_CLUSTER : Cluster | None = None   # KUBECONFIG KUBECONTEXT PROMETHEUS
 
 def tier2_app_factory(**args) -> connexion.FlaskApp:
     """Sinfonia Tier 2 API server"""

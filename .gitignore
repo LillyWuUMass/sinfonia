@@ -10,3 +10,4 @@ sinfonia-*.tgz
 __pycache__/
 *~
 *.swp
+.vscode/*
