@@ -33,7 +33,7 @@
 
   vars:
     #sinfonia_tier1_url: "{{ lookup('env', 'SINFONIA_TIER1_URL') }}"
-    sinfonia_tier1_url: "http://192.168.245.31:5000"
+    sinfonia_tier1_url: "http://192.168.245.30:5000"
     sinfonia_tier2_url: "http://{{ inventory_hostname }}"
     #sinfonia_recipes: "https://storage.cmusatyalab.org/sinfonia-recipes/"
     sinfonia_recipes: ""

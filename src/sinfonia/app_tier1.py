@@ -46,8 +46,8 @@ class Tier1DefaultConfig:
     # Default is network -> location -> random -> cloudlet recommendations
     # We are setting match carbon as the single filter
     # MATCHERS declaration can be found in poetry's pyproject.toml
-    # MATCHERS: list[str] = ["network", "location", "random"]
-    MATCHERS: list[str] = ["carbon-intensity"]
+    MATCHERS: list[str] = ["network", "location", "random"]
+    # MATCHERS: list[str] = ["carbon-intensity"]
     RECIPES: str | Path | URL = "RECIPES"
 
     # These are initialized by the wsgi app factory from the config
