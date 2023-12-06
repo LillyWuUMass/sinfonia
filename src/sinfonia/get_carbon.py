@@ -11,6 +11,7 @@ from requests.exceptions import RequestException
 from attr import define, field
 import rapl
 import time
+import csv
 
 # Configure logging
 logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.INFO)
@@ -31,6 +32,7 @@ class CarbonMetrics:
     """
     latitude: float = field()
     longitude: float = field()
+    zone: str = field()
 
     # Validators for latitude and longitude
     @latitude.validator
@@ -206,3 +208,21 @@ class CarbonMetrics:
 
         return total_avg_power, energy_consumption
 
+    def get_carbon_history(self, timestamp: float) -> dict:
+        """ Retrieve the carbon intensity of a zone from a past timestamp"""
+
+        ZONES = ["CA-ON", "US-CAL-CISO"]
+    
+        if self.zone not in ZONES:
+            logger.warning(f"Carbon metrics not available for the zone: {self.zone}")
+            return None
+            
+        with open(f'src/sinfonia/{self.zone}.csv', newline='') as csvfile:
+            reader = csv.DictReader(csvfile)
+
+            for row in reader:
+                if float(row["timestamp"]) <= timestamp and timestamp - float(row["timestamp"]) < 3600:
+                    return {"timestamp": timestamp, "carbon_intensity": float(row["carbon_intensity_avg"])}
+
+            logger.warning(f"Carbon metrics not available for the timestamp: {timestamp} in zone: {self.zone}")    
+            return None

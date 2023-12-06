@@ -209,15 +209,6 @@ class Cluster:
                 logging.exception(f"Failed to retrieve {resource}")
                 pass
 
-        # Add carbon metrics to resources
-        cloudlet = load(StringIO("endpoint: http://obelix.cs.umass.edu:5000/api/v1/deploy"))[0]
-        location = cloudlet.locations[0]
-        carbon_obj = CarbonMetrics(latitude=location.latitude, longitude=location.longitude)
-        carbon_metrics = carbon_obj.get_carbon_metrics() # gCO2/KWH
-        avg_power, energy_consumption = carbon_obj.get_energy_consumption() # energy in KJ
-        resources["carbon_intensity"] = carbon_metrics["carbon_intensity"]
-        resources["energy_consumption"] = energy_consumption
-        resources["carbon_emission"] = carbon_metrics["carbon_intensity"]*energy_consumption/3600 # gCO2
         return resources
 
     def _active_peers(self, lease_duration: int) -> Sequence[WireguardKey]:

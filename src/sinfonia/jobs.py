@@ -15,6 +15,10 @@ import requests
 from flask_apscheduler import APScheduler
 from requests.exceptions import RequestException
 from yarl import URL
+from time import time
+from datetime import datetime, timedelta
+
+from .get_carbon import CarbonMetrics
 
 logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -68,9 +72,20 @@ def report_to_tier1_endpoints():
 
     tier2_uuid = config["UUID"]
     tier2_endpoint = URL(config["TIER2_URL"]) / "api/v1/deploy"
+    tier2_location = config["TIER2_GEO_LOCATION"]
+    tier2_zone = config["TIER2_ZONE"]
 
     cluster = config["K8S_CLUSTER"]
     resources = cluster.get_resources()
+
+    # Add carbon metrics to resources
+    carbon_obj = CarbonMetrics(latitude=tier2_location.latitude, longitude=tier2_location.longitude, zone=tier2_zone)
+    carbon_metrics = carbon_obj.get_carbon_history((datetime.now()-timedelta(days=2*365)).timestamp()) # gCO2/KWH
+    # carbon_metrics = carbon_obj.get_carbon_metrics()
+    _, energy_consumption = carbon_obj.get_energy_consumption() # energy in KJ
+    resources["carbon_intensity"] = carbon_metrics["carbon_intensity"]
+    resources["energy_consumption"] = energy_consumption
+    resources["carbon_emission"] = carbon_metrics["carbon_intensity"]*energy_consumption/3600 # gCO2
 
     logging.info("Got %s", str(resources))
 
