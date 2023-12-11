@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, Optional
 from urllib.parse import urlencode, urlparse
 
 import typer
@@ -10,8 +10,13 @@ class URLBuilder:
         u = urlparse(base_url, scheme='http')
         self.scheme = u.scheme
         self.netloc = u.netloc
+        self.port = u.port
         self.path = u.path
         self.query = {} if u.query == '' else u.query
+
+    def set_port(self, port: int):
+        self.port = port
+        return self
 
     def add_path(self, path: str):
         self.path = f'{self.path}/{path}'
@@ -24,11 +29,22 @@ class URLBuilder:
         self.query[key] = value
         return self  # For daisy chaining
 
-    def build(self) -> str:
+    def build(self) -> str:        
+        # Base url
+        u = f'{self.scheme}://{self.netloc}'
+        
+        # Port number
+        if self.port != None:
+            u = f'{u}:{self.port}'
+            
+        # Path
+        u = f'{u}{self.path}'
+         
+        # Query parameters
         query = urlencode(self.query) if type(self.query) == dict else self.query
-        u = f'{self.scheme}://{self.netloc}{self.path}'
         if query != '':
             u = f'{u}?{query}'
+            
         return u
 
 
