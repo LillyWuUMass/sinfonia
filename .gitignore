@@ -16,7 +16,7 @@ __pycache__/
 
 ### ANSIBLE DEPLOYMENTS
 
-deploy-tier2/deploy.yml
+deploy-tier2/*
 
 ### LOGS
 
