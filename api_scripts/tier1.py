@@ -26,6 +26,7 @@ def strfmt_http_status_code(code: int) -> str:
         return sp.bold(sp.green(str(code)))
     elif code >= 400 and code <= 599:
         return sp.bold(sp.red(str(code)))
+    
     return sp.bold(sp.yellow(str(code)))
 
 
@@ -79,6 +80,8 @@ def get_deployment_recipe(uuid: str = uuid_option):
         print(f'{fmtsc}:', 'Deployment recipe not accessible')
     elif sc == HTTPStatus.NOT_FOUND:
         print(f'{fmtsc}:', 'Deployment recipe not found')
+    else:
+        print(f'{fmtsc}:')
 
 
 @cli.command(help='Deploy a recipe.')
@@ -86,7 +89,7 @@ def deploy_recipe(
     uuid: str = uuid_option, 
     app_id: str = app_id_option,
 ):
-    u = URLBuilder(API_URL).add_path(uuid).add_path(app_id).build()
+    u = URLBuilder(API_URL).add_path('deploy').add_path(uuid).add_path(app_id).build()
     print('Sending request to', u)
     
     try:
@@ -98,7 +101,14 @@ def deploy_recipe(
         print(sp.red('unable to send request:', str(e)))
         exit(0)
 
-    pass
+    sc, fmtsc = resp.status_code, strfmt_http_status_code(resp.status_code)
+    if sc == HTTPStatus.OK:
+        print(f'{fmtsc}:', 'Successfully deployed to cloudlet')
+        print(sp.json(resp.json()))
+    elif sc == HTTPStatus.NOT_FOUND:
+        print(f'{fmtsc}:', 'Failed to create deployment')
+    else:
+        print(f'{fmtsc}:')
 
 
 if __name__ == "__main__":

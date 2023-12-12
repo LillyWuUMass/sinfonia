@@ -11,5 +11,5 @@ uuid_option = typer.Option(
     )
 app_id_option = typer.Option(
     'YpdTsMtb/QCdYKzHlzKkLcLzEbdTK0vP4ILmdcIvnhc=', 
-    help='UUID of recipe to be launched. See \'RECIPES\' folder for recipe definitions'
+    help='Wireguard key for application.'
     )
