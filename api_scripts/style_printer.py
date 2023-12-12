@@ -21,6 +21,11 @@ def cyan(*tp) -> str:
     return Fore.LIGHTCYAN_EX + t + Fore.RESET
 
 
+def magenta(*tp) -> str:
+    t = ' '.join(tp)
+    return Fore.LIGHTMAGENTA_EX + t + Fore.RESET
+
+
 def cyan_bg(*tp) -> str:
     t = ' '.join(tp)
     return Back.LIGHTCYAN_EX + t + Back.RESET
@@ -54,7 +59,3 @@ def yellow(*tp) -> str:
 def bold(*tp) -> str:
     t = ' '.join(tp)
     return _BOLD + t + _END
-
-
-def json(j: str) -> str:
-    return _pp.pformat(j)

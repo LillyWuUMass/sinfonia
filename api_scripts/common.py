@@ -13,3 +13,6 @@ app_id_option = typer.Option(
     'YpdTsMtb/QCdYKzHlzKkLcLzEbdTK0vP4ILmdcIvnhc=', 
     help='Wireguard key for application.'
     )
+
+
+
