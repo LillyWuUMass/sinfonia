@@ -1,6 +1,9 @@
+import os
+import requests
 from http import HTTPStatus
 
-import requests
+
+from dotenv import load_dotenv
 import typer
 
 from api_scripts.common import (
@@ -13,12 +16,23 @@ from api_scripts.url_builder import URLBuilder
 
 PORT = 5000
 TIMEOUT_SECONDS = 5  # Seconds
-BASE_URL = 'http://localhost'
+BASE_HOSTNAME = 'http://localhost'
 API_PATH = 'api/v1'
-API_URL = URLBuilder(BASE_URL).set_port(PORT).add_path(API_PATH).build()
+API_URL = URLBuilder(BASE_HOSTNAME).set_port(PORT).add_path(API_PATH).build()
 
 
 cli = typer.Typer()
+
+
+def config_runtime_env():
+    load_dotenv()
+    
+    PORT = os.getenv('TIER1_PORT', 5000)
+    TIMEOUT_SECONDS = os.getenv('TIER1_API_TIMEOUT_SECONDS', 5)
+    BASE_HOSTNAME = os.getenv('TIER1_BASE_HOSTNAME', 'http://localhost')
+    API_PATH = os.getenv('TIER1_API_PATH', 'api/v1')
+    API_URL = URLBuilder(BASE_HOSTNAME).set_port(PORT).add_path(API_PATH).build()
+    
 
 
 def strfmt_http_status_code(code: int) -> str:
@@ -112,5 +126,6 @@ def deploy_recipe(
 
 
 if __name__ == "__main__":
+    config_runtime_env()
     cli()
     
