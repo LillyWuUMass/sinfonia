@@ -21,3 +21,7 @@ deploy-tier2/*
 ### LOGS
 
 logs
+
+### ENV
+
+api_scripts/.env
