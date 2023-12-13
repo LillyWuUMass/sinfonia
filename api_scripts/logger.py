@@ -8,6 +8,7 @@ _DEFAULT_FORMAT = "%(levelname)-8s  %(message)s"
 
 
 class ApiLoggingFormatter():    
+    """Custom formatter class for API logging"""
     def __init__(self, fmt: str = _DEFAULT_FORMAT) -> None:
         self.fmt = fmt
 
@@ -25,19 +26,19 @@ class ApiLoggingFormatter():
         return formatter.format(record)
 
 
-def get_stdout_logger(
+def get_api_logger(
     name: str,
     level: Optional[str] = logging.INFO, 
     format: Optional[str] = _DEFAULT_FORMAT,
 ) -> logging.Logger:
-    """Get formatted Python logging object instance"""
+    """Get instance of API logging object"""
     # Create logging object with given name
     logger = logging.getLogger(name)
 
     # Add print format for stdout
     ch = logging.StreamHandler()
     ch.setLevel(level)
-    ch.setFormatter(ApiLoggingFormatter())
+    ch.setFormatter(ApiLoggingFormatter(format))
     
     # Set format and set logging level
     logger.addHandler(ch)

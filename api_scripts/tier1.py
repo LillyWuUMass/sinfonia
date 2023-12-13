@@ -12,7 +12,7 @@ from api_scripts.common import (
     uuid_option
 )
 import api_scripts.strfmt as sfmt
-from api_scripts.logger import get_stdout_logger
+from api_scripts.logger import get_api_logger
 from api_scripts.url_builder import URLBuilder
 
 
@@ -30,16 +30,16 @@ cli = typer.Typer()
 def config_runtime_env():
     # Environment variables
     global PORT, TIMEOUT_SECONDS, BASE_HOSTNAME, API_PATH, API_URL    
-    load_dotenv('./.env')
+    load_dotenv()
     PORT = os.getenv('TIER1_PORT', 5000)
-    TIMEOUT_SECONDS = os.getenv('TIER1_API_TIMEOUT_SECONDS', 5)
+    TIMEOUT_SECONDS = int(os.getenv('TIER1_API_TIMEOUT_SECONDS', 5))
     BASE_HOSTNAME = os.getenv('TIER1_BASE_HOSTNAME', 'http://localhost')
     API_PATH = os.getenv('TIER1_API_PATH', 'api/v1')
     API_URL = URLBuilder(BASE_HOSTNAME).set_port(PORT).add_path(API_PATH).build()
     
     # Formatted logger
     global lg
-    lg = get_stdout_logger('tier1')
+    lg = get_api_logger('tier1')
 
 
 @cli.command(help='Return manifest of known Tier 2 cloudlets.')
@@ -49,7 +49,7 @@ def get_known_cloudlets():
     
     try:
         resp = requests.get(u, timeout=TIMEOUT_SECONDS)
-    except ConnectionError:
+    except TimeoutError:
         lg.critical('api timeout exceeded')
         exit(0)
     except Exception as e:
@@ -79,7 +79,7 @@ def get_deployment_recipe(uuid: str = uuid_option):
     
     try:
         resp = requests.get(u, timeout=TIMEOUT_SECONDS)
-    except ConnectionError:
+    except TimeoutError:
         lg.critical('api timeout exceeded')
         exit(0)
     except Exception as e:
@@ -101,8 +101,8 @@ def get_deployment_recipe(uuid: str = uuid_option):
 
 @cli.command()
 def deploy_recipe(
-    uuid: str = uuid_option, 
-    app_id: str = app_id_option,
+        uuid: str = uuid_option, 
+        app_id: str = app_id_option,
 ):
     """Deploy recipe to Tier 1 cloudlet.
     
@@ -113,7 +113,7 @@ def deploy_recipe(
     
     try:
         resp = requests.post(u, timeout=TIMEOUT_SECONDS)
-    except ConnectionError:
+    except TimeoutError:
         lg.critical('api timeout exceeded')
         exit(0)
     except Exception as e:
