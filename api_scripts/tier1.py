@@ -106,7 +106,7 @@ def deploy_recipe(
 ):
     """Deploy recipe to Tier 1 cloudlet.
     
-    infoING: As of now, this feature is not available for Tier 1
+    WARNING: As of now, this feature is not available for Tier 1
     """
     u = URLBuilder(API_URL).add_path('deploy').add_path(uuid).add_path(app_id).build()
     lg.info(f'Sending POST request to {u}')

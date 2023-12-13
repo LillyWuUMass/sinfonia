@@ -44,10 +44,38 @@ def config_runtime_env():
 
 @cli.command()
 def deploy_recipe():
-    """Deploy recipe to cloudlet."""
+    """Deploy recipe to Tier 2 cloudlet.
+    
+    See 'RECIPES' folder for recipe UUIDS and recipe definitions.
+    """
+    u = URLBuilder(API_URL).add_path('deploy').add_path(uuid).add_path(app_id).build()
+    lg.info(f'Sending POST request to {u}')
+    
+    try:
+        resp = requests.post(u, timeout=TIMEOUT_SECONDS)
+    except ConnectionError:
+        lg.critical('api timeout exceeded')
+        exit(0)
+    except Exception as e:
+        lg.critical(f'unable to send request: {str(e)}')
+        exit(0)
+
+    sc, fmtsc = resp.status_code, sfmt.http_status_code(resp.status_code)
+    if sc == HTTPStatus.OK:
+        lg.info(f'{fmtsc}: Successfully deployed to cloudlet')
+    elif sc == HTTPStatus.NOT_FOUND:
+        lg.info(f'{fmtsc}: Failed to create deployment')
+    else:
+        lg.info(f'{fmtsc}')
+        
+    lg.info('\n' + sfmt.json(resp.json()))
+  
+  
+@cli.command()
+def hello():
     pass
-
-
+  
+  
 if __name__ == '__main__':
     config_runtime_env()
     cli()
