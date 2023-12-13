@@ -4,7 +4,7 @@ import logging
 import style_printer as sp
 
 
-_DEFAULT_FORMAT = "%(name)-8s  %(levelname)-8s  %(message)s"
+_DEFAULT_FORMAT = "%(levelname)-8s  %(message)s"
 
 
 class ApiLoggingFormatter():    
@@ -27,7 +27,7 @@ class ApiLoggingFormatter():
 
 def get_stdout_logger(
     name: str,
-    level: Optional[str] = logging.DEBUG, 
+    level: Optional[str] = logging.INFO, 
     format: Optional[str] = _DEFAULT_FORMAT,
 ) -> logging.Logger:
     """Get formatted Python logging object instance"""

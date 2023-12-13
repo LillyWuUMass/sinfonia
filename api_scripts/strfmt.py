@@ -1,3 +1,4 @@
+from http import HTTPStatus
 from typing import Optional
 from pprint import PrettyPrinter
 
@@ -8,12 +9,13 @@ _pp = PrettyPrinter(indent=4)
 
 
 def http_status_code(code: int) -> str:
+    s = f"{str(code)} {HTTPStatus(code).phrase}"
     if code >= 200 and code <= 299:
-        return sp.bold(sp.green(str(code)))
+        return sp.bold(sp.green(s))
     elif code >= 400 and code <= 599:
-        return sp.bold(sp.red(str(code)))
+        return sp.bold(sp.red(s))
     
-    return sp.bold(sp.yellow(str(code)))
+    return sp.bold(sp.yellow(s))
 
 
 def json(j: str) -> str:

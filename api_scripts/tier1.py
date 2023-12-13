@@ -59,9 +59,10 @@ def get_known_cloudlets():
     sc, fmtsc = resp.status_code, sfmt.http_status_code(resp.status_code)
     if sc == HTTPStatus.OK:
         lg.info(f'{fmtsc}: Returning list of known cloudlets')
-        lg.info(sfmt.json(resp.json()))
     else:
-        lg.warning(f'{fmtsc}: Unable to get list of known cloudlets')
+        lg.info(f'{fmtsc}: Unable to get list of known cloudlets')
+        
+    lg.info('\n' + sfmt.json(resp.json()))
     
     
     
@@ -88,13 +89,14 @@ def get_deployment_recipe(uuid: str = uuid_option):
     sc, fmtsc = resp.status_code, sfmt.http_status_code(resp.status_code)
     if sc == HTTPStatus.OK:
         lg.info(f'{fmtsc}: Returning list of known cloudlets')
-        lg.info(sfmt.json(resp.json()))
     elif sc == HTTPStatus.FORBIDDEN:
-        lg.warning(f'{fmtsc}: Deployment recipe not accessible')
+        lg.info(f'{fmtsc}: Deployment recipe not accessible')
     elif sc == HTTPStatus.NOT_FOUND:
-        lg.warning(f'{fmtsc}: Deployment recipe not found')
+        lg.info(f'{fmtsc}: Deployment recipe not found')
     else:
-        print(f'{fmtsc}:')
+        print(f'{fmtsc}')
+        
+    lg.info('\n' + sfmt.json(resp.json()))
 
 
 @cli.command()
@@ -104,7 +106,7 @@ def deploy_recipe(
 ):
     """Deploy recipe to Tier 1 cloudlet.
     
-    warningING: As of now, this feature is not available for Tier 1
+    infoING: As of now, this feature is not available for Tier 1
     """
     u = URLBuilder(API_URL).add_path('deploy').add_path(uuid).add_path(app_id).build()
     lg.info(f'Sending POST request to {u}')
@@ -121,11 +123,12 @@ def deploy_recipe(
     sc, fmtsc = resp.status_code, sfmt.http_status_code(resp.status_code)
     if sc == HTTPStatus.OK:
         lg.info(f'{fmtsc}: Successfully deployed to cloudlet')
-        lg.info(sfmt.json(resp.json()))
     elif sc == HTTPStatus.NOT_FOUND:
-        lg.warning(f'{fmtsc}: Failed to create deployment')
+        lg.info(f'{fmtsc}: Failed to create deployment')
     else:
-        lg.warning(f'{fmtsc}:')
+        lg.info(f'{fmtsc}')
+        
+    lg.info('\n' + sfmt.json(resp.json()))
 
 
 if __name__ == "__main__":
