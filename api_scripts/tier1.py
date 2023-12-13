@@ -61,7 +61,7 @@ def get_known_cloudlets():
         lg.info(f'{fmtsc}: Returning list of known cloudlets')
         lg.info(sfmt.json(resp.json()))
     else:
-        lg.warn(f'{fmtsc}: Unable to get list of known cloudlets')
+        lg.warning(f'{fmtsc}: Unable to get list of known cloudlets')
     
     
     
@@ -90,9 +90,9 @@ def get_deployment_recipe(uuid: str = uuid_option):
         lg.info(f'{fmtsc}: Returning list of known cloudlets')
         lg.info(sfmt.json(resp.json()))
     elif sc == HTTPStatus.FORBIDDEN:
-        lg.warn(f'{fmtsc}: Deployment recipe not accessible')
+        lg.warning(f'{fmtsc}: Deployment recipe not accessible')
     elif sc == HTTPStatus.NOT_FOUND:
-        lg.warn(f'{fmtsc}: Deployment recipe not found')
+        lg.warning(f'{fmtsc}: Deployment recipe not found')
     else:
         print(f'{fmtsc}:')
 
@@ -104,7 +104,7 @@ def deploy_recipe(
 ):
     """Deploy recipe to Tier 1 cloudlet.
     
-    WARNING: As of now, this feature is not available for Tier 1
+    warningING: As of now, this feature is not available for Tier 1
     """
     u = URLBuilder(API_URL).add_path('deploy').add_path(uuid).add_path(app_id).build()
     lg.info(f'Sending POST request to {u}')
@@ -123,9 +123,9 @@ def deploy_recipe(
         lg.info(f'{fmtsc}: Successfully deployed to cloudlet')
         lg.info(sfmt.json(resp.json()))
     elif sc == HTTPStatus.NOT_FOUND:
-        lg.warn(f'{fmtsc}: Failed to create deployment')
+        lg.warning(f'{fmtsc}: Failed to create deployment')
     else:
-        lg.warn(f'{fmtsc}:')
+        lg.warning(f'{fmtsc}:')
 
 
 if __name__ == "__main__":
