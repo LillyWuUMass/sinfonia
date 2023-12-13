@@ -8,6 +8,7 @@
 # SPDX-License-Identifier: MIT
 #
 
+import os
 import logging
 from itertools import chain, filterfalse, islice, zip_longest
 
@@ -31,7 +32,7 @@ logger = logging.getLogger(__name__)
 MAX_RESULTS = 3
 
 # Whenever a cloudlet reports to tier1, the carbon metrics are appended to this csv
-CLOUDLET_CARBON_HISTORY_CSV = "src/sinfonia/cloudlets_carbon_history.csv"
+CLOUDLET_CARBON_HISTORY_CSV = "logs/cloudlets_carbon_history.csv"
 
 class CloudletsView(MethodView):
     def post(self):
@@ -40,6 +41,12 @@ class CloudletsView(MethodView):
             return "Bad Request, missing UUID", 400
 
         cloudlet = Cloudlet.new_from_api(body)
+        
+        # Create 'logs' folder if not exists
+        if not os.path.exists('logs'):
+            os.makedirs('logs')
+        
+        # Record cloudlet carbon history
         with open(CLOUDLET_CARBON_HISTORY_CSV, 'a') as file:
             csv_writer = csv.writer(file)
             resources = cloudlet.resources
@@ -48,6 +55,7 @@ class CloudletsView(MethodView):
                                  resources["carbon_emission"] if "carbon_emission" in resources else 0])
         cloudlets = current_app.config["cloudlets"]
         cloudlets[cloudlet.uuid] = cloudlet
+        
         return NoContent, 204
 
     def search(self):
