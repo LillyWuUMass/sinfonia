@@ -2,10 +2,10 @@ import os
 import requests
 from http import HTTPStatus
 
-
-from dotenv import load_dotenv
 import typer
 import logging
+from dotenv import load_dotenv
+from yarl import URL
 
 from api_scripts.common import (
     app_id_option, 
@@ -13,7 +13,6 @@ from api_scripts.common import (
 )
 import api_scripts.strfmt as sf
 from api_scripts.logger import get_api_logger
-from api_scripts.url_builder import URLBuilder
 
 
 PORT = None
@@ -23,7 +22,7 @@ API_PATH = None
 API_URL = None
 
 
-lg: logging.Logger = None
+log = get_api_logger('tier1')
 cli = typer.Typer()
 
 
@@ -31,38 +30,35 @@ def config_runtime_env():
     # Environment variables
     global PORT, TIMEOUT_SECONDS, BASE_HOSTNAME, API_PATH, API_URL    
     load_dotenv()
-    PORT = os.getenv('TIER1_PORT', 5000)
+    PORT = int(os.getenv('TIER1_PORT', 5000))
     TIMEOUT_SECONDS = int(os.getenv('TIER1_API_TIMEOUT_SECONDS', 5))
     BASE_HOSTNAME = os.getenv('TIER1_BASE_HOSTNAME', 'http://localhost')
     API_PATH = os.getenv('TIER1_API_PATH', 'api/v1')
-    API_URL = URLBuilder(BASE_HOSTNAME).set_port(PORT).add_path(API_PATH).build()
-    
-    # Formatted logger
-    global lg
-    lg = get_api_logger('tier1')
+    API_URL = URL(BASE_HOSTNAME).with_port(PORT).with_path(API_PATH)
 
 
-@cli.command(help='Return manifest of known Tier 2 cloudlets.')
+@cli.command()
 def get_known_cloudlets():
-    u = URLBuilder(API_URL).add_path('cloudlets').build()
-    lg.info(f'Sending GET request to {u}')
+    """Return manifest of known Tier 2 cloudlets."""
+    u = API_URL / 'cloudlets'
+    log.info(f'Sending GET request to {u}')
     
     try:
         resp = requests.get(u, timeout=TIMEOUT_SECONDS)
     except TimeoutError:
-        lg.critical('api timeout exceeded')
+        log.critical('api timeout exceeded')
         exit(0)
     except Exception as e:
-        lg.critical(f'unable to send request: {str(e)}')
+        log.critical(f'unable to send request: {str(e)}')
         exit(0)
         
     sc, fmtsc = resp.status_code, sf.http_status_code(resp.status_code)
     if sc == HTTPStatus.OK:
-        lg.info(f'{fmtsc}: Returning list of known cloudlets')
+        log.info(f'{fmtsc}: Returning list of known cloudlets')
     else:
-        lg.info(f'{fmtsc}: Unable to get list of known cloudlets')
+        log.info(f'{fmtsc}: Unable to get list of known cloudlets')
         
-    lg.info('\n' + sf.json(resp.json()))
+    log.info('\n' + sf.json(resp.json()))
     
     
     
@@ -74,29 +70,29 @@ def update_cloudlet_resource_metrics():
     
 @cli.command(help='Retrieve information on deployment recipes.')
 def get_deployment_recipe(uuid: str = uuid_option):
-    u = URLBuilder(API_URL).add_path('recipes').add_path(uuid).build()
-    lg.info(f'Sending GET request to {u}')
+    u = API_URL / 'recipes' / uuid
+    log.info(f'Sending GET request to {u}')
     
     try:
         resp = requests.get(u, timeout=TIMEOUT_SECONDS)
     except TimeoutError:
-        lg.critical('api timeout exceeded')
+        log.critical('api timeout exceeded')
         exit(0)
     except Exception as e:
-        lg.critical(f'unable to send request: {str(e)}')
+        log.critical(f'unable to send request: {str(e)}')
         exit(0)
         
     sc, fmtsc = resp.status_code, sf.http_status_code(resp.status_code)
     if sc == HTTPStatus.OK:
-        lg.info(f'{fmtsc}: Returning list of known cloudlets')
+        log.info(f'{fmtsc}: Returning list of known cloudlets')
     elif sc == HTTPStatus.FORBIDDEN:
-        lg.info(f'{fmtsc}: Deployment recipe not accessible')
+        log.info(f'{fmtsc}: Deployment recipe not accessible')
     elif sc == HTTPStatus.NOT_FOUND:
-        lg.info(f'{fmtsc}: Deployment recipe not found')
+        log.info(f'{fmtsc}: Deployment recipe not found')
     else:
         print(f'{fmtsc}')
         
-    lg.info('\n' + sf.json(resp.json()))
+    log.info('\n' + sf.json(resp.json()))
 
 
 @cli.command()
@@ -104,31 +100,28 @@ def deploy_recipe(
         uuid: str = uuid_option, 
         app_id: str = app_id_option,
 ):
-    """Deploy recipe to Tier 1 cloudlet.
-    
-    WARNING: As of now, this feature is not available for Tier 1
-    """
-    u = URLBuilder(API_URL).add_path('deploy').add_path(uuid).add_path(app_id).build()
-    lg.info(f'Sending POST request to {u}')
+    """Deploy recipe to Tier 1 cloudlet."""
+    u = API_URL / 'deploy' / uuid / app_id
+    log.info(f'Sending POST request to {u}')
     
     try:
         resp = requests.post(u, timeout=TIMEOUT_SECONDS)
     except TimeoutError:
-        lg.critical('api timeout exceeded')
+        log.critical('api timeout exceeded')
         exit(0)
     except Exception as e:
-        lg.critical(f'unable to send request: {str(e)}')
+        log.critical(f'unable to send request: {str(e)}')
         exit(0)
 
     sc, fmtsc = resp.status_code, sf.http_status_code(resp.status_code)
     if sc == HTTPStatus.OK:
-        lg.info(f'{fmtsc}: Successfully deployed to cloudlet')
+        log.info(f'{fmtsc}: Successfully deployed to cloudlet')
     elif sc == HTTPStatus.NOT_FOUND:
-        lg.info(f'{fmtsc}: Failed to create deployment')
+        log.info(f'{fmtsc}: Failed to create deployment')
     else:
-        lg.info(f'{fmtsc}')
+        log.info(f'{fmtsc}')
         
-    lg.info('\n' + sf.json(resp.json()))
+    log.info('\n' + sf.json(resp.json()))
 
 
 if __name__ == "__main__":
