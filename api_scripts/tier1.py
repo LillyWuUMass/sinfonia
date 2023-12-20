@@ -11,7 +11,7 @@ from api_scripts.common import (
     app_id_option, 
     uuid_option
 )
-import api_scripts.strfmt as sf
+from api_scripts import strfmt
 from api_scripts.logger import get_api_logger
 
 
@@ -52,13 +52,13 @@ def get_known_cloudlets():
         log.critical(f'unable to send request: {str(e)}')
         exit(0)
         
-    sc, fmtsc = resp.status_code, sf.http_status_code(resp.status_code)
+    sc, fmtsc = resp.status_code, strfmt.http_status_code(resp.status_code)
     if sc == HTTPStatus.OK:
         log.info(f'{fmtsc}: Returning list of known cloudlets')
     else:
         log.info(f'{fmtsc}: Unable to get list of known cloudlets')
         
-    log.info('\n' + sf.json(resp.json()))
+    log.info('\n' + strfmt.json(resp.json()))
     
     
     
@@ -82,7 +82,7 @@ def get_deployment_recipe(uuid: str = uuid_option):
         log.critical(f'unable to send request: {str(e)}')
         exit(0)
         
-    sc, fmtsc = resp.status_code, sf.http_status_code(resp.status_code)
+    sc, fmtsc = resp.status_code, strfmt.http_status_code(resp.status_code)
     if sc == HTTPStatus.OK:
         log.info(f'{fmtsc}: Returning list of known cloudlets')
     elif sc == HTTPStatus.FORBIDDEN:
@@ -92,7 +92,7 @@ def get_deployment_recipe(uuid: str = uuid_option):
     else:
         print(f'{fmtsc}')
         
-    log.info('\n' + sf.json(resp.json()))
+    log.info('\n' + strfmt.json(resp.json()))
 
 
 @cli.command()
@@ -113,15 +113,15 @@ def deploy_recipe(
         log.critical(f'unable to send request: {str(e)}')
         exit(0)
 
-    sc, fmtsc = resp.status_code, sf.http_status_code(resp.status_code)
+    sc, fmtsc = resp.status_code, strfmt.http_status_code(resp.status_code)
     if sc == HTTPStatus.OK:
-        log.info(f'{fmtsc}: Successfully deployed to cloudlet')
+        log.info(f'{fmtsc}: Successtrfmtully deployed to cloudlet')
     elif sc == HTTPStatus.NOT_FOUND:
         log.info(f'{fmtsc}: Failed to create deployment')
     else:
         log.info(f'{fmtsc}')
         
-    log.info('\n' + sf.json(resp.json()))
+    log.info('\n' + strfmt.json(resp.json()))
 
 
 if __name__ == "__main__":
