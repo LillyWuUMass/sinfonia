@@ -11,7 +11,7 @@ from api_scripts.common import (
     app_id_option, 
     uuid_option
 )
-import api_scripts.strfmt as sfmt
+import api_scripts.strfmt as sf
 from api_scripts.logger import get_api_logger
 from api_scripts.url_builder import URLBuilder
 
@@ -56,13 +56,13 @@ def get_known_cloudlets():
         lg.critical(f'unable to send request: {str(e)}')
         exit(0)
         
-    sc, fmtsc = resp.status_code, sfmt.http_status_code(resp.status_code)
+    sc, fmtsc = resp.status_code, sf.http_status_code(resp.status_code)
     if sc == HTTPStatus.OK:
         lg.info(f'{fmtsc}: Returning list of known cloudlets')
     else:
         lg.info(f'{fmtsc}: Unable to get list of known cloudlets')
         
-    lg.info('\n' + sfmt.json(resp.json()))
+    lg.info('\n' + sf.json(resp.json()))
     
     
     
@@ -86,7 +86,7 @@ def get_deployment_recipe(uuid: str = uuid_option):
         lg.critical(f'unable to send request: {str(e)}')
         exit(0)
         
-    sc, fmtsc = resp.status_code, sfmt.http_status_code(resp.status_code)
+    sc, fmtsc = resp.status_code, sf.http_status_code(resp.status_code)
     if sc == HTTPStatus.OK:
         lg.info(f'{fmtsc}: Returning list of known cloudlets')
     elif sc == HTTPStatus.FORBIDDEN:
@@ -96,7 +96,7 @@ def get_deployment_recipe(uuid: str = uuid_option):
     else:
         print(f'{fmtsc}')
         
-    lg.info('\n' + sfmt.json(resp.json()))
+    lg.info('\n' + sf.json(resp.json()))
 
 
 @cli.command()
@@ -120,7 +120,7 @@ def deploy_recipe(
         lg.critical(f'unable to send request: {str(e)}')
         exit(0)
 
-    sc, fmtsc = resp.status_code, sfmt.http_status_code(resp.status_code)
+    sc, fmtsc = resp.status_code, sf.http_status_code(resp.status_code)
     if sc == HTTPStatus.OK:
         lg.info(f'{fmtsc}: Successfully deployed to cloudlet')
     elif sc == HTTPStatus.NOT_FOUND:
@@ -128,7 +128,7 @@ def deploy_recipe(
     else:
         lg.info(f'{fmtsc}')
         
-    lg.info('\n' + sfmt.json(resp.json()))
+    lg.info('\n' + sf.json(resp.json()))
 
 
 if __name__ == "__main__":

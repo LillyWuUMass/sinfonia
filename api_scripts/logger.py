@@ -1,7 +1,7 @@
 from typing import Any, Optional, Mapping
 
 import logging
-import style_printer as sp
+import strfmt as sf
 
 
 _DEFAULT_FORMAT = "%(levelname)-8s  %(message)s"
@@ -14,11 +14,11 @@ class ApiLoggingFormatter():
 
     def format(self, record):
         FORMATS = {
-            logging.DEBUG: sp.magenta(self.fmt),
-            logging.INFO: sp.white(self.fmt),
-            logging.WARNING: sp.yellow(self.fmt),
-            logging.ERROR: sp.red(self.fmt),
-            logging.CRITICAL: sp.red(self.fmt),
+            logging.DEBUG: sf.magenta(self.fmt),
+            logging.INFO: sf.white(self.fmt),
+            logging.WARNING: sf.yellow(self.fmt),
+            logging.ERROR: sf.red(self.fmt),
+            logging.CRITICAL: sf.red(self.fmt),
         }
         
         log_fmt = FORMATS.get(record.levelno)
