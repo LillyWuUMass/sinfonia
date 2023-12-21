@@ -11,7 +11,7 @@ _END = '\033[0m'
 
 
 # Pretty printer formatter for JSON
-_pp = PrettyPrinter(indent=4, width=160)
+_pp = PrettyPrinter(indent=2, width=90)
 
 
 def white(*tp) -> str:
@@ -76,4 +76,8 @@ def http_status_code(code: int) -> str:
 
 
 def json(j: str) -> str:
-    return _pp.pformat(j)
+    fj = _pp.pformat(j)
+    if '\n' in fj:
+        fj = '\n' + fj
+    
+    return fj
