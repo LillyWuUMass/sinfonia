@@ -1,5 +1,4 @@
 from http import HTTPStatus
-from typing import Optional
 from pprint import PrettyPrinter
 
 from colorama import Fore, Back

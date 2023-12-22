@@ -3,13 +3,13 @@ from http import HTTPStatus
 
 import typer
 
-from api_scripts import strfmt
-from api_scripts.common import (
+from src.tier_shell import strfmt
+from src.tier_shell.common import (
     app_id_option, 
     uuid_option
 )
-from api_scripts.config import ApiConfig
-from api_scripts.logger import get_api_logger
+from src.tier_shell.config import ApiConfig
+from src.tier_shell.logger import get_api_logger
 
 
 # Configure runtime environment

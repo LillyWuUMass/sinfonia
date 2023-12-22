@@ -1,24 +1,24 @@
-from typing import Any, Optional, Mapping
+from typing import Optional
 
 import logging
-import strfmt as sf
+from src.tier_shell import strfmt
 
 
 _DEFAULT_FORMAT = "%(levelname)-8s  %(message)s"
 
 
 class ApiLoggingFormatter():    
-    """Custom formatter class for API logging"""
+    """Custom formatter class for API logging."""
     def __init__(self, fmt: str = _DEFAULT_FORMAT) -> None:
         self.fmt = fmt
 
     def format(self, record):
         FORMATS = {
-            logging.DEBUG: sf.magenta(self.fmt),
-            logging.INFO: sf.white(self.fmt),
-            logging.WARNING: sf.yellow(self.fmt),
-            logging.ERROR: sf.red(self.fmt),
-            logging.CRITICAL: sf.red(self.fmt),
+            logging.DEBUG: strfmt.magenta(self.fmt),
+            logging.INFO: strfmt.white(self.fmt),
+            logging.WARNING: strfmt.yellow(self.fmt),
+            logging.ERROR: strfmt.red(self.fmt),
+            logging.CRITICAL: strfmt.red(self.fmt),
         }
         
         log_fmt = FORMATS.get(record.levelno)
