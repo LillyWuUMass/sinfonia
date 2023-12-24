@@ -17,29 +17,16 @@ class _AttributeData:
     typecast: Callable[[Any], Any] = str
 
 
-def _private_attr_name(name: str) -> str:
-    """Convert attribute name to a private attribute name.
-    
-    A private attribute name is simply the attribute name pprepended
-    with an underscore ('_'). E.g. 'a' -> '_a'.
-    
-    Args:
-        name -- str
-    
-    Returns:
-        str: Private attribute name
-    """
-    return '_' + name
-
-
 class BaseConfig(ABC):
     """Base configuration class."""
     _ENV_VARS: Dict[str, _AttributeData] = {}
     
     def __init__(self):
+        self._attrs: Dict[str, Any] = {}
+        
         # Set default private attributes
         for attr, data in self._ENV_VARS.items():
-            setattr(self, _private_attr_name(attr), data.default_value)
+            self._attrs[attr] = data.default_value
     
     @abstractmethod
     def from_env(self, path: Optional[str | Path] = None):
@@ -60,11 +47,7 @@ class BaseConfig(ABC):
             
         for attr, data in self._ENV_VARS.items():
             if attr in os.environ:
-                setattr(
-                    self, 
-                    _private_attr_name(attr), 
-                    data.typecast(os.getenv(attr))
-                    )
+                self._attrs[attr] = data.typecast(os.getenv(attr))
 
 
 class ApiConfig(BaseConfig):
@@ -96,37 +79,37 @@ class ApiConfig(BaseConfig):
         super().from_env(path)
     
         # Construct API root URL
-        self._API_ROOT_URL = URL(self._BASE_URL / self._API_PATH)
+        self._attrs['API_ROOT_URL'] = URL(self._attrs['BASE_URL'] / self._attrs['API_PATH'])
 
         # If no scheme was provided then set default to http
-        if not self._API_ROOT_URL.scheme:
-            self._API_ROOT_URL = URL('http://' + str(self._API_ROOT_URL))
+        if not self._attrs['API_ROOT_URL'].scheme:
+            self._attrs['API_ROOT_URL'] = URL('http://' + str(self._attrs['API_ROOT_URL']))
 
         # If port was provided then append to URL
-        if self._PORT != -1:
-            self._API_ROOT_URL = URL(self._API_ROOT_URL).with_port(self._PORT)
+        if self._attrs['PORT']:
+            self._attrs['API_ROOT_URL'] = URL(self._attrs['API_ROOT_URL']).with_port(self._attrs['PORT'])
             
         return self
     
     @property
     def port(self):
-        return self._PORT
+        return self._attrs['PORT']
     
     @property
     def timeout_seconds(self):
-        return self._TIMEOUT_SECONDS
+        return self._attrs['TIMEOUT_SECONDS']
     
     @property
     def base_url(self):
-        return self._BASE_URL
+        return self._attrs['BASE_URL']
     
     @property
     def api_path(self):
-        return self._API_PATH
+        return self._attrs['API_PATH']
     
     @property
     def api_root_url(self):
-        return self._API_ROOT_URL
+        return self._attrs['API_ROOT_URL']
     
     
 class AppConfig(BaseConfig):
