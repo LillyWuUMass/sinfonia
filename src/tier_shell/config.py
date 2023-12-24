@@ -12,15 +12,28 @@ from yarl import URL
 
 @dataclass(init=True)
 class _AttributeData:
+    """Contains data relating to an attribute."""
     default_value: Any
     typecast: Callable[[Any], Any] = str
 
 
 def _private_attr_name(name: str) -> str:
+    """Convert attribute name to a private attribute name.
+    
+    A private attribute name is simply the attribute name pprepended
+    with an underscore ('_'). E.g. 'a' -> '_a'.
+    
+    Args:
+        name -- str
+    
+    Returns:
+        str: Private attribute name
+    """
     return '_' + name
 
 
 class BaseConfig(ABC):
+    """Base configuration class."""
     _ENV_VARS: Dict[str, _AttributeData] = {}
     
     def __init__(self):
@@ -29,7 +42,16 @@ class BaseConfig(ABC):
             setattr(self, _private_attr_name(attr), data.default_value)
     
     @abstractmethod
-    def from_env(self, path: str | URL):
+    def from_env(self, path: Optional[str | URL] = None):
+        """Load environment variables from current environment.
+        
+        Args:
+            path -- Optional[str | URL]: 
+                Path to environment file (.env) [Defaults to './.env']
+            
+        Returns:
+            Instance of the class.
+        """
         if path is None:
             load_dotenv()
         else:
@@ -69,7 +91,7 @@ class ApiConfig(BaseConfig):
     def __init__(self):
         super().__init__()
         
-    def from_env(self, path: str | URL) -> ApiConfig:
+    def from_env(self, path: Optional[str | URL] = None) -> ApiConfig:
         super().from_env(path)
     
         # Construct API root URL
@@ -107,14 +129,23 @@ class ApiConfig(BaseConfig):
     
     
 class AppConfig(BaseConfig):
+    """Applicaton configuration class.
+    
+    This class contains all known configuration classes. Each attribute in this 
+    class represents a specific configuration usecase. It is recommended that
+    this class be used when managing application-wide environment variables.
+    """
     def __init__(self):
-        self._api = ApiConfig()
+        self._configs: Dict[str, BaseConfig] = {}
+        self._configs['api'] = ApiConfig()
         
-    def from_env(self, path: str | URL) -> AppConfig:
-        self._api = self._api.from_env(path)
+    def from_env(self, path: Optional[str | URL] = None) -> AppConfig:
+        for cfg in self._configs.keys():
+            self._configs[cfg] = self._configs[cfg].from_env(path)
+            
         return self
         
     @property
     def api(self):
-        return self._api
+        return self._configs['api']
     
