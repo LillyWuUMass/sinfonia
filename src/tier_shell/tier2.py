@@ -14,7 +14,7 @@ from src.tier_shell.logger import get_api_logger
 
 # Configure runtime environment
 log = get_api_logger('tier2')
-conf = ApiConfig('tier2.env')
+conf = ApiConfig().from_env('tier2.env')
 cli = typer.Typer()
 
 
@@ -25,10 +25,10 @@ def deploy_recipe(
 ):
     """Deploy recipe to Tier 2 cloudlet.
     
-    NOTE:
-    See 'RECIPES' folder for recipe UUIDS and recipe definitions.
+    Note:
+        See 'RECIPES' folder for recipe UUIDS and recipe definitions.
     """
-    u = conf.api_root_url / 'deploy' / 'uuid' / 'app_id'
+    u = conf.api_root_url / 'deploy' / uuid / app_id
     log.info(f'Sending POST request to {u}')
     
     try:
@@ -58,8 +58,8 @@ def get_candidate_cloudlets_for_recipe(
 ):
     """Get candidate cloudlets for recipe.
     
-    NOTE:
-    See 'RECIPES' folder for recipe UUIDS and recipe definitions.
+    Note:
+        See 'RECIPES' folder for recipe UUIDS and recipe definitions.
     """
     u = conf.api_root_url / 'deploy' / 'uuid' / 'app_id'
     log.info(f'Sending GET request to {u}')

@@ -14,7 +14,7 @@ from src.tier_shell.logger import get_api_logger
 
 # Configure runtime environment
 log = get_api_logger('tier1')
-conf = ApiConfig('tier1.env')
+conf = ApiConfig().from_env('tier1.env')
 cli = typer.Typer()
 
 
@@ -72,7 +72,7 @@ def get_deployment_recipe(uuid: str = uuid_option):
     elif sc == HTTPStatus.NOT_FOUND:
         log.info(f'{fmtsc}: Deployment recipe not found')
     else:
-        print(f'{fmtsc}')
+        log.info(f'{fmtsc}')
         
     log.info(strfmt.json(resp.json()))
 
@@ -87,7 +87,7 @@ def deploy_recipe(
     log.info(f'Sending POST request to {u}')
     
     try:
-        resp = requests.post(u, timeout=conf.api_root_url)
+        resp = requests.post(u, timeout=conf.timeout_seconds)
     except TimeoutError:
         log.critical('api timeout exceeded')
         exit(0)

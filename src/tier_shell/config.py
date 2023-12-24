@@ -42,11 +42,11 @@ class BaseConfig(ABC):
             setattr(self, _private_attr_name(attr), data.default_value)
     
     @abstractmethod
-    def from_env(self, path: Optional[str | URL] = None):
+    def from_env(self, path: Optional[str | Path] = None):
         """Load environment variables from current environment.
         
         Args:
-            path -- Optional[str | URL]: 
+            path -- Optional[str | Path]: 
                 Path to environment file (.env) [Defaults to './.env']
             
         Returns:
@@ -55,6 +55,7 @@ class BaseConfig(ABC):
         if path is None:
             load_dotenv()
         else:
+            path = os.path.abspath(path)
             load_dotenv(path)
             
         for attr, data in self._ENV_VARS.items():
@@ -75,7 +76,7 @@ class ApiConfig(BaseConfig):
             typecast=int
             ),
         'TIMEOUT_SECONDS': _AttributeData(
-            default_value=float('inf'), 
+            default_value=None, 
             typecast=float
             ),
         'BASE_URL': _AttributeData(
@@ -91,19 +92,19 @@ class ApiConfig(BaseConfig):
     def __init__(self):
         super().__init__()
         
-    def from_env(self, path: Optional[str | URL] = None) -> ApiConfig:
+    def from_env(self, path: Optional[str | Path] = None) -> ApiConfig:
         super().from_env(path)
     
         # Construct API root URL
-        self._API_ROOT_URL = self._BASE_URL / self._API_PATH
+        self._API_ROOT_URL = URL(self._BASE_URL / self._API_PATH)
+
+        # If no scheme was provided then set default to http
+        if not self._API_ROOT_URL.scheme:
+            self._API_ROOT_URL = URL('http://' + str(self._API_ROOT_URL))
 
         # If port was provided then append to URL
         if self._PORT != -1:
-            self._API_ROOT_URL = self._API_ROOT_URL.with_port(self._PORT)
-        
-        # If no scheme was provided then set default to http
-        if not self._API_ROOT_URL.scheme:
-            self._API_ROOT_URL = self._API_ROOT_URL.with_scheme("http")
+            self._API_ROOT_URL = URL(self._API_ROOT_URL).with_port(self._PORT)
             
         return self
     
@@ -139,7 +140,7 @@ class AppConfig(BaseConfig):
         self._configs: Dict[str, BaseConfig] = {}
         self._configs['api'] = ApiConfig()
         
-    def from_env(self, path: Optional[str | URL] = None) -> AppConfig:
+    def from_env(self, path: Optional[str | Path] = None) -> AppConfig:
         for cfg in self._configs.keys():
             self._configs[cfg] = self._configs[cfg].from_env(path)
             
