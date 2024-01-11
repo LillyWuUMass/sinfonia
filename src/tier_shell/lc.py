@@ -11,9 +11,12 @@ This module contains life cycle scripts to streamline the implementation of new
 commands. As of writing, we assume JSON to be the data transfer medium for all
 client-server communications.
 """
+from enum import Enum
 from dataclasses import dataclass
 
 import logging
+
+from yarl import URL
 
 from src.tier_shell.config import AppConfig
 
@@ -24,11 +27,30 @@ class App:
     log: logging.Logger
     
     
-def request():      
+class HTTPMethod(Enum):
+    GET = 'GET'
+    POST = 'POST'
+    PUT = 'PUT'
+    DELETE = 'DELETE'
+    PATCH = 'PATCH'
+    HEAD = 'HEAD'
+    OPTIONS = 'OPTIONS'
+    
+    
+def request(
+        url: str | URL,
+        app: App,
+        method: HTTPMethod | str,
+        data: ,
+):
     raise NotImplementedError()
     
     
-def get():
+def get(
+    url: str | URL,
+    app: App,
+):
+    
     raise NotImplementedError()
     
     

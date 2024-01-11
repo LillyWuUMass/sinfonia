@@ -29,7 +29,7 @@ class ApiLoggingFormatter():
 def get_api_logger(
     name: str,
     level: Optional[str] = logging.INFO, 
-    format: Optional[str] = _DEFAULT_FORMAT,
+    fmt: Optional[str] = _DEFAULT_FORMAT,
 ) -> logging.Logger:
     """Get instance of API logging object"""
     # Create logging object with given name
@@ -38,7 +38,7 @@ def get_api_logger(
     # Add print format for stdout
     ch = logging.StreamHandler()
     ch.setLevel(level)
-    ch.setFormatter(ApiLoggingFormatter(format))
+    ch.setFormatter(ApiLoggingFormatter(fmt))
     
     # Set format and set logging level
     logger.addHandler(ch)
