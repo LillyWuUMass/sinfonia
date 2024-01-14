@@ -24,5 +24,3 @@ logs
 
 ### ENV
 
-*.env
-api_scripts/*.env

@@ -14,18 +14,18 @@ from src.tier_shell.logger import get_api_logger
 
 # Configure runtime environment
 log = get_api_logger('tier1')
-conf = ApiConfig().from_env('tier1.env')
+conf = ApiConfig().from_env('./src/tier_shell/tier1.api.env')
 cli = typer.Typer()
 
 
 @cli.command()
 def get_known_cloudlets():
     """Return manifest of known Tier 2 cloudlets."""    
-    u = conf.api_root_url / 'cloudlets'
+    u = conf.API_ROOT_URL / 'cloudlets'
     log.info(f'Sending GET request to {u}')
     
     try:
-        resp = requests.get(u, timeout=conf.timeout_seconds)
+        resp = requests.get(u, timeout=conf.TIMEOUT_SECONDS)
     except TimeoutError:
         log.critical('api timeout exceeded')
         exit(0)
@@ -52,11 +52,11 @@ def update_cloudlet_resource_metrics():
 @cli.command()
 def get_deployment_recipe(uuid: str = uuid_option):
     """Retrieve information on deployment recipes."""
-    u = conf.api_root_url / 'recipes' / uuid
+    u = conf.API_ROOT_URL / 'recipes' / uuid
     log.info(f'Sending GET request to {u}')
     
     try:
-        resp = requests.get(u, timeout=conf.timeout_seconds)
+        resp = requests.get(u, timeout=conf.TIMEOUT_SECONDS)
     except TimeoutError:
         log.critical('api timeout exceeded')
         exit(0)
@@ -83,11 +83,11 @@ def deploy_recipe(
         app_id: str = app_id_option,
 ):
     """Deploy recipe to Tier 1 cloudlet."""
-    u = conf.api_root_url / 'deploy' / uuid / app_id
+    u = conf.API_ROOT_URL / 'deploy' / uuid / app_id
     log.info(f'Sending POST request to {u}')
     
     try:
-        resp = requests.post(u, timeout=conf.timeout_seconds)
+        resp = requests.post(u, timeout=conf.TIMEOUT_SECONDS)
     except TimeoutError:
         log.critical('api timeout exceeded')
         exit(0)
