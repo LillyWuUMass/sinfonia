@@ -14,7 +14,7 @@ from src.tier_shell.logger import get_api_logger
 
 # Configure runtime environment
 log = get_api_logger('tier1')
-conf = ApiConfig().from_env('./src/tier_shell/tier1.api.env')
+conf = ApiConfig(_env_file='./src/tier_shell/tier1.api.env')
 cli = typer.Typer()
 
 
@@ -40,7 +40,10 @@ def get_known_cloudlets():
         log.info(f'{fmtsc}: Unable to get list of known cloudlets')
         exit(0)
         
-    log.info(strfmt.json(resp.json()))
+    try:
+        log.info(strfmt.json(resp.json()))
+    except:
+        pass
     
     
 @cli.command()
@@ -74,7 +77,10 @@ def get_deployment_recipe(uuid: str = uuid_option):
     else:
         log.info(f'{fmtsc}')
         
-    log.info(strfmt.json(resp.json()))
+    try:
+        log.info(strfmt.json(resp.json()))
+    except:
+        pass
 
 
 @cli.command()
@@ -103,7 +109,10 @@ def deploy_recipe(
     else:
         log.info(f'{fmtsc}')
         
-    log.info(strfmt.json(resp.json()))
+    try:
+        log.info(strfmt.json(resp.json()))
+    except:
+        pass
 
 
 if __name__ == "__main__":
