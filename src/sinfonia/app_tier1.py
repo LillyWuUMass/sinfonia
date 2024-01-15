@@ -125,7 +125,7 @@ def wsgi_app_factory(**args) -> connexion.FlaskApp:
     # handle running behind reverse proxy (should this be made configurable?)
     flask_app.wsgi_app = ProxyFix(flask_app.wsgi_app)
 
-    # add Tier1 APIs
+    # Add Tier1 APIs
     app.add_api(
         load_spec(app.specification_dir / "sinfonia_tier1.yaml"),
         resolver=MethodViewResolver("sinfonia.api_tier1"),
