@@ -29,7 +29,7 @@ scheduler = APScheduler()
 def expire_cloudlets():
     cloudlets = scheduler.app.config["cloudlets"]
 
-    expiration = pendulum.now().subtract(minutes=5)
+    expiration = pendulum.now().subtract(minutes=scheduler.app.config["CLOUDLET_EXPIRY_MINUTES"])
 
     for cloudlet in list(cloudlets.values()):
         if cloudlet.last_update is not None and cloudlet.last_update < expiration:

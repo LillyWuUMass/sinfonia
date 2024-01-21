@@ -55,7 +55,7 @@ def deploy_recipe(
   
   
 @cli.command()
-def get_candidate_cloudlets_for_recipe(
+def get_candidate_cloudlets(
         uuid: str = uuid_option, 
         app_id: str = app_id_option,
 ):
