@@ -74,5 +74,5 @@
             ingress:
               className: traefik
             image:
-              repository: sivasaianem/sinfonia
-              tag: add_carbon25
+              repository: k2nt/sinfonia-tier2
+              tag: 2

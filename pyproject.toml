@@ -43,7 +43,7 @@ plumbum = "^1.7.2"
 randomname = "^0.1.5"
 wireguard-tools = "^0.4.0"
 zeroconf = "^0.38.7"
-py-rapl = { git = "https://github.com/wkatsak/py-rapl", branch = "master" }
+py-rapl = {git = "https://github.com/wkatsak/py-rapl.git"}
 pydantic = {extras = ["all"], version = "^2.5.3"}
 pydantic-settings = {version = "^2.1.0", python = "3.10"}
 

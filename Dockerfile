@@ -39,7 +39,8 @@ RUN pip install "poetry==$POETRY_VERSION" \
  && python -m venv /venv
 
 COPY pyproject.toml poetry.lock ./
-RUN poetry export -f requirements.txt | /venv/bin/pip install --no-deps -r /dev/stdin
+RUN /venv/bin/pip install --upgrade pip \
+ && poetry export -f requirements.txt | /venv/bin/pip install --no-deps -r /dev/stdin
 
 COPY src ./src
 COPY tests ./tests

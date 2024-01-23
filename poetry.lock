@@ -1293,9 +1293,7 @@ develop = false
 
 [package.source]
 type = "git"
-url = "https://github.com/wkatsak/py-rapl"
-reference = "master"
-resolved_reference = "194fabad1144cad7edb4fdb1c8e17edb57deb8b1"
+url = "https://github.com/wkatsak/py-rapl.git"
 
 [[package]]
 name = "pydantic"
@@ -2528,4 +2526,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.7"
-content-hash = "28fd10efcf1becb1c5f747af989e34fdc8ea99823e1822f0a766d376708b3586"
+content-hash = "87b309fc58e65569aed954874b155839a8bb0eca4bbc806f5a5351690f68907b"
