@@ -39,8 +39,7 @@ RUN pip install "poetry==$POETRY_VERSION" \
  && python -m venv /venv
 
 COPY pyproject.toml poetry.lock ./
-RUN /venv/bin/pip install --upgrade pip \
- && poetry export -f requirements.txt | /venv/bin/pip install --no-deps -r /dev/stdin
+RUN poetry export -f requirements.txt | /venv/bin/pip install --no-deps -r /dev/stdin
 
 COPY src ./src
 COPY tests ./tests
@@ -49,9 +48,14 @@ RUN poetry build && /venv/bin/pip install dist/*.whl
 
 FROM base as final
 
+# Environment dependencies
 COPY --from=builder /usr/local/bin /usr/local/bin
 COPY --from=builder /venv /venv
 
+# Carbon data
+COPY --from=builder /app/src/sinfonia/data ./src/sinfonia/data
+
+# Application recipes
 COPY RECIPES /RECIPES
 VOLUME ["/RECIPES"]
 ENV SINFONIA_RECIPES=/RECIPES

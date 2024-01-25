@@ -56,7 +56,7 @@ class Tier2DefaultConfig:
     RECIPES: str | Path | URL = "RECIPES"
     KUBECONFIG: str = "/etc/rancher/k3s/k3s.yaml"
     KUBECONTEXT: str = ""
-    PROMETHEUS: str = "http://10.43.217.221:9090" #"http://kube-prometheus-stack-prometheus.monitoring:9090"
+    PROMETHEUS: str = "http://10.43.150.199:9090" #"http://kube-prometheus-stack-prometheus.monitoring:9090"
     TIER1_URLS: list[str] = ["http://192.168.245.31:5000"]
     TIER2_URL: str | None = "http://obelix.cs.umass.edu:5000"
     TIER2_GEO_LOCATION: GeoLocation = GeoLocation(latitude=42.3672, longitude=-72.5185)

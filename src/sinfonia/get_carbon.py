@@ -9,15 +9,19 @@ import requests
 from requests.auth import HTTPBasicAuth
 from requests.exceptions import RequestException
 from attr import define, field
+
 import rapl
 import time
 import csv
+from pathlib import Path
+
 
 # Configure logging
 logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Constants: configure fine and supported providers
+DATA_PATH = Path("src/sinfonia/data")  # Carbon replay data
 CONFIG_PATH = "src/sinfonia/config/carbon_providers.json" # Credentials of carbon providers
 CARBON_PROVIDERS = ["WattTime", "ElectricityMap"] # Only these two providers are supported
 
@@ -217,7 +221,7 @@ class CarbonMetrics:
             logger.warning(f"Carbon metrics not available for the zone: {self.zone}")
             return None
             
-        with open(f'src/sinfonia/{self.zone}.csv', newline='') as csvfile:
+        with open(DATA_PATH / f'{self.zone}.csv', newline='') as csvfile:
             reader = csv.DictReader(csvfile)
 
             for row in reader:

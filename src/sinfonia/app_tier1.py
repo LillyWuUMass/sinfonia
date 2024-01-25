@@ -47,7 +47,7 @@ class Tier1DefaultConfig:
     # We are setting match carbon as the single filter
     # MATCHERS declaration can be found in poetry's pyproject.toml
     # MATCHERS: list[str] = ["network", "location", "random"]
-    MATCHERS: list[str] = ["network", "location" "carbon-intensity"]
+    MATCHERS: list[str] = ["network", "location", "carbon-intensity"]
     RECIPES: str | Path | URL = "RECIPES"
 
     # These are initialized by the wsgi app factory from the config
@@ -58,7 +58,7 @@ class Tier1DefaultConfig:
     # deployment_repository: DeploymentRepository | None = None     # RECIPES
     
     # How long before removing cloudlet due to inactivity
-    CLOUDLET_EXPIRY_MINUTES = 10
+    CLOUDLET_EXPIRY_MINUTES = 60
 
 
 def load_cloudlets_conf(cloudlets_conf: str | Path | None) -> dict[UUID, Cloudlet]:
