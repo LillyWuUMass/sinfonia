@@ -8,8 +8,6 @@
 # SPDX-License-Identifier: MIT
 #
 
-import logging
-
 import pendulum
 import requests
 from flask_apscheduler import APScheduler
@@ -20,9 +18,10 @@ from datetime import datetime, timedelta
 
 from .get_carbon import CarbonMetrics
 
-logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.INFO)
-logger = logging.getLogger(__name__)
+from src.domain.logger import get_default_logger
 
+
+logger = get_default_logger()
 scheduler = APScheduler()
 
 
@@ -33,7 +32,7 @@ def expire_cloudlets():
 
     for cloudlet in list(cloudlets.values()):
         if cloudlet.last_update is not None and cloudlet.last_update < expiration:
-            logging.info(f"Removing stale {cloudlet}")
+            logger.info(f"Removing stale {cloudlet}")
             cloudlets.pop(cloudlet.uuid, None)
 
 
@@ -87,7 +86,7 @@ def report_to_tier1_endpoints():
     resources["energy_consumption"] = energy_consumption
     resources["carbon_emission"] = carbon_metrics["carbon_intensity"]*energy_consumption/3600 # gCO2
 
-    logging.info("Got %s", str(resources))
+    logger.info("Got %s", str(resources))
 
     for tier1_url in config["TIER1_URLS"]:
         tier1_endpoint = URL(tier1_url) / "api/v1/cloudlets/"
@@ -101,7 +100,7 @@ def report_to_tier1_endpoints():
                 },
             )
         except RequestException:
-            logging.warn(f"Failed to report to {tier1_endpoint}")
+            logger.warn(f"Failed to report to {tier1_endpoint}")
 
 
 def start_reporting_job():
@@ -109,7 +108,7 @@ def start_reporting_job():
     if not config["TIER1_URLS"] or config["TIER2_URL"] is None:
         return
 
-    logging.info("Reporting cloudlet status to Tier1 endpoints")
+    logger.info("Reporting cloudlet status to Tier1 endpoints")
     scheduler.add_job(
         func=report_to_tier1_endpoints,
         trigger="interval",

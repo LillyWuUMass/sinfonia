@@ -12,7 +12,6 @@ from __future__ import annotations
 
 import ipaddress
 import json
-import logging
 import math
 import random
 from ipaddress import IPv4Address
@@ -36,6 +35,12 @@ from .deployment_recipe import DeploymentRecipe
 from .get_carbon import CarbonMetrics
 from .geo_location import GeoLocation
 from .cloudlets import load
+
+from src.domain.logger import get_default_logger
+
+
+logger = get_default_logger()
+
 
 RESOURCE_QUERIES = {
     "cpu_ratio": 'sum(rate(node_cpu_seconds_total{mode!="idle"}[1m])) / sum(node:node_num_cpu:sum)',  # noqa
@@ -159,7 +164,7 @@ class Cluster:
         try:
             recipe = DeploymentRecipe.from_uuid(uuid)
         except ValueError:
-            logging.exception(f"Failed to retrieve recipe for {uuid}")
+            logger.exception(f"Failed to retrieve recipe for {uuid}")
             raise ProblemException(
                 404, "Not Found", f"Failed to find recipe for {uuid}"
             )
@@ -206,7 +211,7 @@ class Cluster:
                     resources[resource] = metric
 
             except (RequestException, AssertionError, ValueError):
-                logging.exception(f"Failed to retrieve {resource}")
+                logger.exception(f"Failed to retrieve {resource}")
                 pass
 
         return resources
@@ -234,7 +239,7 @@ class Cluster:
                 for peer in result["data"]["result"]
             ]
         except (RequestException, AssertionError, ValueError):
-            logging.exception("Failed to retrieve active peers")
+            logger.exception("Failed to retrieve active peers")
             return []
 
     def expire_inactive_deployments(self) -> None:
@@ -246,5 +251,5 @@ class Cluster:
                 deployment.created < cutoff
                 and deployment.client_public_key not in active_peers
             ):
-                logging.info(f"Expiring {deployment.name}")
+                logger.info(f"Expiring {deployment.name}")
                 deployment.expire()

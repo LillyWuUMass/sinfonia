@@ -3,7 +3,6 @@ Query real-time carbon metrics of a given coordinator (longitue and latitue).
 '''
 
 import json
-import logging
 from typing import Dict
 import requests
 from requests.auth import HTTPBasicAuth
@@ -15,17 +14,20 @@ import time
 import csv
 from pathlib import Path
 
+from src.domain.logger import get_default_logger
 
-# Configure logging
-logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.INFO)
-logger = logging.getLogger(__name__)
 
-# Constants: configure fine and supported providers
-DATA_PATH = Path("src/sinfonia/data")  # Carbon replay data
-CONFIG_PATH = "src/sinfonia/config/carbon_providers.json" # Credentials of carbon providers
-CARBON_PROVIDERS = ["WattTime", "ElectricityMap"] # Only these two providers are supported
+logger = get_default_logger()
 
-# Define the CarbonMetrics class using attr
+
+# Carbon replay data
+DATA_PATH = Path("src/sinfonia/data")
+# Credentials of carbon providers
+CONFIG_PATH = "src/sinfonia/config/carbon_providers.json"
+# Only these two providers are supported
+CARBON_PROVIDERS = ["WattTime", "ElectricityMap"]
+
+
 @define
 class CarbonMetrics:
     """
@@ -86,7 +88,7 @@ class CarbonMetrics:
             assert response.status_code == 200
             return response.json()
         except (RequestException, AssertionError, ValueError):
-            logging.exception(f"Failed to query URL: {url}")
+            logger.exception(f"Failed to query URL: {url}")
             return None
 
     @staticmethod
@@ -104,7 +106,7 @@ class CarbonMetrics:
             result = response.json()
             return result.get("token", None)
         except (RequestException, AssertionError, ValueError):
-            logging.exception("Failed to get token from WattTime")
+            logger.exception("Failed to get token from WattTime")
             return None
 
     def from_watttime(self, metric_types:list, credential:Dict, urls:Dict) -> Dict[str, float]:
@@ -118,7 +120,7 @@ class CarbonMetrics:
         token = self.get_watttime_token(login_url, credential)
 
         if token is None:
-            logging.exception("WattTime API token is required")
+            logger.exception("WattTime API token is required")
             return None
 
         headers = {"Authorization": f"Bearer {token}"}

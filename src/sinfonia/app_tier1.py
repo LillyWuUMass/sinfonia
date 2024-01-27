@@ -8,7 +8,6 @@
 
 from __future__ import annotations
 
-import logging
 import sys
 from pathlib import Path
 from uuid import UUID
@@ -37,6 +36,11 @@ from .deployment_repository import DeploymentRepository
 from .jobs import scheduler, start_expire_cloudlets_job
 from .matchers import Tier1MatchFunction, get_match_function_plugins
 from .openapi import load_spec
+
+from src.domain.logger import get_default_logger
+
+
+logger = get_default_logger()
 
 
 class Tier1DefaultConfig:
@@ -88,7 +92,7 @@ def load_match_functions(matchers: list[str]) -> list[Tier1MatchFunction]:
     try:
         tier1_matchers = get_match_function_plugins()
         match_functions = [tier1_matchers[matcher].load() for matcher in matchers]
-        logging.info(f"Loaded match functions {matchers}")
+        logger.info(f"Loaded match functions {matchers}")
     except KeyError as e:
         sys.exit(f"Error: Match function '{e.args[0]}' not found")
     return match_functions

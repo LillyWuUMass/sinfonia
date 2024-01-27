@@ -9,7 +9,6 @@
 #
 
 import os
-import logging
 from itertools import chain, filterfalse, islice, zip_longest
 
 from connexion import NoContent
@@ -24,15 +23,12 @@ from .cloudlets import Cloudlet
 from .deployment_recipe import DeploymentRecipe
 from .matchers import tier1_best_match
 
-logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.INFO)
-logger = logging.getLogger(__name__)
-
 
 # don't try to deploy to more than MAX_RESULTS cloudlets at a time
 MAX_RESULTS = 3
-
 # Whenever a cloudlet reports to tier1, the carbon metrics are appended to this csv
 CLOUDLET_CARBON_HISTORY_CSV = "logs/cloudlets_carbon_history.csv"
+
 
 class CloudletsView(MethodView):
     def post(self):

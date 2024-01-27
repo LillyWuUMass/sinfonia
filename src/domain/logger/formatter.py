@@ -4,7 +4,7 @@ from src.domain.logger import strfmt
 
 
 _DEFAULT_FORMAT = "%(asctime)s  %(levelname)-8s  %(message)s"
-_DEFAULT_DATE_FORMAT = "%Y-%m-%d %H:%M:%S %Z"
+_DEFAULT_DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
 
 
 def _color_by_log_level(s: str, level: int) -> str:

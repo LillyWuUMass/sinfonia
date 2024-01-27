@@ -14,7 +14,6 @@ by defining 'sinfonia_tier1_matchers' setuptools entry points.
 from __future__ import annotations
 
 import csv
-import logging
 import os
 import random
 import time
@@ -27,9 +26,11 @@ from .client_info import ClientInfo
 from .cloudlets import Cloudlet
 from .deployment_recipe import DeploymentRecipe
 
+from src.domain.logger import get_default_logger
 
-logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.INFO)
-logger = logging.getLogger(__name__)
+
+logger = get_default_logger()
+
 
 CURRENT_PATH = os.path.abspath(__file__)
 PROJECT_PATH = os.path.dirname(CURRENT_PATH)

@@ -10,7 +10,6 @@
 
 from __future__ import annotations
 
-import logging
 import socket
 from concurrent.futures import Future
 from ipaddress import IPv4Network, IPv6Network, ip_interface
@@ -28,6 +27,12 @@ from yarl import URL
 
 from .client_info import ClientInfo
 from .geo_location import GeoLocation, geolocate
+
+from src.domain.logger import get_default_logger
+
+
+logger = get_default_logger()
+
 
 CLOUDLET_SCHEMA = {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -106,10 +111,6 @@ CLOUDLET_SCHEMA = {
 }
 
 
-logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.INFO)
-logger = logging.getLogger(__name__)
-
-
 def getaddrinfo(host, port):
     # return list of global ip addresses for the service at host/port.
     addresses = []
@@ -160,7 +161,7 @@ class Cloudlet:
 
         api_version = int(endpoint.parent.name[1:])
         if api_version > 1:
-            logging.info(f"Downgrading {endpoint} api version to v1")
+            logger.info(f"Downgrading {endpoint} api version to v1")
             endpoint = endpoint.parent.with_name("v1") / "deploy"
             api_version = 1
 

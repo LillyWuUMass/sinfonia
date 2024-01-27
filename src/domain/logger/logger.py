@@ -32,7 +32,7 @@ _DEFAULT_LOGGING_CONFIG = {
         # }
     },
     'loggers': {
-        'default': {
+        'main': {
             'handlers': ['console'],
             'level': 'INFO',
             'propagate': False
@@ -51,9 +51,12 @@ _LOGGERS: List[Logger] = list()
 
 
 def get_default_logger() -> Logger:
-    return logging.getLogger('default')
+    return logging.getLogger('main')
 
 
 def new_logger_from_yaml(name: str, path: Path) -> Logger:
     """Register logger based given yaml configuration."""
+    if name == 'main':
+        raise ValueError("the name 'main' is reserved for the default logger.")
+    
     raise NotImplementedError()
