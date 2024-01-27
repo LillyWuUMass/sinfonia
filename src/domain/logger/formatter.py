@@ -1,9 +1,9 @@
 import logging
 
-from src.domain.logger import strfmt
+import lib.str.format as strfmt
 
 
-_DEFAULT_FORMAT = "%(asctime)s  %(levelname)-8s  %(message)s"
+_DEFAULT_FORMAT = "%(asctime)s  %(levelname)s  %(message)s"
 _DEFAULT_DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
 
 
@@ -23,12 +23,12 @@ def _color_by_log_level(s: str, level: int) -> str:
             return strfmt.white(s)
 
 
-class DefaultFormatter(logging.Formatter):    
+class DefaultFormatter(logging.Formatter):
     """Custom formatter class for API logging."""
     def __init__(self, 
             fmt: str = _DEFAULT_FORMAT,
             datefmt: str = _DEFAULT_DATE_FORMAT,
-    ) -> None:
+    ):
         super().__init__(fmt=fmt, datefmt=datefmt)
 
     def format(self, record: logging.LogRecord):                

@@ -3,7 +3,7 @@ from http import HTTPStatus
 
 import typer
 
-from src.tier_shell import strfmt
+import src.lib.http.format as httpfmt
 from src.tier_shell.common import (
     app_id_option, 
     uuid_option
@@ -20,7 +20,7 @@ cli = typer.Typer()
 
 @cli.command()
 def get_known_cloudlets():
-    """Return manifest of known Tier 2 cloudlets."""    
+    """Return manifest of known Tier 2 cloudlets.""" 
     u = conf.API_ROOT_URL / 'cloudlets'
     logger.info(f'Sending GET request to {u}')
     
@@ -33,14 +33,15 @@ def get_known_cloudlets():
         logger.critical(f'unable to send request: {str(e)}')
         exit(0)
         
-    sc, fmtsc = resp.status_code, strfmt.http_status_code(resp.status_code)
+    sc, fmtsc = resp.status_code, httpfmt.http_repr(resp.status_code)
     if sc == HTTPStatus.OK:
         logger.info(f'{fmtsc}: Returning list of known cloudlets')
     else:
         logger.info(f'{fmtsc}: Unable to get list of known cloudlets')
         exit(0)
+        
     try:
-        logger.info(strfmt.json(resp.json()))
+        logger.info(httpfmt.http_repr(resp.json()))
     except:
         pass
     
@@ -66,7 +67,7 @@ def get_deployment_recipe(uuid: str = uuid_option):
         logger.critical(f'unable to send request: {str(e)}')
         exit(0)
         
-    sc, fmtsc = resp.status_code, strfmt.http_status_code(resp.status_code)
+    sc, fmtsc = resp.status_code, httpfmt.http_repr(resp.status_code)
     if sc == HTTPStatus.OK:
         logger.info(f'{fmtsc}: Returning list of known cloudlets')
     elif sc == HTTPStatus.FORBIDDEN:
@@ -77,7 +78,7 @@ def get_deployment_recipe(uuid: str = uuid_option):
         logger.info(f'{fmtsc}')
         
     try:
-        logger.info(strfmt.json(resp.json()))
+        logger.info(httpfmt.http_repr(resp.json()))
     except:
         pass
 
@@ -100,7 +101,7 @@ def deploy_recipe(
         logger.critical(f'unable to send request: {str(e)}')
         exit(0)
 
-    sc, fmtsc = resp.status_code, strfmt.http_status_code(resp.status_code)
+    sc, fmtsc = resp.status_code, httpfmt.http_repr(resp.status_code)
     if sc == HTTPStatus.OK:
         logger.info(f'{fmtsc}: Successfully deployed to cloudlet')
     elif sc == HTTPStatus.NOT_FOUND:
@@ -109,7 +110,7 @@ def deploy_recipe(
         logger.info(f'{fmtsc}')
         
     try:
-        logger.info(strfmt.json(resp.json()))
+        logger.info(httpfmt.http_repr(resp.json()))
     except:
         pass
 
