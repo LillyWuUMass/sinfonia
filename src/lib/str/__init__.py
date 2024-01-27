@@ -1,0 +1,1 @@
+"""More tring manipulation operations compared to standard library."""
