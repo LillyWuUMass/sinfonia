@@ -65,13 +65,7 @@ def bold(*tp) -> str:
 
 
 def http_status_code(code: int) -> str:
-    s = bold(f"{str(code)} {HTTPStatus(code).phrase}")
-    if code >= 200 and code <= 299:
-        return green(s)
-    elif code >= 500 and code <= 599:
-        return red(s)
-    
-    return yellow(s)
+    return f"{str(code)} {HTTPStatus(code).phrase.upper()}"
 
 
 def json(j: str) -> str:
