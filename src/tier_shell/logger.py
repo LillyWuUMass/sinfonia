@@ -4,7 +4,7 @@ import logging
 from src.tier_shell import strfmt
 
 
-_DEFAULT_FORMAT = "%(levelname)-8s  %(message)s"
+_DEFAULT_FORMAT = "%(name)-8s  %(levelname)-8s  %(message)s"
 
 
 class ApiLoggingFormatter():    
@@ -27,11 +27,11 @@ class ApiLoggingFormatter():
 
 
 def get_api_logger(
-    name: str,
-    level: Optional[str] = logging.INFO, 
-    fmt: Optional[str] = _DEFAULT_FORMAT,
+        name: str,
+        level: Optional[str] = logging.INFO, 
+        fmt: Optional[str] = _DEFAULT_FORMAT,
 ) -> logging.Logger:
-    """Get instance of API logging object"""
+    """Get instance of API logging object."""
     # Create logging object with given name
     logger = logging.getLogger(name)
 

@@ -86,7 +86,7 @@ def tier2_app_factory(**args) -> connexion.FlaskApp:
         flask_app.config["RECIPES"]
     )
 
-    # connect to local kubernetes cluster
+    # Connect to local kubernetes cluster
     cluster = Cluster.connect(
         flask_app.config.get("KUBECONFIG"), flask_app.config.get("KUBECONTEXT")
     )
@@ -94,17 +94,19 @@ def tier2_app_factory(**args) -> connexion.FlaskApp:
         URL(flask_app.config["PROMETHEUS"]) / "api" / "v1" / "query"
     )
     flask_app.config["K8S_CLUSTER"] = cluster
+    
+    # Print runtime environment
 
-    # start background jobs to expire deployments and report to Tier1
+    # Start background jobs to expire deployments and report to Tier1
     scheduler.init_app(flask_app)
     scheduler.start()
     start_expire_deployments_job()
     start_reporting_job()
 
-    # handle running behind reverse proxy (should this be made configurable?)
+    # Handle running behind reverse proxy (should this be made configurable?)
     flask_app.wsgi_app = ProxyFix(flask_app.wsgi_app)
 
-    # add Tier1 APIs
+    # Add Tier 2 APIs
     app.add_api(
         load_spec(app.specification_dir / "sinfonia_tier2.yaml"),
         resolver=MethodViewResolver("sinfonia.api_tier2"),
