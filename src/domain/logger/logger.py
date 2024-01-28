@@ -54,7 +54,7 @@ def get_default_logger() -> Logger:
     return logging.getLogger('main')
 
 
-def new_logger_from_yaml(name: str, path: Path) -> Logger:
+def configure_logger_from_yaml(name: str, path: Path) -> Logger:
     """Register logger based given yaml configuration."""
     if name == 'main':
         raise ValueError("the name 'main' is reserved for the default logger.")
