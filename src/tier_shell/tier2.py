@@ -3,18 +3,18 @@ from http import HTTPStatus
 
 import typer
 
-from src.tier_shell import strfmt
+import src.lib.http.format as httpfmt
 from src.tier_shell.common import (
     app_id_option, 
     uuid_option
 )
-from src.tier_shell.config import ApiConfig
+from src.tier_shell.domain.app.context import TierShellContext
 from src.domain.logger import get_default_logger
 
 
 # Configure runtime environment
 logger = get_default_logger()
-conf = ApiConfig(_env_file='./src/tier_shell/tier2.api.env')
+conf = TierShellContext(_env_file='./src/tier_shell/tier2.api.env')
 cli = typer.Typer()
 
 
@@ -28,13 +28,13 @@ def deploy_recipe(
     Note:
         See 'RECIPES' folder for recipe UUIDS and recipe definitions.
     """
-    u = conf.API_ROOT_URL / 'deploy' / uuid / app_id
+    u = conf.root_url / 'deploy' / uuid / app_id
     logger.info(f'Sending POST request to {u}')
     
     try:
-        resp = requests.post(u, timeout=conf.TIMEOUT_SECONDS)
+        resp = requests.post(u, timeout=conf.timeout_seconds)
     except requests.Timeout:
-        logger.critical(f'api timeout exceeded ({conf.TIMEOUT_SECONDS} seconds)')
+        logger.critical(f'api timeout exceeded ({conf.timeout_seconds} seconds)')
         exit(0)
     except Exception as e:
         logger.critical(f'unable to send request: {str(e)}')
@@ -64,11 +64,11 @@ def get_candidate_cloudlets(
     Note:
         See 'RECIPES' folder for recipe UUIDS and recipe definitions.
     """
-    u = conf.API_ROOT_URL / 'deploy' / uuid / app_id
+    u = conf.root_url / 'deploy' / uuid / app_id
     logger.info(f'Sending GET request to {u}')
     
     try:
-        resp = requests.get(u, timeout=conf.TIMEOUT_SECONDS)
+        resp = requests.get(u, timeout=conf.timeout_seconds)
     except TimeoutError:
         logger.critical('api timeout exceeded')
         exit(0)

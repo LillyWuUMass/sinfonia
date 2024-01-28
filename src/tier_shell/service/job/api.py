@@ -1,3 +1,9 @@
+"""Manages life cycle of API jobs
+
+This module contains life cycle scripts to streamline the implementation of new
+commands. As of writing, we assume HTTP/JSON to be the data transfer medium for 
+all client-server communications.
+"""
 from typing import Optional, Dict
 
 import logging
