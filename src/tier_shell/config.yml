@@ -3,7 +3,7 @@ logging:
   disable_existing_loggers: False
   formatters:
     default:
-      "class": "src.domain.logger.formatter.DefaultFormatter"
+      "()": "src.domain.logger.formatter.DefaultFormatter"
   handlers:
     console:
       level: INFO

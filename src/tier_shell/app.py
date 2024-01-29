@@ -1,16 +1,23 @@
-import typer
+from dependency_injector.wiring import Provide, inject
+
+from src.tier_shell.domain.config import Config
 from src.tier_shell.domain.di import AppDI
-
-
-cli = typer.Typer('tier1')
 
 
 def build():
     app = AppDI()
-    app.init_resource()
-    app.wire(modules=['app'])
+    app.config_yaml.from_yaml('src/tier_shell/config.yml')
+    app.init_resources()
+    app.wire(modules=[__name__])
+
+
+@inject
+def test(
+    config: Config = Provide[AppDI.config]
+):
+    print(config.tier1)
 
 
 if __name__ == "__main__":
     build()
-    cli()
+    test()
