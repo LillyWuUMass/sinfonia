@@ -1,11 +1,11 @@
 from typing import Dict
 
-from pathlib import Path
-
 from yarl import URL
 
 from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+import src.lib.str.format as strfmt
 
 
 class AppConfig(BaseSettings):
@@ -32,4 +32,15 @@ class Config(BaseSettings):
         case_sensitive=False,
         frozen=True,
         )
+    
+    def __repr__(self):
+        def repr_app_config(cfg: AppConfig):
+            r = ""
+            for k, v in cfg.model_dump().items():
+                r += f" * {k}: {v}\n"
+                
+            return strfmt.white(r[:-1])
+                
+        
+        return f"Tier 1:\n{repr_app_config(self.tier1)}\n\nTier 2:\n{repr_app_config(self.tier2)}"
     

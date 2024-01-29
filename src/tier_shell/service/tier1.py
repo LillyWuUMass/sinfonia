@@ -1,7 +1,10 @@
 import typer
 
 
-app = typer.Typer()
+app = typer.Typer(
+    name="tier1",
+    help="Interactions with Tier1 instances.",
+    )
 
 
 @app.command()
