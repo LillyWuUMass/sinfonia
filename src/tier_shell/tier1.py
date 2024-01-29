@@ -20,7 +20,7 @@ cli = typer.Typer()
 
 @cli.command()
 def get_known_cloudlets():
-    """Return manifest of known Tier 2 cloudlets.""" 
+    """Return manifest of known Tier 2 cloudlets."""     
     u = conf.root_url / 'cloudlets'
     logger.info(f'Sending GET request to {u}')
     

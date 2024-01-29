@@ -10,6 +10,8 @@ class TierShellContext(BaseSettings):
     """Manage environment variables for tier shell application."""
     timeout_seconds: int
     root_url: URL
+    port: int
+    api_path: str
     
     model_config = SettingsConfigDict(
         env_file='.env',

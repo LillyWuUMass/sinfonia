@@ -46,6 +46,7 @@ zeroconf = "^0.38.7"
 py-rapl = {git = "https://github.com/wkatsak/py-rapl.git"}
 pydantic = {extras = ["all"], version = "^2.5.3"}
 pydantic-settings = {version = "^2.1.0", python = "3.10"}
+dependency-injector = "^4.41.0"
 
 [tool.poetry.group.dev.dependencies]
 black = "^22.10.0"
