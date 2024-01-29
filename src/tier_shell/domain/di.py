@@ -11,16 +11,16 @@ from src.tier_shell.domain.gateway import APIGateway
 class AppDI(containers.DeclarativeContainer):    
     # Core
     
-    config_yaml = providers.Configuration()
+    config_dict = providers.Configuration()
     
     config = providers.Singleton(
         Config.model_validate,
-        config_yaml,
+        config_dict,
         )
     
-    logger = providers.Resource(
+    logging = providers.Resource(
         logging.config.dictConfig,
-        config=config_yaml.logging,
+        config_dict.logging,
         )
     
     # Gateways

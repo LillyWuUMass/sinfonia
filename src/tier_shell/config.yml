@@ -3,7 +3,7 @@ logging:
   disable_existing_loggers: False
   formatters:
     default:
-      "()": "src.domain.logger.formatter.DefaultFormatter"
+      "()": src.domain.logger.formatter.DefaultFormatter
   handlers:
     console:
       level: INFO
@@ -12,7 +12,7 @@ logging:
       stream: ext://sys.stdout
   root:
     handlers: [console]
-    level: WARNING
+    level: INFO
 
 tier1:
   timeout_seconds: 8
