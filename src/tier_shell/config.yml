@@ -12,7 +12,7 @@ logging:
       stream: ext://sys.stdout
   root:
     handlers: [console]
-    level: INFO
+    level: DEBUG
 
 tier1:
   timeout_seconds: 8

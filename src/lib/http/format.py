@@ -6,8 +6,11 @@ from pprint import PrettyPrinter
 _pp = PrettyPrinter(indent=2, width=90)
 
 
-def http_repr(code: int) -> str:
-    """Return HTTP code along with its descriptive phrase.
+def status_code_repr(code: int) -> str:
+    """Return HTTP status code along with its descriptive phrase.
+    
+    Example:
+        200 -> 200 OK
     
     Args:
         code -- int: HTTP status code

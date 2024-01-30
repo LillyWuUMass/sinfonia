@@ -40,7 +40,7 @@ def deploy_recipe(
         logger.critical(f'unable to send request: {str(e)}')
         exit(0)
 
-    sc, fmtsc = resp.status_code, httpfmt.http_repr(resp.status_code)
+    sc, fmtsc = resp.status_code, httpfmt.status_code_repr(resp.status_code)
     if sc == HTTPStatus.OK:
         logger.info(f'{fmtsc}: Successfully deployed to cloudlet')
     elif sc == HTTPStatus.NOT_FOUND:
@@ -49,7 +49,7 @@ def deploy_recipe(
         logger.info(f'{fmtsc}')
         
     try:
-        logger.info(httpfmt.http_repr(resp.json()))
+        logger.info(httpfmt.status_code_repr(resp.json()))
     except:
         pass
   
@@ -76,7 +76,7 @@ def get_candidate_cloudlets(
         logger.critical(f'unable to send request: {str(e)}')
         exit(0)
 
-    sc, fmtsc = resp.status_code, httpfmt.http_repr(resp.status_code)
+    sc, fmtsc = resp.status_code, httpfmt.status_code_repr(resp.status_code)
     if sc == HTTPStatus.OK:
         logger.info(f'{fmtsc}: Returning candidate cloudlets')
     elif sc == HTTPStatus.NOT_FOUND:
@@ -85,7 +85,7 @@ def get_candidate_cloudlets(
         logger.info(f'{fmtsc}')
         
     try:
-        logger.info(httpfmt.http_repr(resp.json()))
+        logger.info(httpfmt.status_code_repr(resp.json()))
     except:
         pass
   

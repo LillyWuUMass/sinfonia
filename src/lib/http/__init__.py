@@ -1,10 +1,18 @@
 """Handles HTTP/JSON applications."""
 
 from .format import (
-    http_repr,
+    status_code_repr,
     json_repr,
 )
 
-from .types import  (
+from .types import (
     HTTPMethod,
+)
+
+from .resp import (
+    is_success_status_code,
+)
+
+from .json import (
+    is_json_response,
 )
