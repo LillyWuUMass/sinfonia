@@ -8,6 +8,7 @@ from typing import Optional, Dict
 
 import logging
 import requests
+from pathlib import Path
 
 from yarl import URL
 
@@ -41,6 +42,7 @@ def _short_msg_critical(
 
 def _short_msg_log(
         config: AppConfig,
+        api_path: str,
         method: httplib.HTTPMethod,
         status_code: int,
         msg: str = '',
@@ -48,8 +50,8 @@ def _short_msg_log(
     host_url_repr = str(config.root_url)
     
     method_repr = str(method)
-    req_path_repr = config.api_path
-    req_repr = f"{method_repr} {req_repr}"
+    req_path_repr = Path(config.api_path) / api_path
+    req_repr = f"{method_repr} {req_path_repr}"
     req_repr = strfmt.bold(strfmt.magenta(req_repr))
 
     status_code_repr = httplib.status_code_repr(status_code)
@@ -60,6 +62,7 @@ def _short_msg_log(
 def log_api_request(
         config: AppConfig,
         method: httplib.HTTPMethod,
+        api_path: Path | str = '',
         is_short_form: bool = True,
         logger: Optional[logging.Logger] = get_default_logger(),
         msg_by_status_code: Optional[Dict[int, str]] = None,
@@ -67,7 +70,7 @@ def log_api_request(
     if not resp_msg:
         resp_msg = dict()
         
-    u: URL = URL(config.root_url) / config.api_path
+    u: URL = URL(config.root_url) / config.api_path / api_path
     u.with_port(config.port)
     url_repr = strfmt.bold(strfmt.magenta(str(u)))
     
@@ -78,7 +81,7 @@ def log_api_request(
     
     # Make API request
         
-    err_msg, stack_trace: str = '', ''
+    err_msg, stack_trace = '', ''
     try:
         resp = requests.get(u, timeout=config.timeout_seconds)
     except requests.Timeout:
@@ -94,7 +97,14 @@ def log_api_request(
         if not is_short_form:
             logger.critical(err_msg)
         else:
-            logger.critical(_short_msg_critical(config, method, err_msg))
+            logger.critical(
+                _short_msg_critical(
+                    config, 
+                    api_path, 
+                    method, 
+                    err_msg
+                    )
+                )
             
         if stack_trace:
             logger.debug(stack_trace)
@@ -106,11 +116,19 @@ def log_api_request(
     status_code = resp.status_code
     status_code_repr = httpfmt.status_code_repr(status_code)
     
-    if is_short_form:
-        logger.info(_short_msg_log(config, method))
-        return
-    
     description = msg_by_status_code.get(status_code, '')
+    
+    if is_short_form:
+        logger.info(
+            _short_msg_log(
+                config, 
+                api_path, 
+                method, 
+                status_code, 
+                description
+                )
+            )
+        return
     
     msg = f"{status_code_repr}" + (f" -- {description}" if description else '')
     if httplib.is_json_response(resp):

@@ -31,6 +31,13 @@ _DEFAULT_LOGGING_CONFIG = {
         #     'mode': 'a',
         # }
     },
+    'loggers': {
+        'main': { 
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+    },
     'root': {
         'handlers': ['console'],
         'level': 'INFO',
@@ -44,7 +51,7 @@ _LOGGERS: List[Logger] = list()
 
 
 def get_default_logger() -> Logger:
-    return logging.getLogger()
+    return logging.getLogger('main')
 
 
 def configure_logger_from_yaml(name: str, path: Path) -> Logger:

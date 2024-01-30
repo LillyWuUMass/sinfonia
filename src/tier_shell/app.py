@@ -1,16 +1,12 @@
-import sys
-import logging
-
 import typer
 
 from dependency_injector.wiring import Provide, inject
+from src.tier_shell.domain.di import AppDI
 
 from src.domain.logger import get_default_logger
-
 from src.tier_shell.domain.config import Config
-from src.tier_shell.domain.di import AppDI
-from src.tier_shell.service.tier1 import app as tier1_app
-from src.tier_shell.service.tier2 import app as tier2_app
+from src.tier_shell.view.tier1 import app as tier1_app
+from src.tier_shell.view.tier2 import app as tier2_app
 
 
 app = typer.Typer()
@@ -24,14 +20,15 @@ logger = get_default_logger()
 @app.callback()
 def build():
     """Build application."""    
-    # Application dependencies
     app = AppDI()
     app.config_dict.from_yaml('src/tier_shell/config.yml')
     app.init_resources()
-    app.wire(modules=[__name__])
-    
-    # Logger
-    logger = logging.getLogger('main')
+    app.wire(
+        modules=[
+            __name__, 
+            'src.tier_shell.service.api'
+            ]
+        )
 
 
 # Dependency injector doesn't play well with Typer, cannot stack decorator
