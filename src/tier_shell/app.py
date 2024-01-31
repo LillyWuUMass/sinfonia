@@ -2,21 +2,13 @@ import typer
 
 from src.tier_shell.domain.di import AppDI
 
-from src.lib.http import HTTPMethod, HTTPStatus
-from src.domain.logger import get_default_logger
-
-import src.tier_shell.service.metrics as svc_metrics
-import src.tier_shell.service.api as svc_api
-from src.tier_shell.view.tier1 import app as tier1_app
-from src.tier_shell.view.tier2 import app as tier2_app
+import src.tier_shell.service as svc
+import src.tier_shell.view as view
 
 
 app = typer.Typer()
-app.add_typer(tier1_app, name='tier1')
-app.add_typer(tier2_app, name='tier2')
-
-
-logger = get_default_logger()
+app.add_typer(view.tier1, name='tier1')
+app.add_typer(view.tier2, name='tier2')
 
 
 @app.callback()
@@ -41,7 +33,7 @@ def build():
 @app.command()
 def app_state():
     """Report application state."""
-    svc_metrics.get_application_state()
+    svc.metrics.get_application_state()
 
 
 if __name__ == "__main__":
