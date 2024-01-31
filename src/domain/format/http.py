@@ -1,9 +1,6 @@
-from http import HTTPStatus
 from pprint import PrettyPrinter
 
-
-# Pretty printer formatter for JSON
-_pp = PrettyPrinter(indent=2, width=90)
+from src.lib.http import HTTPStatus
 
 
 def status_code_repr(code: int) -> str:
@@ -16,18 +13,25 @@ def status_code_repr(code: int) -> str:
         code -- int: HTTP status code
         
     Return:
-        str
+        str -- Status code representation
     """
     return f"{str(code)} {HTTPStatus(code).phrase}"
 
 
-def json_repr(j: str) -> str:
+def json_repr(
+        j: str,
+        indent: int = 2,
+        width: int = 90,
+) -> str:
     """Prettify JSON string.
     
     Args:
         j -- str: JSON string
+        indent -- int: Indent level (spaces) [default = 2]
+        width -- int: Maximum line width (spaces) [default = 90]
         
     Return:
-        str
+        str -- Prettified JSON string
     """    
-    return _pp.format(j)
+    pp = PrettyPrinter(indent=2, width=90)
+    return pp.format(j)

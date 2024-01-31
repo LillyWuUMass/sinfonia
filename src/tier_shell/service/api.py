@@ -16,8 +16,8 @@ from dependency_injector.wiring import Provide, inject
 from src.tier_shell.domain.di import AppDI
 
 import src.lib.http as httplib
-import src.lib.http.format as httpfmt
 from src.lib.http import HTTPMethod
+
 import src.domain.format as fmt
 from src.domain.logger import get_default_logger
 
@@ -71,7 +71,7 @@ def log_api_request(
         logger: Optional[logging.Logger] = get_default_logger(),
         msg_by_status_code: Optional[Dict[int, str]] = None,
         config = Provide[AppDI.config_tier1]
-):        
+):
     if not msg_by_status_code:
         msg_by_status_code = dict()
         
@@ -120,7 +120,7 @@ def log_api_request(
     # Log response
 
     status_code = resp.status_code
-    status_code_repr = httpfmt.status_code_repr(status_code)
+    status_code_repr = fmt.http.status_code_repr(status_code)
     
     description = msg_by_status_code.get(status_code, '')
     
@@ -137,7 +137,7 @@ def log_api_request(
         return
     
     msg = f"{status_code_repr}" + (f" - {description}" if description else '')
-    if httplib.is_json_response(resp):
-        msg += "\n" + httplib.json_repr(resp.json())
+    if httplib.resp.is_json_response(resp):
+        msg += "\n" + httplib.resp.json_repr(resp.json())
 
     logger.info(msg)
