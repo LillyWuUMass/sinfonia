@@ -15,10 +15,10 @@ from yarl import URL
 from dependency_injector.wiring import Provide, inject
 from src.tier_shell.domain.di import AppDI
 
-import src.lib.http.format as httpfmt
-import src.lib.str.format as strfmt
 import src.lib.http as httplib
+import src.lib.http.format as httpfmt
 from src.lib.http import HTTPMethod
+import src.domain.format as fmt
 from src.domain.logger import get_default_logger
 
 from src.tier_shell.domain.config import AppConfig
@@ -39,7 +39,7 @@ def _short_msg_critical(
     method_repr = str(method)
     req_path_repr = config.api_path
     req_repr = f"{method_repr} {req_path_repr}"
-    req_repr = strfmt.bold(strfmt.magenta(req_repr))
+    req_repr = fmt.str.bold(fmt.str.magenta(req_repr))
     
     return f"{host_url_repr} - {req_repr} - ERROR - {msg}"
 
@@ -56,7 +56,7 @@ def _short_msg_log(
     method_repr = str(method)
     req_path_repr = Path(config.api_path) / api_path
     req_repr = f"{method_repr} {req_path_repr}"
-    req_repr = strfmt.bold(strfmt.magenta(req_repr))
+    req_repr = fmt.str.bold(fmt.str.magenta(req_repr))
 
     status_code_repr = httplib.status_code_repr(status_code)
     
@@ -77,7 +77,7 @@ def log_api_request(
         
     u: URL = URL(config.root_url) / config.api_path / api_path
     u = u.with_port(config.port)
-    url_repr = strfmt.bold(strfmt.magenta(str(u)))
+    url_repr = fmt.str.bold(fmt.str.magenta(str(u)))
     
     ts: int = config.timeout_seconds
     method_repr = method.value
