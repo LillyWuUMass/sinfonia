@@ -9,7 +9,7 @@ from src.domain.logger import get_default_logger
 from src.tier_shell.common import (
     app_id_option, 
     uuid_option
-)
+    )
 from src.tier_shell.domain_legacy.app.context import TierShellContext
 
 

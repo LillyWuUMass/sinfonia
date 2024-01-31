@@ -70,12 +70,12 @@ def log_api_request(
         is_short_form: bool = False,
         logger: Optional[logging.Logger] = get_default_logger(),
         msg_by_status_code: Optional[Dict[int, str]] = None,
-        config = Provide[AppDI.config_tier1]
+        config: AppConfig = Provide[AppDI.config_tier1]
 ):
     if not msg_by_status_code:
         msg_by_status_code = dict()
         
-    u: URL = URL(config.root_url) / config.api_path / api_path
+    u: URL = URL(config.root_url) / config.api_path / str(api_path)
     u = u.with_port(config.port)
     url_repr = fmt.str.bold(fmt.str.magenta(str(u)))
     
