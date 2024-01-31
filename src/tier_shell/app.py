@@ -7,8 +7,8 @@ import src.tier_shell.view as view
 
 
 app = typer.Typer()
-app.add_typer(view.tier1, name='tier1')
-app.add_typer(view.tier2, name='tier2')
+app.add_typer(view.tier1.app, name='tier1')
+app.add_typer(view.tier2.app, name='tier2')
 
 
 @app.callback()

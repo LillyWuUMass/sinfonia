@@ -32,5 +32,5 @@ def json_repr(
     Return:
         str -- Prettified JSON string
     """    
-    pp = PrettyPrinter(indent=2, width=90)
+    pp = PrettyPrinter(indent=indent, width=width)
     return pp.format(j)

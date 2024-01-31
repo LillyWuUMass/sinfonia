@@ -3,13 +3,14 @@ from http import HTTPStatus
 
 import typer
 
-import src.lib.http.format as httpfmt
+import src.domain.format as fmt
+from src.domain.logger import get_default_logger
+
 from src.tier_shell.common import (
     app_id_option, 
     uuid_option
 )
 from src.tier_shell.domain_legacy.app.context import TierShellContext
-from src.domain.logger import get_default_logger
 
 
 # Configure runtime environment
@@ -40,7 +41,7 @@ def deploy_recipe(
         logger.critical(f'unable to send request: {str(e)}')
         exit(0)
 
-    sc, fmtsc = resp.status_code, httpfmt.status_code_repr(resp.status_code)
+    sc, fmtsc = resp.status_code, fmt.http.status_code_repr(resp.status_code)
     if sc == HTTPStatus.OK:
         logger.info(f'{fmtsc}: Successfully deployed to cloudlet')
     elif sc == HTTPStatus.NOT_FOUND:
@@ -49,7 +50,7 @@ def deploy_recipe(
         logger.info(f'{fmtsc}')
         
     try:
-        logger.info(httpfmt.status_code_repr(resp.json()))
+        logger.info(fmt.http.status_code_repr(resp.json()))
     except:
         pass
   
@@ -76,7 +77,7 @@ def get_candidate_cloudlets(
         logger.critical(f'unable to send request: {str(e)}')
         exit(0)
 
-    sc, fmtsc = resp.status_code, httpfmt.status_code_repr(resp.status_code)
+    sc, fmtsc = resp.status_code, fmt.http.status_code_repr(resp.status_code)
     if sc == HTTPStatus.OK:
         logger.info(f'{fmtsc}: Returning candidate cloudlets')
     elif sc == HTTPStatus.NOT_FOUND:
@@ -85,7 +86,7 @@ def get_candidate_cloudlets(
         logger.info(f'{fmtsc}')
         
     try:
-        logger.info(httpfmt.status_code_repr(resp.json()))
+        logger.info(fmt.http.status_code_repr(resp.json()))
     except:
         pass
   
