@@ -7,6 +7,7 @@ from .format import (
 
 from .types import (
     HTTPMethod,
+    HTTPStatus,
 )
 
 from .resp import (

@@ -1,10 +1,12 @@
 import typer
 
-from dependency_injector.wiring import Provide, inject
 from src.tier_shell.domain.di import AppDI
 
+from src.lib.http import HTTPMethod, HTTPStatus
 from src.domain.logger import get_default_logger
-from src.tier_shell.domain.config import Config
+
+import src.tier_shell.service.metrics as svc_metrics
+import src.tier_shell.service.api as svc_api
 from src.tier_shell.view.tier1 import app as tier1_app
 from src.tier_shell.view.tier2 import app as tier2_app
 
@@ -26,22 +28,27 @@ def build():
     app.wire(
         modules=[
             __name__, 
-            'src.tier_shell.service.api'
+            'src.tier_shell.view.tier1',
+            'src.tier_shell.view.tier2',
+            'src.tier_shell.service.api',
+            'src.tier_shell.service.metrics',
             ]
         )
 
 
 # Dependency injector doesn't play well with Typer, cannot stack decorator
 # Separating functions seems like the best option for the moment.
-@inject
-def _app_state(config: Config = Provide[AppDI.config]):
-    print(repr(config))
-
-
 @app.command()
 def app_state():
     """Report application state."""
-    _app_state()
+    # svc_metrics.get_application_state()
+    svc_api.log_api_request(
+        method=HTTPMethod.GET,
+        api_path='cloudlets',
+        msg_by_status_code={
+            HTTPStatus.OK: 'Returning list of known cloudlets'
+            }
+        )
 
 
 if __name__ == "__main__":

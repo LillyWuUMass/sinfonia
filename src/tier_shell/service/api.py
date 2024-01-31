@@ -1,4 +1,4 @@
-"""Manages life cycle of API jobs
+"""Manages API request life cycle
 
 This module contains life cycle scripts to streamline the implementation of new
 commands. As of writing, we assume HTTP/JSON to be the data transfer medium for 
@@ -12,9 +12,13 @@ from pathlib import Path
 
 from yarl import URL
 
-import src.lib.http as httplib
+from dependency_injector.wiring import Provide, inject
+from src.tier_shell.domain.di import AppDI
+
 import src.lib.http.format as httpfmt
 import src.lib.str.format as strfmt
+import src.lib.http as httplib
+from src.lib.http import HTTPMethod
 from src.domain.logger import get_default_logger
 
 from src.tier_shell.domain.config import AppConfig
@@ -27,14 +31,14 @@ _ERR_MSG = "an exception occurred"
 
 def _short_msg_critical(
         config: AppConfig,
-        method: httplib.HTTPMethod,
+        method: HTTPMethod,
         msg: str = '',
 ):
     host_url_repr = str(config.root_url)
     
     method_repr = str(method)
     req_path_repr = config.api_path
-    req_repr = f"{method_repr} {req_repr}"
+    req_repr = f"{method_repr} {req_path_repr}"
     req_repr = strfmt.bold(strfmt.magenta(req_repr))
     
     return f"{host_url_repr} - {req_repr} - ERROR - {msg}"
@@ -43,12 +47,12 @@ def _short_msg_critical(
 def _short_msg_log(
         config: AppConfig,
         api_path: str,
-        method: httplib.HTTPMethod,
+        method: HTTPMethod,
         status_code: int,
         msg: str = '',
 ):
     host_url_repr = str(config.root_url)
-    
+ 
     method_repr = str(method)
     req_path_repr = Path(config.api_path) / api_path
     req_repr = f"{method_repr} {req_path_repr}"
@@ -59,25 +63,29 @@ def _short_msg_log(
     return f"{host_url_repr} - {req_repr} - {status_code_repr} - {msg}"
 
 
+@inject
 def log_api_request(
-        config: AppConfig,
-        method: httplib.HTTPMethod,
+        method: HTTPMethod,
         api_path: Path | str = '',
-        is_short_form: bool = True,
+        is_short_form: bool = False,
         logger: Optional[logging.Logger] = get_default_logger(),
         msg_by_status_code: Optional[Dict[int, str]] = None,
-):
-    if not resp_msg:
-        resp_msg = dict()
+        config = Provide[AppDI.config]
+):    
+    config = config.tier1
+    
+    if not msg_by_status_code:
+        msg_by_status_code = dict()
         
     u: URL = URL(config.root_url) / config.api_path / api_path
-    u.with_port(config.port)
+    u = u.with_port(config.port)
     url_repr = strfmt.bold(strfmt.magenta(str(u)))
     
     ts: int = config.timeout_seconds
+    method_repr = method.value
         
     if not is_short_form:
-        logger.info(f"Sending {method} request to {url_repr} ...")
+        logger.info(f"Sending {method_repr} request to {url_repr} ...")
     
     # Make API request
         
@@ -130,7 +138,7 @@ def log_api_request(
             )
         return
     
-    msg = f"{status_code_repr}" + (f" -- {description}" if description else '')
+    msg = f"{status_code_repr}" + (f" - {description}" if description else '')
     if httplib.is_json_response(resp):
         msg += "\n" + httplib.json_repr(resp.json())
 
