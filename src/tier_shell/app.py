@@ -41,14 +41,7 @@ def build():
 @app.command()
 def app_state():
     """Report application state."""
-    # svc_metrics.get_application_state()
-    svc_api.log_api_request(
-        method=HTTPMethod.GET,
-        api_path='cloudlets',
-        msg_by_status_code={
-            HTTPStatus.OK: 'Returning list of known cloudlets'
-            }
-        )
+    svc_metrics.get_application_state()
 
 
 if __name__ == "__main__":

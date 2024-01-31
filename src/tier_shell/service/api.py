@@ -70,10 +70,8 @@ def log_api_request(
         is_short_form: bool = False,
         logger: Optional[logging.Logger] = get_default_logger(),
         msg_by_status_code: Optional[Dict[int, str]] = None,
-        config = Provide[AppDI.config]
-):    
-    config = config.tier1
-    
+        config = Provide[AppDI.config_tier1]
+):        
     if not msg_by_status_code:
         msg_by_status_code = dict()
         
