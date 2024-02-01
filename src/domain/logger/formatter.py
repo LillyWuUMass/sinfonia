@@ -3,7 +3,7 @@ import logging
 import domain.format as fmt
 
 
-_DEFAULT_FORMAT = "%(asctime)s  %(name)s  %(levelname)s  %(message)s"
+_DEFAULT_FORMAT = "%(asctime)s  %(levelname)s  %(message)s"
 _DEFAULT_DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
 
 

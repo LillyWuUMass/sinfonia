@@ -43,7 +43,9 @@ _DEFAULT_LOGGING_CONFIG = {
         'level': 'INFO',
     },
 }
-_DEFAULT_LOGGER: Logger = logging.config.dictConfig(_DEFAULT_LOGGING_CONFIG)
+
+
+logging.config.dictConfig(_DEFAULT_LOGGING_CONFIG)
 
 
 # Named loggers

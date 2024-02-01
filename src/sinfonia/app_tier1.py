@@ -55,11 +55,11 @@ class Tier1DefaultConfig:
     RECIPES: str | Path | URL = "RECIPES"
 
     # These are initialized by the wsgi app factory from the config
-    # cloudlets: dict[UUID, Cloudlet] = {}                          # CLOUDLETS
+    # cloudlets: dict[UUID, Cloudlet] = {}                           # CLOUDLETS
     # executor = Executor(flask_app)
     # geolite2_reader = geolite2.reader()
-    # match_functions: list[Tier1MatchFunction] = []                # MATCHERS
-    # deployment_repository: DeploymentRepository | None = None     # RECIPES
+    # match_functions: list[Tier1MatchFunction] = []                 # MATCHERS
+    # deployment_repository: DeploymentRepository | None = None      # RECIPES
     
     # How long before removing cloudlet due to inactivity
     CLOUDLET_EXPIRY_MINUTES = 60
