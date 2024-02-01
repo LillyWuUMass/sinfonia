@@ -15,25 +15,6 @@ app.add_typer(view.tier1.app, name='tier1')
 app.add_typer(view.tier2.app, name='tier2')
 
 
-@app.command()
-def app_state():
-    """Report application state."""
-    # Dependency injector doesn't play well with Typer, cannot stack decorator
-    # Separating functions seems like the best option for the moment.
-    _app_state()
-
-    
-@inject
-def _app_state(
-        config_tier1: AppConfig = Provide[AppDI.config_tier1],
-        config_tier2: AppConfig = Provide[AppDI.config_tier2]
-):
-    print(fmt.str.white('Tier 1'))
-    print(fmt.str.white(repr(config_tier1)))
-    print(fmt.str.white('Tier 2'))
-    print(fmt.str.white(repr(config_tier2)))
-
-
 @app.callback()
 def build():
     app_di = AppDI()
@@ -50,6 +31,31 @@ def build():
             ]
         )
 
+
+# Views
+
+@app.command()
+def app_state():
+    """Report application state."""
+    # Dependency injector doesn't play well with Typer, cannot stack decorator
+    # Separating functions seems like the best option for the moment.
+    _app_state()
+
+
+# Connectors
+    
+@inject
+def _app_state(
+        config_tier1: AppConfig = Provide[AppDI.config_tier1],
+        config_tier2: AppConfig = Provide[AppDI.config_tier2]
+):
+    print(fmt.str.white('Tier 1'))
+    print(fmt.str.white(repr(config_tier1)))
+    print(fmt.str.white('Tier 2'))
+    print(fmt.str.white(repr(config_tier2)))
+
+
+# Application entry point
 
 if __name__ == "__main__":
     app()

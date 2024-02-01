@@ -12,17 +12,13 @@ from pathlib import Path
 
 from yarl import URL
 
-from dependency_injector.wiring import Provide, inject
-from src.tier_shell.domain.di import AppDI
-
 import src.lib.http as httplib
 from src.lib.http import HTTPMethod
 
 import src.domain.format as fmt
 from src.domain.logger import get_default_logger
 
-from src.tier_shell.domain.app import AppType
-from src.tier_shell.domain.config import Config, AppConfig
+from src.tier_shell.domain.config import AppConfig
 
 
 _TIMEOUT_ERR_MSG = lambda sec: f"api timeout exceeded ({sec} seconds)"
@@ -64,20 +60,16 @@ def _short_msg_log(
     return f"{host_url_repr} - {req_repr} - {status_code_repr} - {msg}"
 
 
-@inject
 def log_api_request(
-        app: AppType,
+        config: AppConfig,
         method: HTTPMethod,
         api_path: Path | str = '',
         is_short_form: bool = False,
         logger: Optional[logging.Logger] = get_default_logger(),
         msg_by_status_code: Optional[Dict[int, str]] = None,
-        core_config: Config = Provide[AppDI.config]
 ):
     if not msg_by_status_code:
         msg_by_status_code = dict()
-        
-    config: AppConfig = core_config.get_app_config(app)
         
     u: URL = URL(config.root_url) / config.api_path / str(api_path)
     u = u.with_port(config.port)
@@ -90,7 +82,7 @@ def log_api_request(
         logger.info(f"Sending {method_repr} request to {url_repr} ...")
     
     # Make API request
-        
+    
     err_msg, stack_trace = '', ''
     try:
         resp = requests.get(u, timeout=config.timeout_seconds)
@@ -102,7 +94,7 @@ def log_api_request(
         err_msg, stack_trace = _ERR_MSG, str(e)
 
     # Log error if exists
-
+    
     if err_msg:
         if not is_short_form:
             logger.critical(err_msg)
@@ -119,7 +111,7 @@ def log_api_request(
         if stack_trace:
             logger.debug(stack_trace)
             
-        raise Exception()
+        return
 
     # Log response
 

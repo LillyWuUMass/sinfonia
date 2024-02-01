@@ -4,7 +4,10 @@ import typer
 
 from src.lib.http import HTTPMethod, HTTPStatus
 
-from src.tier_shell.domain.app import AppType
+from dependency_injector.wiring import Provide, inject
+
+from src.tier_shell.domain.config import AppConfig
+from src.tier_shell.domain.di import AppDI
 
 from src.tier_shell.view.common import (
     uuid_option,
@@ -20,6 +23,8 @@ app = typer.Typer(
     )
 
 
+# Views
+
 @app.command()
 def deploy_recipe(
         uuid: str = uuid_option,
@@ -30,18 +35,30 @@ def deploy_recipe(
     Note:
         See 'RECIPES' folder for recipe UUIDs and recipe definitions.
     """
-    svc.api.log_api_request(
-        app=AppType.Tier2,
-        method=HTTPMethod.POST,
-        api_path=Path('deploy') / uuid / app_id,
-        msg_by_status_code={
-            HTTPStatus.OK: 'Recipe deployed to cloudlet.',
-            HTTPStatus.NOT_FOUND: 'Failed to create deployment.',
-            }
-        )
+    _deploy_recipe(uuid, app_id)
     
 
 @app.command()
 def c2():
     """c2"""    
-    print('pong')
+    print('c2')
+
+
+# Connectors
+
+
+@inject
+def _deploy_recipe(
+        uuid: str,
+        app_id: str,
+        config: AppConfig = Provide[AppDI.config_tier2]
+):
+    svc.api.log_api_request(
+        config=config,
+        method=HTTPMethod.POST,
+        api_path=Path('deploy') / uuid / app_id,
+        msg_by_status_code={
+            HTTPStatus.OK: "Recipe deployed to cloudlet.",
+            HTTPStatus.NOT_FOUND: "Failed to create deployment.",
+            }
+        )
