@@ -16,7 +16,7 @@ from src.tier_shell.view.common import (
 
 app = typer.Typer(
     name="tier1",
-    help="Interactions with Tier1 instances.",
+    help="Interactions with Tier 1 instances.",
     )
 
 

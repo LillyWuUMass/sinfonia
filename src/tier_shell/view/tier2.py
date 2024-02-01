@@ -14,7 +14,10 @@ from src.tier_shell.view.common import (
 import src.tier_shell.service as svc
 
 
-app = typer.Typer()
+app = typer.Typer(
+    name="tier2",
+    help="Interactions with Tier 2 instances.",
+    )
 
 
 @app.command()
