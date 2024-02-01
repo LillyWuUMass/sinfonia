@@ -14,6 +14,11 @@ def is_json_response(resp: requests.Response) -> bool:
     Return:
         bool
     """
-    resp.headers.get('content-type') == 'application/json' 
+    try:
+        _ = resp.json()
+        return True
+    except:
+        return False
     
+    # resp.headers.get('content-type') == 'application/json' 
     

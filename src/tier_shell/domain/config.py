@@ -5,6 +5,8 @@ from yarl import URL
 from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+from src.tier_shell.domain.app import AppType
+
 
 class AppConfig(BaseSettings):
     """Manage environment variables for tier1 and tier2 applications."""
@@ -38,6 +40,15 @@ class Config(BaseSettings):
         case_sensitive=False,
         frozen=True,
         )
+    
+    def get_app_config(self, app: AppType) -> AppConfig:
+        match app:
+            case AppType.Tier1:
+                return self.tier1
+            case AppType.Tier2:
+                return self.tier2
+            case _:
+                raise ValueError('application not configured')
     
     def __repr__(self):        
         return f"Tier 1:\n{repr(self.tier1)}\n\nTier 2:\n{repr(self.tier2)}"

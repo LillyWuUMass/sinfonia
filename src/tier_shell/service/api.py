@@ -21,7 +21,8 @@ from src.lib.http import HTTPMethod
 import src.domain.format as fmt
 from src.domain.logger import get_default_logger
 
-from src.tier_shell.domain.config import AppConfig
+from src.tier_shell.domain.app import AppType
+from src.tier_shell.domain.config import Config, AppConfig
 
 
 _TIMEOUT_ERR_MSG = lambda sec: f"api timeout exceeded ({sec} seconds)"
@@ -65,15 +66,18 @@ def _short_msg_log(
 
 @inject
 def log_api_request(
+        app: AppType,
         method: HTTPMethod,
         api_path: Path | str = '',
         is_short_form: bool = False,
         logger: Optional[logging.Logger] = get_default_logger(),
         msg_by_status_code: Optional[Dict[int, str]] = None,
-        config: AppConfig = Provide[AppDI.config_tier1]
+        core_config: Config = Provide[AppDI.config]
 ):
     if not msg_by_status_code:
         msg_by_status_code = dict()
+        
+    config: AppConfig = core_config.get_app_config(app)
         
     u: URL = URL(config.root_url) / config.api_path / str(api_path)
     u = u.with_port(config.port)
@@ -138,6 +142,8 @@ def log_api_request(
     
     msg = f"{status_code_repr}" + (f" - {description}" if description else '')
     if httplib.resp.is_json_response(resp):
-        msg += "\n" + httplib.resp.json_repr(resp.json())
+        msg += "\n" + fmt.http.json_repr(resp.json())
 
+    logger.info(resp.json())
+    logger.info(fmt.http.json_repr(resp.json()))
     logger.info(msg)
