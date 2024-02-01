@@ -37,7 +37,7 @@ def deploy_recipe(
     """
     _deploy_recipe(uuid, app_id)
     
-
+    
 @app.command()
 def c2():
     """c2"""    
