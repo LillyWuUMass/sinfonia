@@ -56,8 +56,8 @@ class CloudletsView(MethodView):
                 unix_time, 
                 carbon_intensity, 
                 energy_consumption, 
-                carbon_emission]
-                )
+                carbon_emission
+                ])
             
         cloudlets = current_app.config["cloudlets"]
         cloudlets[cloudlet.uuid] = cloudlet
