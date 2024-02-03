@@ -45,10 +45,20 @@ class CloudletsView(MethodView):
         # Record cloudlet carbon history
         with open(CLOUDLET_CARBON_HISTORY_CSV, 'a') as file:
             csv_writer = csv.writer(file)
+            
             resources = cloudlet.resources
-            csv_writer.writerow([time(), cloudlet.uuid, resources["carbon_intensity"] if "carbon_intensity" in resources else 0, 
-                                 resources["energy_consumption"] if "energy_consumption" in resources else 0,
-                                 resources["carbon_emission"] if "carbon_emission" in resources else 0])
+            unix_time = int(time())
+            carbon_intensity = resources.get('carbon_intensity', '')
+            energy_consumption = resources.get('energy_consumption', '')
+            carbon_emission = resources.get('carbon_emission', '')
+            
+            csv_writer.writerow([
+                unix_time, 
+                carbon_intensity, 
+                energy_consumption, 
+                carbon_emission]
+                )
+            
         cloudlets = current_app.config["cloudlets"]
         cloudlets[cloudlet.uuid] = cloudlet
         

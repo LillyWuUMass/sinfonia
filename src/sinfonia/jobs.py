@@ -18,6 +18,8 @@ from datetime import datetime, timedelta
 
 from .get_carbon import CarbonMetrics
 
+from src.lib.time.unit import TimeUnit
+
 from src.domain.logger import get_default_logger
 
 
@@ -78,15 +80,22 @@ def report_to_tier1_endpoints():
     resources = cluster.get_resources()
 
     # Add carbon metrics to resources
-    carbon_obj = CarbonMetrics(latitude=tier2_location.latitude, longitude=tier2_location.longitude, zone=tier2_zone)
-    carbon_metrics = carbon_obj.get_carbon_history((datetime.now()-timedelta(days=2*365)).timestamp()) # gCO2/KWH
-    # carbon_metrics = carbon_obj.get_carbon_metrics()
-    _, energy_consumption = carbon_obj.get_energy_consumption() # energy in KJ
+    carbon_obj = CarbonMetrics(
+        latitude=tier2_location.latitude, 
+        longitude=tier2_location.longitude, 
+        zone=tier2_zone
+        )
+    
+    time_ago = datetime.now() - timedelta(seconds=2 * TimeUnit.YEAR)
+    carbon_metrics = carbon_obj.get_carbon_history(time_ago.timestamp())  # gCO2/kWH
+
+    _, energy_consumption = carbon_obj.get_energy_consumption()  # kJ
+    
     resources["carbon_intensity"] = carbon_metrics["carbon_intensity"]
     resources["energy_consumption"] = energy_consumption
-    resources["carbon_emission"] = carbon_metrics["carbon_intensity"]*energy_consumption/3600 # gCO2
+    resources["carbon_emission"] = carbon_metrics["carbon_intensity"] * energy_consumption / 3600  # gCO2
 
-    logger.info("Got %s", str(resources))
+    logger.info("Reporting %s", str(resources))
 
     for tier1_url in config["TIER1_URLS"]:
         tier1_endpoint = URL(tier1_url) / "api/v1/cloudlets/"
@@ -97,8 +106,8 @@ def report_to_tier1_endpoints():
                     "uuid": str(tier2_uuid),
                     "endpoint": str(tier2_endpoint),
                     "resources": resources,
-                },
-            )
+                    },
+                )
         except RequestException:
             logger.warn(f"Failed to report to {tier1_endpoint}")
 

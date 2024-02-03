@@ -210,7 +210,7 @@ class CarbonMetrics:
             domain = diff.domains[d]
             total_avg_power += diff.average_power(package=domain.name)
 
-        energy_consumption = (total_avg_power)/1000
+        energy_consumption = (total_avg_power) / 1000
 
         return total_avg_power, energy_consumption
 
