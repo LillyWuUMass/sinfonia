@@ -54,7 +54,7 @@ from .geo_location import GeoLocation
 
 class Tier2DefaultConfig:
     RECIPES: str | Path | URL = "RECIPES"
-    KUBECONFIG: str = "deploy-tier2/config/k3s.yaml"
+    KUBECONFIG: str = ""
     KUBECONTEXT: str = ""
     PROMETHEUS: str = "http://kube-prometheus-stack-prometheus.monitoring.svc:9090"
     TIER1_URLS: list[str] = ["http://192.168.245.30:5000"]
