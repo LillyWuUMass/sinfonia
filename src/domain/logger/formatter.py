@@ -1,6 +1,6 @@
 import logging
 
-import domain.format as fmt
+import src.domain.format as fmt
 
 
 _DEFAULT_FORMAT = "%(asctime)s  %(levelname)s  %(message)s"

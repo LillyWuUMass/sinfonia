@@ -3,7 +3,7 @@
 
 from ipaddress import IPv4Address
 
-from sinfonia.client_info import ClientInfo
+from src.sinfonia.client_info import ClientInfo
 
 
 class TestClientInfo:

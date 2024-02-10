@@ -7,9 +7,9 @@ from pathlib import Path
 import pytest
 
 from sinfonia import cloudlets
-from sinfonia.client_info import ClientInfo
-from sinfonia.deployment_recipe import DeploymentRecipe
-from sinfonia.matchers import (
+from src.sinfonia.client_info import ClientInfo
+from src.sinfonia.deployment_recipe import DeploymentRecipe
+from src.sinfonia.matchers import (
     match_by_location,
     match_by_network,
     match_random,

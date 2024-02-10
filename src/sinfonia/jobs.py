@@ -86,7 +86,7 @@ def report_to_tier1_endpoints():
         zone=tier2_zone
         )
     
-    time_ago = datetime.now() - timedelta(seconds=2 * TimeUnit.YEAR)
+    time_ago = datetime.now() - timedelta(seconds=2 * TimeUnit.YEAR.value)
     carbon_metrics = carbon_obj.get_carbon_history(time_ago.timestamp())  # gCO2/kWH
 
     _, energy_consumption = carbon_obj.get_energy_consumption()  # kJ

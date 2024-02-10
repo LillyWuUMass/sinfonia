@@ -4,7 +4,7 @@
 import pytest
 from jsonschema import ValidationError
 
-from sinfonia.deployment_recipe import DeploymentRecipe
+from src.sinfonia.deployment_recipe import DeploymentRecipe
 
 
 class TestDeploymentDescription:

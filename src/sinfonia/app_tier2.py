@@ -54,10 +54,10 @@ from .geo_location import GeoLocation
 
 class Tier2DefaultConfig:
     RECIPES: str | Path | URL = "RECIPES"
-    KUBECONFIG: str = "/etc/rancher/k3s/k3s.yaml"
+    KUBECONFIG: str = "deploy-tier2/config/k3s.yaml"
     KUBECONTEXT: str = ""
     PROMETHEUS: str = "http://kube-prometheus-stack-prometheus.monitoring.svc:9090"
-    TIER1_URLS: list[str] = ["http://192.168.245.31:5000"]
+    TIER1_URLS: list[str] = ["http://192.168.245.30:5000"]
     TIER2_URL: str | None = "http://obelix.cs.umass.edu:5000"
     TIER2_GEO_LOCATION: GeoLocation = GeoLocation(latitude=42.3672, longitude=-72.5185)
     TIER2_ZONE: str = "CA-ON"
@@ -109,7 +109,7 @@ def tier2_app_factory(**args) -> connexion.FlaskApp:
     # Add Tier 2 APIs
     app.add_api(
         load_spec(app.specification_dir / "sinfonia_tier2.yaml"),
-        resolver=MethodViewResolver("sinfonia.api_tier2"),
+        resolver=MethodViewResolver("src.sinfonia.api_tier2"),
         validate_responses=True,
     )
 

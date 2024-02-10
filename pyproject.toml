@@ -11,6 +11,7 @@ authors = [
 ]
 license = "MIT"
 packages = [
+    { include = "src" },
     { include = "sinfonia", from = "src" },
     { include = "tests", format = "sdist" },
 ]
@@ -67,20 +68,20 @@ types-jsonschema = {version = ">=4.4.0, <4.6.0"}
 types-python-dateutil = "^2.8.17"
 
 [tool.poetry.group.admin.dependencies]
-# dependencies for sinfonia.s3_upload
+# dependencies for src.sinfonia.s3_upload
 boto3 = "^1.26.21"
 tqdm = "^4.64.1"
 
 [tool.poetry.scripts]
-sinfonia-tier1 = "sinfonia.app_tier1:cli"
-sinfonia-tier2 = "sinfonia.app_tier2:cli"
+sinfonia-tier1 = "src.sinfonia.app_tier1:cli"
+sinfonia-tier2 = "src.sinfonia.app_tier2:cli"
 tier-shell = "tier_shell.main:app"
 
-[tool.poetry.plugins."sinfonia.tier1_matchers"]
-network = "sinfonia.matchers:match_by_network"
-location = "sinfonia.matchers:match_by_location"
-random = "sinfonia.matchers:match_random"
-carbon-intensity = "sinfonia.matchers:match_carbon_intensity"
+[tool.poetry.plugins."src.sinfonia.tier1_matchers"]
+network = "src.sinfonia.matchers:match_by_network"
+location = "src.sinfonia.matchers:match_by_location"
+random = "src.sinfonia.matchers:match_random"
+carbon-intensity = "src.sinfonia.matchers:match_carbon_intensity"
 
 [tool.black]
 target-version = ["py37"]

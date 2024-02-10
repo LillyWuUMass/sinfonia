@@ -3,7 +3,7 @@
 
 import pytest
 
-from sinfonia.geo_location import GeoLocation
+from src.sinfonia.geo_location import GeoLocation
 
 
 class TestGeoLocation:

@@ -23,5 +23,5 @@ tier1:
 tier2:
   timeout_seconds: 8
   port: 80
-  root_url: http://10.43.198.193
+  root_url: http://10.43.56.130
   api_path: api/v1

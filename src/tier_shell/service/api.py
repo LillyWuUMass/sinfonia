@@ -85,7 +85,11 @@ def log_api_request(
     
     err_msg, stack_trace = '', ''
     try:
-        resp = requests.get(u, timeout=config.timeout_seconds)
+        resp = requests.request(
+            method=method.value, 
+            url=u, 
+            timeout=config.timeout_seconds
+            )
     except requests.Timeout:
         err_msg = _TIMEOUT_ERR_MSG(ts)
     except requests.ConnectionError as e:
@@ -136,6 +140,4 @@ def log_api_request(
     if httplib.resp.is_json_response(resp):
         msg += "\n" + fmt.http.json_repr(resp.json())
 
-    logger.info(resp.json())
-    logger.info(fmt.http.json_repr(resp.json()))
     logger.info(msg)

@@ -3,7 +3,7 @@
 
 from wireguard_tools import WireguardKey
 
-from sinfonia.deployment import key_from_k8s_label, key_to_k8s_label
+from src.sinfonia.deployment import key_from_k8s_label, key_to_k8s_label
 
 
 class TestWireguardKey:

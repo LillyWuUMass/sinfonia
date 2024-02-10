@@ -8,7 +8,7 @@ import pytest
 from jsonschema import ValidationError
 
 from sinfonia import cloudlets
-from sinfonia.geo_location import GeoLocation
+from src.sinfonia.geo_location import GeoLocation
 
 
 class TestValidation:

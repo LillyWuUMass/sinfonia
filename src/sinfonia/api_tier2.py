@@ -19,12 +19,21 @@ from flask.views import MethodView
 class DeployView(MethodView):
     def post(self, uuid, application_key):
         cluster = current_app.config["K8S_CLUSTER"]
+        
+        print("LALA")
+        
         deployment = cluster.get(uuid, application_key, create=True)
+        
+        print("LALA")
 
         try:
             deployment.deploy()
         except (CancelledError, TimeoutError) as e:
             raise ProblemException(400, "Error", f"Failed to deploy {e!r}")
+        except Exception as e:
+            raise ProblemException(500, "Error", f"Error occured {e!r}")
+        
+        print("LALA")
 
         return [deployment.asdict()]
 
@@ -33,7 +42,7 @@ class DeployView(MethodView):
         deployment = cluster.get(uuid, application_key)
         if deployment is None:
             raise ProblemException(
-                404, "Not Found", "Unable to find existing deployment"
+                404, "Not Found", title="Unable to find existing deployment"
             )
         return deployment.asdict()
 

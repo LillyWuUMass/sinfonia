@@ -59,6 +59,7 @@ COPY --from=builder /app/src/sinfonia/data ./src/sinfonia/data
 
 # Application recipes
 COPY RECIPES /RECIPES
+
 VOLUME ["/RECIPES"]
 ENV SINFONIA_RECIPES=/RECIPES
 

@@ -4,7 +4,7 @@
 import pytest
 from yarl import URL
 
-from sinfonia.deployment_repository import DeploymentRepository
+from src.sinfonia.deployment_repository import DeploymentRepository
 
 from .conftest import BAD_CONTENT, BAD_UUID, GOOD_CONTENT, GOOD_UUID
 
