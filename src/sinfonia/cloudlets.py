@@ -240,7 +240,10 @@ class Cloudlet:
     @classmethod
     def new_from_api(cls, request_body: dict) -> Cloudlet:
         uuid = request_body["uuid"]
+        
         endpoint = URL(request_body["endpoint"])
+        logger.debug(f"new_from_api req body, {request_body}")
+        
         locations = [
             GeoLocation.from_tuple(coord) for coord in request_body.get("locations", [])
         ]
@@ -256,7 +259,7 @@ class Cloudlet:
             rejected_clients=rejected_clients,
             resources=resources,
             last_update=pendulum.now(),
-        )
+            )
 
     def deploy_async(
         self,

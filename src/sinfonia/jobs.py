@@ -30,7 +30,7 @@ scheduler = APScheduler()
 def expire_cloudlets():
     cloudlets = scheduler.app.config["cloudlets"]
 
-    expiration = pendulum.now().subtract(minutes=scheduler.app.config["CLOUDLET_EXPIRY_MINUTES"])
+    expiration = pendulum.now().subtract(seconds=scheduler.app.config["CLOUDLET_EXPIRY_SECONDS"])
 
     for cloudlet in list(cloudlets.values()):
         if cloudlet.last_update is not None and cloudlet.last_update < expiration:
@@ -86,7 +86,7 @@ def report_to_tier1_endpoints():
         zone=tier2_zone
         )
     
-    time_ago = datetime.now() - timedelta(seconds=2 * TimeUnit.YEAR.value)
+    time_ago = datetime.now() - timedelta(seconds=2 * TimeUnit.YEAR)
     carbon_metrics = carbon_obj.get_carbon_history(time_ago.timestamp())  # gCO2/kWH
 
     _, energy_consumption = carbon_obj.get_energy_consumption()  # kJ

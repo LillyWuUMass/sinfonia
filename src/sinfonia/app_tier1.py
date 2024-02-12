@@ -37,6 +37,7 @@ from .jobs import scheduler, start_expire_cloudlets_job
 from .matchers import Tier1MatchFunction, get_match_function_plugins
 from .openapi import load_spec
 
+from src.lib.time import TimeUnit
 from src.domain.logger import get_default_logger
 
 
@@ -62,7 +63,7 @@ class Tier1DefaultConfig:
     # deployment_repository: DeploymentRepository | None = None      # RECIPES
     
     # How long before removing cloudlet due to inactivity
-    CLOUDLET_EXPIRY_MINUTES = 60
+    CLOUDLET_EXPIRY_SECONDS = TimeUnit.HOUR
 
 
 def load_cloudlets_conf(cloudlets_conf: str | Path | None) -> dict[UUID, Cloudlet]:

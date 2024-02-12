@@ -10,7 +10,7 @@ _DEFAULT_DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
 def _color_by_log_level(s: str, level: int) -> str:
     match level:
         case logging.DEBUG:
-            return fmt.str.magenta(s)
+            return fmt.str.cyan(s)
         case logging.INFO:
             return fmt.str.white(s)
         case logging.WARNING:

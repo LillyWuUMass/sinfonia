@@ -18,7 +18,7 @@ _DEFAULT_LOGGING_CONFIG = {
     },
     'handlers': {
         'console': {
-            'level': 'INFO',
+            'level': 'DEBUG',
             'formatter': 'default',
             'class': 'logging.StreamHandler',
             'stream': 'ext://sys.stdout',
