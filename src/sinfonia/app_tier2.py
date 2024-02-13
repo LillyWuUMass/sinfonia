@@ -58,7 +58,7 @@ class Tier2DefaultConfig:
     KUBECONTEXT: str = ""
     PROMETHEUS: str = "http://kube-prometheus-stack-prometheus.monitoring.svc:9090"
     TIER1_URLS: list[str] = ["http://192.168.245.30:5001"]
-    TIER2_URL: str | None = "http://obelix.cs.umass.edu:5000"
+    TIER2_URL: str | None = "http://10.43.56.130"
     TIER2_GEO_LOCATION: GeoLocation = GeoLocation(latitude=42.3672, longitude=-72.5185)
     TIER2_ZONE: str = "CA-ON"
 
