@@ -48,12 +48,14 @@ class CloudletsView(MethodView):
             
             resources = cloudlet.resources
             unix_time = int(time())
+            uuid = cloudlet.uuid
             carbon_intensity = resources.get('carbon_intensity', '')
             energy_consumption = resources.get('energy_consumption', '')
             carbon_emission = resources.get('carbon_emission', '')
             
             csv_writer.writerow([
                 unix_time, 
+                uuid,
                 carbon_intensity, 
                 energy_consumption, 
                 carbon_emission
