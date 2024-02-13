@@ -75,6 +75,7 @@ tqdm = "^4.64.1"
 [tool.poetry.scripts]
 sinfonia-tier1 = "src.sinfonia.app_tier1:cli"
 sinfonia-tier2 = "src.sinfonia.app_tier2:cli"
+sinfonia-tie3 = "src.sinfonia_tier3.cli:main"
 tier-shell = "tier_shell.main:app"
 
 [tool.poetry.plugins."src.sinfonia.tier1_matchers"]
