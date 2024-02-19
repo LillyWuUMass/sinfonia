@@ -1,0 +1,7 @@
+description: |-
+  Loadtest applications
+chart: charts/loadtest
+version: 0.1.0
+values:
+  fullnameOverride: helloworld
+restricted: false
