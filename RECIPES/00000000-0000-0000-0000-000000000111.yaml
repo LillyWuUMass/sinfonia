@@ -1,5 +1,5 @@
 description: |-
-  Loadtest applications
+  Sinfonia loadtest applications
 chart: charts/loadtest
 version: 0.1.0
 values:

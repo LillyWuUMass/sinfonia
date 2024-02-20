@@ -15,6 +15,9 @@ from connexion.exceptions import ProblemException
 from flask import current_app
 from flask.views import MethodView
 
+from src.domain.logger import get_default_logger
+
+
 
 class DeployView(MethodView):
     def post(self, uuid, application_key):
@@ -27,6 +30,9 @@ class DeployView(MethodView):
             raise ProblemException(400, "Error", f"Failed to deploy {e!r}")
         except Exception as e:
             raise ProblemException(500, "Error", f"Error occured {e!r}")
+
+        logger = get_default_logger()
+        logger.debug(f"deployview post {deployment.asdict()}")
 
         return [deployment.asdict()]
 
