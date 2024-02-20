@@ -3,5 +3,5 @@ description: |-
 chart: charts/loadtest
 version: 0.1.0
 values:
-  fullnameOverride: helloworld
+  fullnameOverride: loadtest
 restricted: false
