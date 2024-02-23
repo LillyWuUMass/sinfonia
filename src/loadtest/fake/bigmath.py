@@ -40,6 +40,3 @@ def square_matrix(
         List[List[int]]
     """
     return matrix(rows=n, cols=n, min_value=min_value, max_value=max_value)
-
-
-print(square_matrix(3, 3))
