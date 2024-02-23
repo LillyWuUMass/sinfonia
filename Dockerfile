@@ -45,7 +45,6 @@ COPY src ./src
 COPY tests ./tests
 RUN poetry build && /venv/bin/pip install dist/*.whl
 
-
 FROM base as final
 
 # Environment dependencies
@@ -59,6 +58,9 @@ COPY --from=builder /app/src/sinfonia/data ./src/sinfonia/data
 
 # Application recipes
 COPY RECIPES /RECIPES
+
+# Helm charts for local helm repo finds
+COPY charts /RECIPES/charts
 
 VOLUME ["/RECIPES"]
 ENV SINFONIA_RECIPES=/RECIPES

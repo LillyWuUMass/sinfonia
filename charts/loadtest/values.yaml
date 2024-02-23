@@ -8,7 +8,7 @@ image:
   repository: k2nt/sinfonia-loadtest-app
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: 6
+  tag: 10
 
 imagePullSecrets: []
 nameOverride: ""
@@ -74,11 +74,15 @@ resources: {}
 livenessProbe:
   httpGet:
     path: /livez
-    port: 8080
+    port: 80
+  initialDelaySeconds: 5
+  periodSeconds: 10
 readinessProbe:
   httpGet:
-    path: /livez
-    port: 8080
+    path: /readyz
+    port: 80
+  initialDelaySeconds: 5
+  periodSeconds: 10
 
 autoscaling:
   enabled: false

@@ -22,5 +22,5 @@ __pycache__/
 .nox/
 .pytest-cache/
 /build/
-/charts/
+# /charts/
 /dist/
