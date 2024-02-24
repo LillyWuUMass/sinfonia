@@ -32,7 +32,6 @@ from io import StringIO
 
 from .deployment import CLIENT_NETWORK, Deployment
 from .deployment_recipe import DeploymentRecipe
-from .carbon import CarbonMetrics
 from .geo_location import GeoLocation
 from .cloudlets import load
 

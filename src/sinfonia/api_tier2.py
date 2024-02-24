@@ -7,7 +7,6 @@
 #
 # SPDX-License-Identifier: MIT
 #
-
 from concurrent.futures import CancelledError
 
 from connexion import NoContent
@@ -17,10 +16,12 @@ from flask.views import MethodView
 
 from src.domain.logger import get_default_logger
 
+from src.sinfonia.carbon import CarbonInfo
+
 
 class CarbonView(MethodView):
     def search(self):
-        return NoContent, 200
+        return CarbonInfo(1, 2, 3)
 
 
 class DeployView(MethodView):

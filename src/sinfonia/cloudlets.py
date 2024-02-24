@@ -242,7 +242,6 @@ class Cloudlet:
         uuid = request_body["uuid"]
         
         endpoint = URL(request_body["endpoint"])
-        logger.debug(f"new_from_api req body, {request_body}")
         
         locations = [
             GeoLocation.from_tuple(coord) for coord in request_body.get("locations", [])
