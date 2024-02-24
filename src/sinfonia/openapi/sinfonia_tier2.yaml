@@ -75,7 +75,21 @@ paths:
         in: header
         schema:
           "$ref": "#/components/schemas/GeoLocation"
-
+  '/carbon':
+    get:
+      summary: obtains a list of candidate cloudlets
+      responses:
+        "200":
+          description: "returning candidate cloudlets"
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                '$ref': '#/components/schemas/CarbonInfo'
+        "400":
+          description: "Invalid request"
+            
 components:
   schemas:
     CloudletDeployment:
@@ -133,6 +147,18 @@ components:
           type: array
           items:
             "$ref": "#/components/schemas/NetworkAddress"
+    CarbonInfo:
+      type: object
+      properties:
+        intensity:
+          type: number
+          format: float
+        consumption:
+          type: number
+          format: float
+        emission:
+          type: number
+          format: float
     GeoLocation:
       type: array
       items:

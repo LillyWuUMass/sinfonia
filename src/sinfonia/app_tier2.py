@@ -52,6 +52,7 @@ from .geo_location import GeoLocation
 #     # deployment_repository: DeploymentRepository | None = None     # RECIPES
 #     # K8S_CLUSTER : Cluster | None = None   # KUBECONFIG KUBECONTEXT PROMETHEUS
 
+
 class Tier2DefaultConfig:
     RECIPES: str | Path | URL = "RECIPES"
     KUBECONFIG: str = ""

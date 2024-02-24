@@ -170,7 +170,7 @@ class CarbonMetrics:
 
         return metrics
 
-    def get_carbon_metrics(self) -> Dict[str, float]:
+    def carbon_metrics(self) -> Dict[str, float]:
         """ Retrieve carbon metrics from providers: WattTime, ElectricityMap"""
         carbon_metrics = {}
         wt_metrics = {}
@@ -214,7 +214,7 @@ class CarbonMetrics:
 
         return total_avg_power, energy_consumption
 
-    def get_carbon_history(self, timestamp: float) -> dict:
+    def carbon_history(self, timestamp: float) -> dict:
         """ Retrieve the carbon intensity of a zone from a past timestamp"""
 
         ZONES = ["CA-ON", "US-CAL-CISO"]

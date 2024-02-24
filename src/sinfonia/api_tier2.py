@@ -18,6 +18,10 @@ from flask.views import MethodView
 from src.domain.logger import get_default_logger
 
 
+class CarbonView(MethodView):
+    def search(self):
+        return NoContent, 200
+
 
 class DeployView(MethodView):
     def post(self, uuid, application_key):

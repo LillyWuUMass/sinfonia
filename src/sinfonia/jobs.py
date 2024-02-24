@@ -16,7 +16,7 @@ from yarl import URL
 from time import time
 from datetime import datetime, timedelta
 
-from .get_carbon import CarbonMetrics
+from .carbon import CarbonMetrics
 
 from src.lib.time.unit import TimeUnit
 
@@ -87,7 +87,7 @@ def report_to_tier1_endpoints():
         )
     
     time_ago = datetime.now() - timedelta(seconds=2 * TimeUnit.YEAR)
-    carbon_metrics = carbon_obj.get_carbon_history(time_ago.timestamp())  # gCO2/kWH
+    carbon_metrics = carbon_obj.carbon_history(time_ago.timestamp())  # gCO2/kWH
 
     _, energy_consumption = carbon_obj.get_energy_consumption()  # kJ
     
