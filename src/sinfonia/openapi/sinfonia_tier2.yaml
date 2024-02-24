@@ -153,7 +153,7 @@ components:
         intensity:
           type: number
           format: float
-        consumption:
+        energy_consumption:
           type: number
           format: float
         emission:

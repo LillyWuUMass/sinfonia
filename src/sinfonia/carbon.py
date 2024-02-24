@@ -1,18 +1,20 @@
 '''
 Query real-time carbon metrics of a given coordinator (longitue and latitue).
 '''
+from typing import Dict
 
 import json
-from typing import Dict
 import requests
+from attr import define, field
 from requests.auth import HTTPBasicAuth
 from requests.exceptions import RequestException
-from attr import define, field
 
+import csv
 import rapl
 import time
-import csv
 from pathlib import Path
+
+from pydantic import BaseModel
 
 from src.domain.logger import get_default_logger
 
@@ -26,6 +28,13 @@ DATA_PATH = Path("src/sinfonia/data")
 CONFIG_PATH = "src/sinfonia/config/carbon_providers.json"
 # Only these two providers are supported
 CARBON_PROVIDERS = ["WattTime", "ElectricityMap"]
+
+
+class CarbonInfo(BaseModel):
+    """Contains carbon reporting information."""
+    intensity: float
+    energy_consumption: float
+    emission: float
 
 
 @define
