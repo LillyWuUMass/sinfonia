@@ -49,7 +49,7 @@ pydantic = "2.5.0"
 dependency-injector = "^4.41.0"
 python-dotenv = {version = "^1.0.1", python = "3.10"}
 pydantic-settings = {version = "^2.1.0", python = "3.10"}
-locust = {version = "^2.23.1", python = "3.10"}
+ansible = {version = "^9.2.0", python = "3.10"}
 
 [tool.poetry.group.dev.dependencies]
 black = "^22.10.0"
@@ -76,7 +76,6 @@ tqdm = "^4.64.1"
 [tool.poetry.scripts]
 sinfonia-tier1 = "src.sinfonia.app_tier1:cli"
 sinfonia-tier2 = "src.sinfonia.app_tier2:cli"
-sinfonia-tie3 = "src.sinfonia_tier3.cli:main"
 tier-shell = "tier_shell.main:app"
 
 [tool.poetry.plugins."src.sinfonia.tier1_matchers"]

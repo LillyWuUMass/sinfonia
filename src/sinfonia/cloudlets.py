@@ -284,6 +284,8 @@ class Cloudlet:
             except requests.exceptions.RequestException:
                 logger.exception("Exception while forwarding request")
                 return []
+            except Exception as e:
+                logger.exception(f"cloudlet Exception occurred {str(e)}")
 
         request_url = self.endpoint / str(app_uuid) / client_info.publickey.urlsafe
 
