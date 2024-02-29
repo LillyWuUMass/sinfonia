@@ -27,43 +27,59 @@ app = typer.Typer(
 
 logger = get_default_logger()
 
+_NAME_TABLE = {
+    "helloworld": "00000000-0000-0000-0000-000000000000",
+    "loadtest": "00000000-0000-0000-0000-000000000111",
+    "openrtist-cpu": "737b5001-d27a-413f-9806-abf9bfce6746",
+    "openrtist-gpu": "755e5883-0788-44da-8778-2113eddf4271",
+    }
+
 
 # Views
 
 @app.command()
-def deploy_recipe(
+def deploy_app(
         uuid: str = uuid_option,
         app_id: str = app_id_option,
 ):
-    """Deploy recipe to Tier 2 cloudlet.
+    """Deploy application to Tier 2 cloudlet.
     
     Note:
         See 'RECIPES' folder for recipe UUIDs and recipe definitions.
     """    
-    _NAME_TABLE = {
-        "helloworld": "00000000-0000-0000-0000-000000000000",
-        "loadtest": "00000000-0000-0000-0000-000000000111",
-        "openrtist-cpu": "737b5001-d27a-413f-9806-abf9bfce6746",
-        "openrtist-gpu": "755e5883-0788-44da-8778-2113eddf4271",
-        }
-    
     if not svc.types.is_valid_uuid(uuid):
         uuid = _NAME_TABLE.get(uuid)
     
-    _deploy_recipe(uuid, app_id)
+    _deploy_app(uuid, app_id)
     
     
 @app.command()
-def c2():
-    """c2"""    
-    print('c2')
+def delete_app(
+        uuid: str = uuid_option,
+        app_id: str = app_id_option,
+):
+    """Delete application from Tier 2 cloudlet.
+    
+    Note:
+        See 'RECIPES' folder for recipe UUIDs and recipe definitions.
+    """
+    if not svc.types.is_valid_uuid(uuid):
+        uuid = _NAME_TABLE.get(uuid)
+    
+    _delete_app(uuid, app_id)
+    
+    
+@app.command()
+def get_carbon():
+    """Get carbon level at Tier 2 cloudlet."""
+    _get_carbon()
 
 
 # Connectors
 
 
 @inject
-def _deploy_recipe(
+def _deploy_app(
         uuid: str,
         app_id: str,
         config: AppConfig = Provide[AppDI.config_tier2]
@@ -73,7 +89,39 @@ def _deploy_recipe(
         method=HTTPMethod.POST,
         api_path=Path('deploy') / uuid / app_id,
         msg_by_status_code={
-            HTTPStatus.OK: "Recipe deployed to cloudlet.",
-            HTTPStatus.NOT_FOUND: "Failed to create deployment.",
+            HTTPStatus.OK: "Application deployed to cloudlet.",
+            HTTPStatus.NOT_FOUND: "Failed to deploy application.",
             }
         )
+
+
+@inject
+def _delete_app(
+        uuid: str,
+        app_id: str,
+        config: AppConfig = Provide[AppDI.config_tier2]
+):
+    svc.api.log_api_request(
+        config=config,
+        method=HTTPMethod.DELETE,
+        api_path=Path('deploy') / uuid / app_id,
+        msg_by_status_code={
+            HTTPStatus.NO_CONTENT: "Application deleted from cloudlet.",
+            HTTPStatus.NOT_FOUND: "Failed to delete application.",
+            }
+        )
+
+
+@inject
+def _get_carbon(
+        config: AppConfig = Provide[AppDI.config_tier2]
+):
+    svc.api.log_api_request(
+        config=config,
+        method=HTTPMethod.GET,
+        api_path=Path('carbon'),
+        msg_by_status_code={
+            HTTPStatus.OK: "Retrieved carbon data.",
+            }
+        )
+

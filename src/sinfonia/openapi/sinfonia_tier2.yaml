@@ -82,18 +82,16 @@ paths:
           "$ref": "#/components/schemas/GeoLocation"
   '/carbon':
     get:
-      summary: obtains a list of candidate cloudlets
+      summary: get carbon data at Tier2 cloudlet
       responses:
         "200":
-          description: "returning candidate cloudlets"
+          description: "returning carbon data"
           content:
             application/json:
               schema:
                 type: object
                 items:
                 '$ref': '#/components/schemas/CarbonInfo'
-        "400":
-          description: "Invalid request"
             
 components:
   schemas:

@@ -35,17 +35,17 @@ def build():
 # Views
 
 @app.command()
-def app_state():
+def get_config():
     """Report application state."""
     # Dependency injector doesn't play well with Typer, cannot stack decorator
     # Separating functions seems like the best option for the moment.
-    _app_state()
+    _get_config()
 
 
 # Connectors
     
 @inject
-def _app_state(
+def _get_config(
         config_tier1: AppConfig = Provide[AppDI.config_tier1],
         config_tier2: AppConfig = Provide[AppDI.config_tier2]
 ):
