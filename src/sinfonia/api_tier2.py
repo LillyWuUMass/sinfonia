@@ -52,8 +52,12 @@ class DeployView(MethodView):
 
     def delete(self, uuid, application_key):
         cluster = current_app.config["K8S_CLUSTER"]
+        
         deployment = cluster.get(uuid, application_key)
         if deployment is not None:
-            deployment.expire()
-            deployment.delete()
+            try:
+                deployment.expire()
+            except Exception as e:
+                raise ProblemException(500, "Error", f"Error occured {e!r}")
+        
         return NoContent, 204

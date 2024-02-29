@@ -44,6 +44,11 @@ paths:
                     '$ref': '#/components/schemas/CloudletInfo'
         "404":
             description: "No suitable cloudlets found"
+    delete:
+      summary: delete a deployment
+      responses:
+        "204":
+            description: "Successfully deleted deployment"
     parameters:
       - name: uuid
         description: uuid of the desired application backend
