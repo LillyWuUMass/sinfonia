@@ -35,6 +35,7 @@ from .deployment_recipe import DeploymentRecipe
 from .geo_location import GeoLocation
 from .cloudlets import load
 
+from src.lib.time import TimeUnit
 from src.domain.logger import get_default_logger
 
 
@@ -49,7 +50,7 @@ RESOURCE_QUERIES = {
     "gpu_ratio": "sum(DCGM_FI_DEV_GPU_UTIL) / count(DCGM_FI_DEV_GPU_UTIL)",
 }
 
-LEASE_DURATION = 300  # seconds
+LEASE_DURATION = 2 * TimeUnit.HOUR
 
 
 @define

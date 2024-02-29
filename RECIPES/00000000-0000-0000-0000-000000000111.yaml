@@ -1,7 +1,7 @@
 description: |-
   A collection of load-testing apps for the Sinfonia framework
-chart: https://k2nt.github.io/projects/sinfonia/helm/loadtest-app
+chart: https://k2nt.github.io/projects/sinfonia/helm/loadtest
 version: 0.1.0
 values:
-  fullnameOverride: sinfonia-loadtest-app
+  fullnameOverride: sinfonia-loadtest
 restricted: false
