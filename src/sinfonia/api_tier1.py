@@ -7,8 +7,10 @@
 #
 # SPDX-License-Identifier: MIT
 #
+from typing import Dict, List, Iterable
 
 import os
+from uuid import UUID
 from itertools import chain, filterfalse, islice, zip_longest
 
 from connexion import NoContent
@@ -67,7 +69,7 @@ class CloudletsView(MethodView):
         return NoContent, 204
 
     def search(self):
-        cloudlets = current_app.config["cloudlets"]
+        cloudlets: Dict[UUID, Cloudlet] = current_app.config["cloudlets"]
         return [cloudlet.summary() for cloudlet in cloudlets.values()]
 
 
@@ -83,8 +85,8 @@ class DeployView(MethodView):
             raise ProblemException(400, "Bad Request", "Incorrectly formatted request")
 
         matchers = current_app.config["match_functions"]
-        available = list(current_app.config["cloudlets"].values())
-        candidates = islice(
+        available: List[Cloudlet] = list(current_app.config["cloudlets"].values())
+        candidates: Iterable[Cloudlet] = islice(
             tier1_best_match(matchers, client_info, requested, available), max_results
         )
 
@@ -114,6 +116,9 @@ class DeployView(MethodView):
         return results
 
     def get(self, uuid, application_key):
+        raise ProblemException(500, "Error", "Not implemented")
+    
+    def delete(self, uuid, application_key):
         raise ProblemException(500, "Error", "Not implemented")
 
 
