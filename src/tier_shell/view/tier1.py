@@ -9,9 +9,13 @@ from dependency_injector.wiring import Provide, inject
 from src.tier_shell.domain.config import AppConfig
 from src.tier_shell.domain.di import AppDI
 
-import src.tier_shell.service as svc
+from src.tier_shell.view.common import (
+    uuid_option,
+    app_id_option,
+    lookup_uuid,
+    )
 
-from src.tier_shell.view.common import uuid_option
+import src.tier_shell.service as svc
 
 
 app = typer.Typer(
@@ -29,9 +33,21 @@ def get_known_cloudlets():
 
 
 @app.command()
-def get_deployment_recipe(uuid: str = uuid_option):
+def get_deploy_app(uuid: str = uuid_option):
+    """Retrieve information on deployment app."""
+    _get_deploy_app(uuid)
+    
+    
+@app.command()
+def deploy_app(
+        uuid: str = uuid_option,
+        app_id: str = app_id_option,
+):
     """Retrieve information on deployment recipes."""
-    _get_deployment_recipe(uuid)
+    if not svc.types.is_valid_uuid(uuid):
+        uuid = lookup_uuid(uuid)
+    
+    _deploy_app(uuid, app_id)
 
 
 # Connectors
@@ -51,7 +67,7 @@ def _get_known_cloudlets(
     
     
 @inject
-def _get_deployment_recipe(
+def _get_deploy_app(
         uuid: str,
         config: AppConfig = Provide[AppDI.config_tier1],
 ):
@@ -63,5 +79,21 @@ def _get_deployment_recipe(
             HTTPStatus.OK: 'Returning list of known cloudlets.',
             HTTPStatus.FORBIDDEN: 'Cannot access deployment recipe.',
             HTTPStatus.NOT_FOUND: 'Deployment recipe not found.',
+            }
+        )
+    
+    
+@inject
+def _deploy_app(
+        uuid: str,
+        app_id: str,
+        config: AppConfig = Provide[AppDI.config_tier1]
+):
+    svc.api.log_api_request(
+        config=config,
+        method=HTTPMethod.POST,
+        api_path=Path('deploy') / uuid / app_id,
+        msg_by_status_code={
+            HTTPStatus.OK: 'App deployed.'
             }
         )

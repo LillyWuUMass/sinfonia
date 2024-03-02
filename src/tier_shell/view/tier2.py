@@ -13,26 +13,16 @@ from src.tier_shell.domain.di import AppDI
 from src.tier_shell.view.common import (
     uuid_option,
     app_id_option,
+    lookup_uuid,
     )
 
 import src.tier_shell.service as svc
-
-from src.domain.logger import get_default_logger
 
 
 app = typer.Typer(
     name="tier2",
     help="Interactions with Tier 2 instances.",
     )
-
-logger = get_default_logger()
-
-_NAME_TABLE = {
-    "helloworld": "00000000-0000-0000-0000-000000000000",
-    "loadtest": "00000000-0000-0000-0000-000000000111",
-    "openrtist-cpu": "737b5001-d27a-413f-9806-abf9bfce6746",
-    "openrtist-gpu": "755e5883-0788-44da-8778-2113eddf4271",
-    }
 
 
 # Views
@@ -48,7 +38,7 @@ def deploy_app(
         See 'RECIPES' folder for recipe UUIDs and recipe definitions.
     """    
     if not svc.types.is_valid_uuid(uuid):
-        uuid = _NAME_TABLE.get(uuid)
+        uuid = lookup_uuid(uuid)
     
     _deploy_app(uuid, app_id)
     
