@@ -51,6 +51,8 @@ python-dotenv = {version = "^1.0.1", python = "3.10"}
 pydantic-settings = {version = "^2.1.0", python = "3.10"}
 ansible = {version = "^9.2.0", python = "3.10"}
 locust = {version = "^2.23.1", python = "3.10"}
+pandas = {version = "^2.2.1", python = "3.10"}
+pyrapl = "^0.2.3.1"
 
 [tool.poetry.group.dev.dependencies]
 black = "^22.10.0"
