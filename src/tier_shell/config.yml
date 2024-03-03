@@ -22,6 +22,8 @@ tier1:
 
 tier2:
   timeout_seconds: 8
-  port: 80
-  root_url: http://10.43.223.99
+  port: 5000
+  root_url: http://localhost
+  # port: 80
+  # root_url: http://10.43.223.99
   api_path: api/v1

@@ -16,7 +16,7 @@ from yarl import URL
 from time import time
 from datetime import datetime, timedelta
 
-from .carbon import CarbonMetrics
+from .carbon_siva import CarbonMetrics
 
 from src.lib.time.unit import TimeUnit
 

@@ -1,8 +1,6 @@
-from .measures import (
-    get_carbon_trace,
-    get_average_energy_use_joules,
-    )
-import src.sinfonia.carbon.replay as replay
+from dataclasses import dataclass
+
+# import src.sinfonia.carbon.trace as trace
 import src.sinfonia.carbon.unit_conv as unit_conv
 
 
