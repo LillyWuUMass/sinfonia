@@ -18,7 +18,7 @@ def get_average_energy_use_joules(period_seconds: float = 1) -> float:
     """
     meter = pyRAPL.Measurement('sys')
     
-    # Instantaneous energy use is measured over a 1-second interval
+    # Measure system energy use over the specified period
     meter.begin()
     time.sleep(period_seconds)
     meter.end()

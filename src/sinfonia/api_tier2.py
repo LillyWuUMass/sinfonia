@@ -16,12 +16,12 @@ from flask.views import MethodView
 
 from src.domain.logger import get_default_logger
 
-from src.sinfonia.carbon import CarbonInfo
+from src.sinfonia.carbon import CarbonReport
 
 
 class CarbonView(MethodView):
     def search(self):
-        return CarbonInfo(1, 2, 3)
+        return CarbonReport(1, 2, 3)
 
 
 class DeployView(MethodView):

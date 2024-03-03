@@ -30,11 +30,11 @@ CARBON_PROVIDERS = ["WattTime", "ElectricityMap"]
 
 
 @dataclass(init=True)
-class CarbonInfo():
+class CarbonReport():
     """Contains carbon reporting information."""
     intensity: float
     energy_consumption: float
-    emission: float
+    carbon_intensity_gco2_kwh: float
 
 
 @define

@@ -79,21 +79,21 @@ def report_to_tier1_endpoints():
     cluster = config["K8S_CLUSTER"]
     resources = cluster.get_resources()
 
-    # Add carbon metrics to resources
-    carbon_obj = CarbonMetrics(
-        latitude=tier2_location.latitude, 
-        longitude=tier2_location.longitude, 
-        zone=tier2_zone
-        )
+    # # Add carbon metrics to resources
+    # carbon_obj = CarbonMetrics(
+    #     latitude=tier2_location.latitude, 
+    #     longitude=tier2_location.longitude, 
+    #     zone=tier2_zone
+    #     )
     
-    time_ago = datetime.now() - timedelta(seconds=2 * TimeUnit.YEAR)
-    carbon_metrics = carbon_obj.carbon_history(time_ago.timestamp())  # gCO2/kWH
+    # time_ago = datetime.now() - timedelta(seconds=2 * TimeUnit.YEAR)
+    # carbon_metrics = carbon_obj.carbon_history(time_ago.timestamp())  # gCO2/kWH
 
-    _, energy_consumption = carbon_obj.get_energy_consumption()  # kJ
+    # _, energy_consumption = carbon_obj.get_energy_consumption()  # kJ
     
-    resources["carbon_intensity"] = carbon_metrics["carbon_intensity"]
-    resources["energy_consumption"] = energy_consumption
-    resources["carbon_emission"] = carbon_metrics["carbon_intensity"] * energy_consumption / 3600  # gCO2
+    # resources["carbon_intensity"] = carbon_metrics["carbon_intensity"]
+    # resources["energy_consumption"] = energy_consumption
+    # resources["carbon_emission"] = carbon_metrics["carbon_intensity"] * energy_consumption / 3600  # gCO2
 
     logger.info("Reporting %s", str(resources))
 

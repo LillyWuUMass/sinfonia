@@ -91,7 +91,7 @@ paths:
               schema:
                 type: object
                 items:
-                '$ref': '#/components/schemas/CarbonInfo'
+                '$ref': '#/components/schemas/CarbonReport'
             
 components:
   schemas:
@@ -150,16 +150,16 @@ components:
           type: array
           items:
             "$ref": "#/components/schemas/NetworkAddress"
-    CarbonInfo:
+    CarbonReport:
       type: object
       properties:
-        intensity:
+        carbon_intensity_gco2_kwh:
           type: number
           format: float
-        energy_consumption:
+        energy_use_joules:
           type: number
           format: float
-        emission:
+        carbon_emission_gco2:
           type: number
           format: float
     GeoLocation:
