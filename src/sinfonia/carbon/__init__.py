@@ -1,6 +1,8 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
 
-# import src.sinfonia.carbon.trace as trace
+from .measures import (
+    get_average_energy_use_joules
+)
 import src.sinfonia.carbon.unit_conv as unit_conv
 
 
@@ -10,3 +12,6 @@ class CarbonReport():
     carbon_intensity_gco2_kwh: float
     energy_use_joules: float
     carbon_emission_gco2: float
+    
+    def to_dict(self):
+        return asdict(self)

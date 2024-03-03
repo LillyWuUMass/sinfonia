@@ -1,5 +1,6 @@
 from typing import Dict
 
+import time
 from bisect import bisect_left
 from pathlib import Path
 
@@ -10,16 +11,13 @@ from src.sinfonia.carbon import (
     get_average_energy_use_joules,
     )
 
-from .carbon.unit_conv import joules_to_kwh
-
-
-def _is_supported_zone(zone: str) -> bool:
-    return zone in _SUPPORTED_ZONES
+from src.sinfonia.carbon.unit_conv import joules_to_kilowatt_hours
+from .metadata import DATA_PATH, is_supported_zone, get_metadata, MetaData
 
 
 def get_carbon_trace(zone: str, timestamp: int) -> Dict:
     """Return carbon trace given zone and timestamp."""
-    if not _is_supported_zone(zone):
+    if not is_supported_zone(zone):
         raise ValueError(f"Zone {zone} is not supported. Supported zones are: {_SUPPORTED_ZONES}")
     
     h = pd.read_csv(DATA_PATH / f"{zone}.csv")
@@ -28,14 +26,31 @@ def get_carbon_trace(zone: str, timestamp: int) -> Dict:
 
 
 def get_average_carbon_intensity_gco2_kwh(zone: str, timestamp: int) -> float:
-    return get_carbon_trace(zone, timestamp)["carbon_intensity"]
+    return get_carbon_trace(zone, timestamp)["carbon_intensity_avg"]
 
 
-def get_carbon_report(zone: str, timestamp: int) -> CarbonReport:
-    """Return system carbon report given zone and timestamp."""
+def get_carbon_report(zone: str, timestamp: int = -1) -> CarbonReport:
+    """Return system carbon report given zone and timestamp.
+    
+    Args:
+        zone - str: Zone for which to get carbon report
+        timestamp - int: Timestamp for which to get carbon report. If not 
+            specified, the current time is used and is translated to the trace's 
+            reference timeframe [default: -1]
+        
+    Returns:
+        CarbonReport: Carbon report for the specified zone and timestamp.
+    """
+    # Translate current time to trace reference time
+    if timestamp == -1:
+        m = get_metadata(zone)
+        tn = int(time.time())
+        incr = tn % (m.end_date_unix - m.start_date_unix)
+        timestamp = m.start_date_unix + incr
+    
     ci = get_average_carbon_intensity_gco2_kwh(zone, timestamp)
     eu = get_average_energy_use_joules()
-    ce = ci * joules_to_kwh(eu)
+    ce = ci * joules_to_kilowatt_hours(eu)
     
     return CarbonReport(
         carbon_intensity_gco2_kwh=ci,

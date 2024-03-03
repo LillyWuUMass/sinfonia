@@ -8,6 +8,8 @@
 # SPDX-License-Identifier: MIT
 #
 
+from typing import Dict
+
 import pendulum
 import requests
 from flask_apscheduler import APScheduler
@@ -16,11 +18,12 @@ from yarl import URL
 from time import time
 from datetime import datetime, timedelta
 
-from .carbon_siva import CarbonMetrics
-
 from src.lib.time.unit import TimeUnit
 
 from src.domain.logger import get_default_logger
+
+from src.sinfonia.carbon import CarbonReport
+from src.sinfonia.carbon.trace import get_carbon_report
 
 
 logger = get_default_logger()
@@ -77,7 +80,7 @@ def report_to_tier1_endpoints():
     tier2_zone = config["TIER2_ZONE"]
 
     cluster = config["K8S_CLUSTER"]
-    resources = cluster.get_resources()
+    resources: Dict = cluster.get_resources()
 
     # # Add carbon metrics to resources
     # carbon_obj = CarbonMetrics(
@@ -94,6 +97,10 @@ def report_to_tier1_endpoints():
     # resources["carbon_intensity"] = carbon_metrics["carbon_intensity"]
     # resources["energy_consumption"] = energy_consumption
     # resources["carbon_emission"] = carbon_metrics["carbon_intensity"] * energy_consumption / 3600  # gCO2
+    
+    # Inject carbon metrics
+    carbon_report = get_carbon_report(tier2_zone)
+    resources.update(carbon_report.to_dict())
 
     logger.info("Reporting %s", str(resources))
 
