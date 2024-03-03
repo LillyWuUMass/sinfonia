@@ -83,6 +83,13 @@ paths:
   '/carbon':
     get:
       summary: get carbon data at Tier2 cloudlet
+      parameters:
+        - in: query
+          name: tspad
+          schema:
+            type: integer
+          description: Timestamp pad to manipulate trace clock
+          required: false
       responses:
         "200":
           description: "returning carbon data"

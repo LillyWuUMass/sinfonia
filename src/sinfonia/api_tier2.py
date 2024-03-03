@@ -17,11 +17,17 @@ from flask.views import MethodView
 from src.domain.logger import get_default_logger
 
 from src.sinfonia.carbon import CarbonReport
+from src.sinfonia.carbon.trace import get_carbon_report
+
+from flask import request
 
 
 class CarbonView(MethodView):
     def search(self):
-        return CarbonReport(1, 2, 3)
+        tspad = request.args.get('tspad', 0)
+        timestamp = int(time.time()) + tspad
+        zone = current_app.config['TIER2_ZONE']
+        return get_carbon_report(zone, ts)
 
 
 class DeployView(MethodView):
