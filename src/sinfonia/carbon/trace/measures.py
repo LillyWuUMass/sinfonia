@@ -29,24 +29,20 @@ def get_average_carbon_intensity_gco2_kwh(zone: str, timestamp: int) -> float:
     return get_carbon_trace(zone, timestamp)["carbon_intensity_avg"]
 
 
-def get_carbon_report(zone: str, timestamp: int = -1) -> CarbonReport:
+def get_carbon_report(zone: str, timestamp: int) -> CarbonReport:
     """Return system carbon report given zone and timestamp.
     
     Args:
         zone - str: Zone for which to get carbon report
-        timestamp - int: Timestamp for which to get carbon report. If not 
-            specified, the current time is used and is translated to the trace's 
-            reference timeframe [default: -1]
+        timestamp - int: Timestamp for which to get carbon report.
         
     Returns:
         CarbonReport: Carbon report for the specified zone and timestamp.
     """
-    # Translate current time to trace reference time
-    if timestamp == -1:
-        m = get_metadata(zone)
-        tn = int(time.time())
-        incr = tn % (m.end_date_unix - m.start_date_unix)
-        timestamp = m.start_date_unix + incr
+    # Translate given time to trace reference time
+    m = get_metadata(zone)
+    incr = timestamp % (m.end_date_unix - m.start_date_unix)
+    timestamp = m.start_date_unix + incr
     
     ci = get_average_carbon_intensity_gco2_kwh(zone, timestamp)
     eu = get_average_energy_use_joules()

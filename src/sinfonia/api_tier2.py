@@ -7,27 +7,41 @@
 #
 # SPDX-License-Identifier: MIT
 #
+import time
 from concurrent.futures import CancelledError
 
 from connexion import NoContent
 from connexion.exceptions import ProblemException
-from flask import current_app
+from flask import current_app, request
 from flask.views import MethodView
+from pydantic import BaseModel, validator
 
 from src.domain.logger import get_default_logger
 
 from src.sinfonia.carbon import CarbonReport
 from src.sinfonia.carbon.trace import get_carbon_report
 
-from flask import request
+
+class CarbonGet(BaseModel):
+    tspad: int = 0
+    
+    @validator('tspad')
+    def _check_non_negative(cls, v):
+        if v < 0:
+            raise ValueError('tspad must be non-negative')
+        return v
 
 
 class CarbonView(MethodView):
     def search(self):
-        tspad = request.args.get('tspad', 0)
-        timestamp = int(time.time()) + tspad
+        try:
+            req = CarbonGet(**request.args)
+        except ValueError as e:
+            raise ProblemException(400, "Error", f"Failed to parse request {e!r}")
+
+        timestamp = int(time.time()) + req.tspad
         zone = current_app.config['TIER2_ZONE']
-        return get_carbon_report(zone, ts)
+        return get_carbon_report(zone, timestamp)
 
 
 class DeployView(MethodView):

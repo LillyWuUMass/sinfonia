@@ -99,7 +99,7 @@ def report_to_tier1_endpoints():
     # resources["carbon_emission"] = carbon_metrics["carbon_intensity"] * energy_consumption / 3600  # gCO2
     
     # Inject carbon metrics
-    carbon_report = get_carbon_report(tier2_zone)
+    carbon_report = get_carbon_report(tier2_zone, int(time()))
     resources.update(carbon_report.to_dict())
 
     logger.info("Reporting %s", str(resources))
