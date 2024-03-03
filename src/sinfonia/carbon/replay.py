@@ -10,12 +10,13 @@ DATA_PATH = Path("src/sinfonia/data")
 _SUPPORTED_ZONES = ["CA-ON", "US-CAL-CISO"]
 
 
-def is_supported_zone(zone: str) -> bool:
+def _is_supported_zone(zone: str) -> bool:
     return zone in _SUPPORTED_ZONES
 
 
 def get_carbon_trace(zone: str, timestamp: int) -> Dict:
-    if not is_supported_zone(zone):
+    """Return carbon trace given zone and timestamp."""
+    if not _is_supported_zone(zone):
         raise ValueError(f"Zone {zone} is not supported. Supported zones are: {_SUPPORTED_ZONES}")
     
     h = pd.read_csv(DATA_PATH / f"{zone}.csv")
