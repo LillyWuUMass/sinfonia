@@ -54,7 +54,7 @@ COPY --from=builder /venv /venv
 # Carbon data
 # This is purely for testing carbon replay and not a part of Sinfonia itself
 # It would be better if we pull carbon replay from an independent source, but oh well
-COPY --from=builder /app/src/sinfonia/data ./src/sinfonia/data
+COPY --from=builder /app/src/sinfonia/carbon/trace/data ./src/sinfonia/carbon/trace/data
 
 # Application recipes
 COPY RECIPES /RECIPES

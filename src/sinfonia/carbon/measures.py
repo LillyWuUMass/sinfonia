@@ -1,10 +1,6 @@
 import time
 
-import pyRAPL
-
-
-# Monitor energy usage on all devices (PKG, DRAM) over all sockets
-pyRAPL.setup()
+import rapl
 
 
 def get_average_energy_use_joules(period_seconds: float = 1) -> float:
@@ -16,16 +12,16 @@ def get_average_energy_use_joules(period_seconds: float = 1) -> float:
     Returns:
         float: Average system energy use in Joules over the specified period.
     """
-    meter = pyRAPL.Measurement('sys')
-    
     # Measure system energy use over the specified period
-    meter.begin()
+    s1 = rapl.RAPLMonitor.sample()
     time.sleep(period_seconds)
-    meter.end()
+    s2 = rapl.RAPLMonitor.sample()
 
-    all_pkg = sum(meter.result.pkg)
-    all_dram = sum(meter.result.dram)
+    diff = s2 - s1
+    
+    eu = 0
+    for d in diff.domains:
+        domain = diff.domains[d]
+        eu += diff.average_power(package=domain.name)
 
-    # Raw results are in micro-joules
-    # Need to convert to joules    
-    return (all_pkg + all_dram) / 1e6
+    return eu
