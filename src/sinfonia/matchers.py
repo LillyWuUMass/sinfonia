@@ -179,13 +179,13 @@ def match_carbon_intensity(
 ) -> Iterator[Cloudlet]:
     """Yields cloudlet recommendations based on lowest carbon intensity level"""
     # Sort cloudlets by lowest carbon intensity level
-    sorted(cloudlets, key=lambda c: c.resources['carbon_intensity'])
+    sorted(cloudlets, key=lambda c: c.resources['carbon_intensity_gco2_kwh'])
 
     # Append decision to persistent log
     # This is for debugging purposes only
     timestamp = int(time.time())
     names = [c.name for c in cloudlets]
-    carbon_intensity = [c.resources['carbon_intensity'] for c in cloudlets]
+    carbon_intensity = [c.resources['carbon_intensity_gco2_kwh'] for c in cloudlets]
     _append_to_csv(
         path=CARBON_INTENSITY_LOG_FILE_PATH,
         header=CARBON_INTENSITY_CSV_HEADER,

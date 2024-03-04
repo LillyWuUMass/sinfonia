@@ -54,7 +54,7 @@ def delete_app(
         See 'RECIPES' folder for recipe UUIDs and recipe definitions.
     """
     if not svc.types.is_valid_uuid(uuid):
-        uuid = _NAME_TABLE.get(uuid)
+        uuid = lookup_uuid(uuid)
     
     _delete_app(uuid, app_id)
     
