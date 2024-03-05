@@ -26,6 +26,6 @@ def is_supported_zone(zone: str) -> bool:
 
 def get_metadata(zone: str) -> MetaData:
     if not is_supported_zone(zone):
-        raise ValueError(f"Zone {zone} is not supported. Supported zones are: {_SUPPORTED_ZONES}")
+        raise ValueError(f"Zone {zone} is not supported. Supported zones are: {SUPPORTED_ZONES}")
     return METADATA[zone]
     
