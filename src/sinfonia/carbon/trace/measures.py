@@ -1,8 +1,6 @@
 from typing import Dict
 
-import time
 from bisect import bisect_left
-from pathlib import Path
 
 import pandas as pd
 
@@ -12,13 +10,19 @@ from src.sinfonia.carbon import (
     )
 
 from src.sinfonia.carbon.unit_conv import joules_to_kilowatt_hours
-from .metadata import DATA_PATH, is_supported_zone, get_metadata, MetaData
+from .metadata import (
+    DATA_PATH, 
+    SUPPORTED_ZONES, 
+    is_supported_zone, 
+    get_metadata, 
+    MetaData
+    )
 
 
 def get_carbon_trace(zone: str, timestamp: int) -> Dict:
     """Return carbon trace given zone and timestamp."""
     if not is_supported_zone(zone):
-        raise ValueError(f"Zone {zone} is not supported. Supported zones are: {_SUPPORTED_ZONES}")
+        raise ValueError(f"Zone {zone} is not supported. Supported zones are: {SUPPORTED_ZONES}")
     
     h = pd.read_csv(DATA_PATH / f"{zone}.csv")
     i = bisect_left(h['timestamp'], timestamp)
@@ -40,7 +44,7 @@ def get_carbon_report(zone: str, timestamp: int) -> CarbonReport:
         CarbonReport: Carbon report for the specified zone and timestamp.
     """
     # Translate given time to trace reference time
-    m = get_metadata(zone)
+    m: MetaData = get_metadata(zone)
     incr = timestamp % (m.end_date_unix - m.start_date_unix)
     timestamp = m.start_date_unix + incr
     
