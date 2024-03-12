@@ -26,8 +26,8 @@
       cmd: poetry run poe update-deployment-files
       creates: "files/kilo-wg-exporter.yaml"
 
-- hosts: localhost
-  remote_user: ubuntu
+- hosts: tier2hosts
+  remote_user: khainguyen
   become_user: root
   become: true
 
