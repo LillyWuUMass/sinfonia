@@ -82,7 +82,7 @@ paths:
           "$ref": "#/components/schemas/GeoLocation"
   '/carbon':
     get:
-      summary: get carbon data at Tier2 cloudlet
+      summary: Get carbon data at Tier2 cloudlet
       parameters:
         - in: query
           name: tspad
@@ -99,6 +99,18 @@ paths:
                 type: object
                 items:
                 '$ref': '#/components/schemas/CarbonReport'
+  '/resu':
+    get:
+      summary: Get system resource utilization
+      responses:
+        "200":
+          description: "returning resource  utilization"
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                '$ref': '#/components/schemas/SystemStatsReport'
             
 components:
   schemas:
@@ -167,6 +179,24 @@ components:
           type: number
           format: float
         carbon_emission_gco2:
+          type: number
+          format: float
+    SystemStatsReport:
+      type: object
+      properties:
+        cpu_ratio:
+          type: number
+          format: float
+        mem_ratio:
+          type: number
+          format: float
+        net_rx_rate:
+          type: number
+          format: float
+        net_tx_rate:
+          type: number
+          format: float
+        gpu_ratio:
           type: number
           format: float
     GeoLocation:

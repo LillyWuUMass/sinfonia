@@ -42,6 +42,12 @@ class CarbonView(MethodView):
         timestamp = int(time.time()) + req.tspad
         zone = current_app.config['TIER2_ZONE']
         return get_carbon_report(zone, timestamp)
+    
+    
+class ResuView(MethodView):
+    """Resource Utilization"""
+    def search(self):
+        return current_app.config['K8S_CLUSTER'].get_resources()
 
 
 class DeployView(MethodView):
