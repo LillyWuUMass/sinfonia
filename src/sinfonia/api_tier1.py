@@ -25,11 +25,16 @@ from .cloudlets import Cloudlet
 from .deployment_recipe import DeploymentRecipe
 from .matchers import tier1_best_match
 
+from src.domain.logger import get_default_logger
+
 
 # don't try to deploy to more than MAX_RESULTS cloudlets at a time
 MAX_RESULTS = 3
 # Whenever a cloudlet reports to tier1, the carbon metrics are appended to this csv
 CLOUDLET_CARBON_HISTORY_CSV = "logs/cloudlets_carbon_history.csv"
+
+
+logger = get_default_logger()
 
 
 class CloudletsView(MethodView):
@@ -83,18 +88,25 @@ class DeployView(MethodView):
             client_info = ClientInfo.from_request(application_key)
         except ValueError:
             raise ProblemException(400, "Bad Request", "Incorrectly formatted request")
+        
+        logger.info('AAA')
 
         matchers = current_app.config["match_functions"]
         available: List[Cloudlet] = list(current_app.config["cloudlets"].values())
         candidates: Iterable[Cloudlet] = islice(
             tier1_best_match(matchers, client_info, requested, available), max_results
         )
+        
+        logger.info('AAA')
+        logger.info(f'candidates\n{candidates}')
 
         # fire off deployment requests
         requests = [
             cloudlet.deploy_async(requested.uuid, client_info)
             for cloudlet in candidates
         ]
+        
+        logger.info('AAA')
 
         # gather the results,
         # - interleave results from cloudlets in case any returned more than requested.
@@ -108,10 +120,14 @@ class DeployView(MethodView):
                 max_results,
             )
         )
+        
+        logger.info('AAA')
 
         # all requests failed?
         if not results:
             raise ProblemException(500, "Error", "Something went wrong")
+        
+        logger.info('AAA')
 
         return results
 

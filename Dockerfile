@@ -57,14 +57,11 @@ COPY --from=builder /venv /venv
 COPY --from=builder /app/src/sinfonia/carbon/trace/data ./src/sinfonia/carbon/trace/data
 
 # Application recipes
-COPY RECIPES /RECIPES
-
-# Helm charts for local helm repo finds
-COPY charts /RECIPES/charts
+COPY RECIPES /app/RECIPES
 
 VOLUME ["/RECIPES"]
 ENV SINFONIA_RECIPES=/RECIPES
 
-EXPOSE 5000
+EXPOSE 5001
 
-ENTRYPOINT ["/venv/bin/sinfonia-tier2"]
+ENTRYPOINT ["/venv/bin/sinfonia-tier2", "--port", "5001"]

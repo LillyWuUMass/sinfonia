@@ -15,15 +15,15 @@ logging:
     level: DEBUG
 
 tier1:
-  timeout_seconds: 8
+  timeout_seconds: 15
   port: 5000
   root_url: http://localhost
   api_path: api/v1
 
 tier2:
-  timeout_seconds: 8
-  # port: 5000
-  # root_url: http://localhost
-  port: 80
-  root_url: http://10.43.223.99
+  timeout_seconds: 15
+  port: 30051
+  root_url: http://192.168.245.32
+  # port: 80
+  # root_url: http://10.43.223.99
   api_path: api/v1

@@ -1,0 +1,10 @@
+tier2hosts:
+  hosts:
+    obelix30:
+      ansible_host: "192.168.245.30"
+      sinfonia_tier2_url: "http://192.168.245.30:30051"
+
+    obelix32:
+      ansible_host: "192.168.245.32"
+      sinfonia_tier2_url: "http://192.168.245.32:30051"
+      

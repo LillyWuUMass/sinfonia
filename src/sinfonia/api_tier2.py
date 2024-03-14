@@ -44,6 +44,16 @@ class CarbonView(MethodView):
         return get_carbon_report(zone, timestamp)
     
     
+class LivezView(MethodView):
+    def search(self):
+        return NoContent, 200
+    
+    
+class ReadyzView(MethodView):
+    def search(self):
+        return NoContent, 200
+    
+    
 class ResuView(MethodView):
     """Resource Utilization"""
     def search(self):

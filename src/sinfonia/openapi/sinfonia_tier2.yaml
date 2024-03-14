@@ -111,6 +111,18 @@ paths:
                 type: object
                 items:
                 '$ref': '#/components/schemas/SystemStatsReport'
+  '/livez':
+    get:
+      summary: Liveliness check
+      responses:
+        "200":
+          description: "is alive"
+  '/readyz':
+    get:
+      summary: Readiness check
+      responses:
+        "200":
+          description: "is ready"
             
 components:
   schemas:
