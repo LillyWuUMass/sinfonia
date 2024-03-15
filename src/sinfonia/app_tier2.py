@@ -26,7 +26,6 @@ from .app_common import (
     OptionalPath,
     OptionalStr,
     StrList,
-    port_option,
     recipes_option,
     version_option,
 )
@@ -34,23 +33,6 @@ from .cluster import Cluster
 from .deployment_repository import DeploymentRepository
 from .jobs import scheduler, start_expire_deployments_job, start_reporting_job
 from .openapi import load_spec
-from .geo_location import GeoLocation
-
-
-# class Tier2DefaultConfig:
-#     RECIPES: str | Path | URL = "RECIPES"
-#     KUBECONFIG: str = ""
-#     KUBECONTEXT: str = ""
-#     PROMETHEUS: str = "http://kube-prometheus-stack-prometheus.monitoring:9090"
-#     TIER1_URLS: list[str] = []
-#     TIER2_URL: str | None = None
-#     TIER2_GEO_LOCATION: GeoLocation = None
-#     TIER2_ZONE: str = ""
-
-#     # These are initialized by the wsgi app factory from the config
-#     # UUID: UUID
-#     # deployment_repository: DeploymentRepository | None = None     # RECIPES
-#     # K8S_CLUSTER : Cluster | None = None   # KUBECONFIG KUBECONTEXT PROMETHEUS
 
 
 class Tier2DefaultConfig:
@@ -58,15 +40,15 @@ class Tier2DefaultConfig:
     KUBECONFIG: str = ""
     KUBECONTEXT: str = ""
     PROMETHEUS: str = "http://kube-prometheus-stack-prometheus.monitoring.svc:9090"
-    TIER1_URLS: list[str] = ["http://192.168.245.30:5000"]
-    # TIER2_URL: str | None = "http://10.43.223.99"
-    TIER2_GEO_LOCATION: GeoLocation = GeoLocation(latitude=42.3672, longitude=-72.5185)
-    TIER2_ZONE: str = "US-CAL-CISO"
-
+    TIER1_URLS: list[str] = ["http://localhost:5000"]
+    TIER2_URL: str | None = "http://localhost:5001"
+    TIER2_ZONE: str = "CA-ON"
+    
     # These are initialized by the wsgi app factory from the config
     # UUID: UUID
     # deployment_repository: DeploymentRepository | None = None     # RECIPES
     # K8S_CLUSTER : Cluster | None = None   # KUBECONFIG KUBECONTEXT PROMETHEUS
+    
 
 def tier2_app_factory(**args) -> connexion.FlaskApp:
     """Sinfonia Tier 2 API server"""
@@ -165,7 +147,7 @@ cli = typer.Typer()
 @cli.command()
 def tier2_server(
     version: OptionalBool = version_option,
-    port: int = port_option,
+    port: int = typer.Option(5001, help="Port to listen for requests"),
     recipes: OptionalStr = recipes_option,
     kubeconfig: OptionalPath = typer.Option(
         None,
