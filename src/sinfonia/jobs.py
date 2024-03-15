@@ -76,27 +76,10 @@ def report_to_tier1_endpoints():
 
     tier2_uuid = config["UUID"]
     tier2_endpoint = URL(config["TIER2_URL"]) / "api/v1/deploy"
-    tier2_location = config["TIER2_GEO_LOCATION"]
     tier2_zone = config["TIER2_ZONE"]
 
     cluster = config["K8S_CLUSTER"]
     resources: Dict = cluster.get_resources()
-
-    # # Add carbon metrics to resources
-    # carbon_obj = CarbonMetrics(
-    #     latitude=tier2_location.latitude, 
-    #     longitude=tier2_location.longitude, 
-    #     zone=tier2_zone
-    #     )
-    
-    # time_ago = datetime.now() - timedelta(seconds=2 * TimeUnit.YEAR)
-    # carbon_metrics = carbon_obj.carbon_history(time_ago.timestamp())  # gCO2/kWH
-
-    # _, energy_consumption = carbon_obj.get_energy_consumption()  # kJ
-    
-    # resources["carbon_intensity"] = carbon_metrics["carbon_intensity"]
-    # resources["energy_consumption"] = energy_consumption
-    # resources["carbon_emission"] = carbon_metrics["carbon_intensity"] * energy_consumption / 3600  # gCO2
     
     # Inject carbon metrics
     carbon_report = get_carbon_report(tier2_zone, int(time()))

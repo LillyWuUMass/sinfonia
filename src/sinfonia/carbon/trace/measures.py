@@ -12,7 +12,6 @@ from src.sinfonia.carbon import (
 from src.sinfonia.carbon.unit_conv import joules_to_kilowatt_hours
 from .metadata import (
     DATA_PATH, 
-    SUPPORTED_ZONES, 
     is_supported_zone, 
     get_metadata, 
     MetaData
@@ -22,7 +21,7 @@ from .metadata import (
 def get_carbon_trace(zone: str, timestamp: int) -> Dict:
     """Return carbon trace given zone and timestamp."""
     if not is_supported_zone(zone):
-        raise ValueError(f"Zone {zone} is not supported. Supported zones are: {SUPPORTED_ZONES}")
+        raise ValueError(f"zone {zone} is not supported")
     
     h = pd.read_csv(DATA_PATH / f"{zone}.csv")
     i = bisect_left(h['timestamp'], timestamp)
