@@ -13,7 +13,6 @@
 # defaults to http://minio:9000/recipes when minio is enabled
 #sinfoniaRecipes: ""
 
-
 replicaCount: 1
 
 image:

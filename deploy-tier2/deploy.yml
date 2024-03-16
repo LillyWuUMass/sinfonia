@@ -30,12 +30,11 @@
   remote_user: khainguyen
   become_user: root
   become: true
+  gather_facts: true
 
   vars:
-    #sinfonia_tier1_url: "{{ lookup('env', 'SINFONIA_TIER1_URL') }}"
     sinfonia_tier1_url: "http://192.168.245.30:5000"
     sinfonia_tier2_url: "{{ hostvars[inventory_hostname].sinfonia_tier2_url }}"
-    # sinfonia_recipes: "https://storage.cmusatyalab.org/sinfonia-recipes/"
     sinfonia_recipes: "RECIPES"
     enable_ufw: false
     override_resolv_conf: true
@@ -75,5 +74,5 @@
               className: traefik
             image:
               repository: k2nt/sinfonia-tier2
-              tag: 42
+              tag: 45
               pullPolicy: Always

@@ -4,23 +4,34 @@ tier2hosts:
       ansible_host: "192.168.245.32"
       sinfonia_tier2_url: "http://192.168.245.32:30051"
       sinfonia_tier2_zone: "CA-ON"
+      sinfonia_tier2_latitude: "43.65107"
+      sinfonia_tier2_longitude: "-79.347015"
 
     obelix33:
       ansible_host: "192.168.245.33"
       sinfonia_tier2_url: "http://192.168.245.33:30051"
       sinfonia_tier2_zone: "US-CAL-CISO"
+      sinfonia_tier2_latitude: "43.65107"
+      sinfonia_tier2_longitude: "-79.347015"
 
     obelix34:
       ansible_host: "192.168.245.34"
       sinfonia_tier2_url: "http://192.168.245.34:30051"
       sinfonia_tier2_zone: "CA-ON"
+      sinfonia_tier2_latitude: "43.65107"
+      sinfonia_tier2_longitude: "-79.347015"
 
     obelix35:
       ansible_host: "192.168.245.35"
       sinfonia_tier2_url: "http://192.168.245.35:30051"
-      sinfonia_tier2_zone: "US-CAL-CISO"
+      sinfonia_tier2_zone: "CA-ON"
+      sinfonia_tier2_latitude: "43.65107"
+      sinfonia_tier2_longitude: "-79.347015"
 
     obelix36:
       ansible_host: "192.168.245.36"
       sinfonia_tier2_url: "http://192.168.245.36:30051"
-      sinfonia_tier2_zone: "US-CAL-CISO"
+      sinfonia_tier2_zone: "CA-ON"
+      sinfonia_tier2_latitude: "43.65107"
+      sinfonia_tier2_longitude: "-79.347015"
+      

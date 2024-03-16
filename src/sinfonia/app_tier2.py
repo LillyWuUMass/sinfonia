@@ -33,21 +33,14 @@ from .cluster import Cluster
 from .deployment_repository import DeploymentRepository
 from .jobs import scheduler, start_expire_deployments_job, start_reporting_job
 from .openapi import load_spec
+from .geo_location import GeoLocation
 
 
 class Tier2DefaultConfig:
     RECIPES: str | Path | URL = "RECIPES"
-    KUBECONFIG: str = ""
-    KUBECONTEXT: str = ""
+    KUBECONFIG: str = "/etc/rancher/k3s/k3s.yaml"
     PROMETHEUS: str = "http://kube-prometheus-stack-prometheus.monitoring.svc:9090"
     TIER1_URLS: list[str] = ["http://localhost:5000"]
-    TIER2_URL: str | None = "http://localhost:5001"
-    TIER2_ZONE: str = "CA-ON"
-    
-    # These are initialized by the wsgi app factory from the config
-    # UUID: UUID
-    # deployment_repository: DeploymentRepository | None = None     # RECIPES
-    # K8S_CLUSTER : Cluster | None = None   # KUBECONFIG KUBECONTEXT PROMETHEUS
     
 
 def tier2_app_factory(**args) -> connexion.FlaskApp:
@@ -63,6 +56,10 @@ def tier2_app_factory(**args) -> connexion.FlaskApp:
 
     cmdargs = {k.upper(): v for k, v in args.items() if v}
     flask_app.config.from_mapping(cmdargs)
+
+    tier2_lat = float(flask_app.config.get("TIER2_LATITUDE"))
+    tier2_long = float(flask_app.config.get("TIER2_LONGITUDE"))
+    flask_app.config["TIER2_GEO_LOCATION"] = GeoLocation(tier2_lat, tier2_long)
 
     flask_app.config["UUID"] = uuid4()
     flask_app.config["deployment_repository"] = DeploymentRepository(
