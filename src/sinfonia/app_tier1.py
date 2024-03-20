@@ -63,7 +63,7 @@ class Tier1DefaultConfig:
     # deployment_repository: DeploymentRepository | None = None      # RECIPES
     
     # How long before removing cloudlet due to inactivity
-    CLOUDLET_EXPIRY_SECONDS = TimeUnit.HOUR
+    CLOUDLET_EXPIRY_SECONDS = TimeUnit.MINUTE
 
 
 def load_cloudlets_conf(cloudlets_conf: str | Path | None) -> dict[UUID, Cloudlet]:

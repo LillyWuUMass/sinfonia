@@ -13,7 +13,7 @@
 - hosts: localhost
   become: false
   gather_facts: false
-  no_log: true
+  no_log: false
 
   tasks:
   - name: make sure local directory for deployment files exists
@@ -27,14 +27,15 @@
       creates: "files/kilo-wg-exporter.yaml"
 
 - hosts: tier2hosts
-  remote_user: khainguyen
+  remote_user: sanem
   become_user: root
   become: true
   gather_facts: true
 
   vars:
-    sinfonia_tier1_url: "http://192.168.245.30:5000"
+    sinfonia_tier1_url: "http://192.168.245.31:5000"
     sinfonia_tier2_url: "{{ hostvars[inventory_hostname].sinfonia_tier2_url }}"
+    sinfonia_tier2_zone: "{{ hostvars[inventory_hostname].sinfonia_tier2_zone }}"
     sinfonia_recipes: "RECIPES"
     enable_ufw: false
     override_resolv_conf: true
@@ -69,10 +70,13 @@
           valuesContent: |-
             sinfoniaTier1Url: "{{ sinfonia_tier1_url }}"
             sinfoniaTier2Url: "{{ sinfonia_tier2_url }}"
+            # sinfoniaTier2Latitude: “42.3672”
+            # sinfoniaTier2Longitude: “-72.5185"
+            sinfoniaTier2Zone: "{{ sinfonia_tier2_zone }}"
             sinfoniaRecipes: "{{ sinfonia_recipes }}"
             ingress:
               className: traefik
             image:
-              repository: k2nt/sinfonia-tier2
-              tag: 45
+              repository: sivasaianem/sinfonia-tier2
+              tag: 2
               pullPolicy: Always
