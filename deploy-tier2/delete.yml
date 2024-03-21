@@ -1,0 +1,35 @@
+- hosts: tier2hosts
+  remote_user: khainguyen
+  become_user: root
+  become: true
+  gather_facts: true
+
+  environment:
+    K8S_AUTH_KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+
+  tasks:
+    - name: delete tier2 deployments
+      kubernetes.core.k8s:
+        state: absent
+        api_version: v1
+        kind: Deployment
+        namespace: default
+        name: sinfonia-tier2
+      register: checkDeleteDeployment
+
+    - name: Check if deployments were deleted
+      debug: {}
+      when: checkDeleteDeployment is changed
+
+    - name: delete tier2 services
+      kubernetes.core.k8s:
+        state: absent
+        api_version: v1
+        kind: Service
+        namespace: default
+        name: sinfonia-tier2
+      register: checkDeleteService
+
+    - name: Check if services were deleted
+      debug: {}
+      when: checkDeleteService is changed

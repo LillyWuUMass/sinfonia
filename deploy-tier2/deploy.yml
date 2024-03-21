@@ -35,6 +35,7 @@
   vars:
     sinfonia_tier1_url: "http://192.168.245.30:5000"
     sinfonia_tier2_url: "{{ hostvars[inventory_hostname].sinfonia_tier2_url }}"
+    sinfonia_tier2_zone: "{{ hostvars[inventory_hostname].sinfonia_tier2_zone }}"
     sinfonia_recipes: "RECIPES"
     enable_ufw: false
     override_resolv_conf: true
@@ -69,7 +70,9 @@
           valuesContent: |-
             sinfoniaTier1Url: "{{ sinfonia_tier1_url }}"
             sinfoniaTier2Url: "{{ sinfonia_tier2_url }}"
+            sinfoniaTier2Zone: "{{ sinfonia_tier2_zone }}"
             sinfoniaRecipes: "{{ sinfonia_recipes }}"
+            sinfoniaTier2Recipes: "{{ sinfonia_tier2_zone }}"
             ingress:
               className: traefik
             image:
