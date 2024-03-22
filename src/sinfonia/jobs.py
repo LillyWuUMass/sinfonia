@@ -37,7 +37,7 @@ def expire_cloudlets():
 
     for cloudlet in list(cloudlets.values()):
         if cloudlet.last_update is not None and cloudlet.last_update < expiration:
-            logger.info(f"Removing stale {cloudlet}")
+            logger.info(f"Removing stale cloudlet at {cloudlet.endpoint}")
             cloudlets.pop(cloudlet.uuid, None)
 
 
@@ -85,7 +85,7 @@ def report_to_tier1_endpoints():
     carbon_report = get_carbon_report(tier2_zone, int(time()))
     resources.update(carbon_report.to_dict())
 
-    logger.info("Reporting %s", str(resources))
+    logger.debug("Reporting %s", str(resources))
 
     for tier1_url in config["TIER1_URLS"]:
         tier1_endpoint = URL(tier1_url) / "api/v1/cloudlets/"

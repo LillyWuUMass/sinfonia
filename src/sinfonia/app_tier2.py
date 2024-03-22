@@ -57,8 +57,8 @@ def tier2_app_factory(**args) -> connexion.FlaskApp:
     cmdargs = {k.upper(): v for k, v in args.items() if v}
     flask_app.config.from_mapping(cmdargs)
 
-    tier2_lat = float(flask_app.config.get("TIER2_LATITUDE"))
-    tier2_long = float(flask_app.config.get("TIER2_LONGITUDE"))
+    tier2_lat = float(flask_app.config.get("TIER2_LATITUDE", 0.0))
+    tier2_long = float(flask_app.config.get("TIER2_LONGITUDE", 0.0))
     flask_app.config["TIER2_GEO_LOCATION"] = GeoLocation(tier2_lat, tier2_long)
 
     flask_app.config["UUID"] = uuid4()

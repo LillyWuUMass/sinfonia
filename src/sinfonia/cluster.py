@@ -50,7 +50,7 @@ RESOURCE_QUERIES = {
     "gpu_ratio": "sum(DCGM_FI_DEV_GPU_UTIL) / count(DCGM_FI_DEV_GPU_UTIL)",
 }
 
-LEASE_DURATION = 2 * TimeUnit.HOUR
+LEASE_DURATION = 15 * TimeUnit.MINUTE
 
 
 @define

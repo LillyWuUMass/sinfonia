@@ -8,7 +8,7 @@
     K8S_AUTH_KUBECONFIG: /etc/rancher/k3s/k3s.yaml
 
   tasks:
-    - name: delete tier2 deployments
+    - name: Delete Tier 2 deployments
       kubernetes.core.k8s:
         state: absent
         api_version: v1
@@ -18,10 +18,11 @@
       register: checkDeleteDeployment
 
     - name: Check if deployments were deleted
-      debug: {}
+      debug:
+        msg: Deployment successfully deleted
       when: checkDeleteDeployment is changed
 
-    - name: delete tier2 services
+    - name: Delete Tier 2 services
       kubernetes.core.k8s:
         state: absent
         api_version: v1
@@ -31,5 +32,6 @@
       register: checkDeleteService
 
     - name: Check if services were deleted
-      debug: {}
+      debug:
+        msg: Service successfully deleted
       when: checkDeleteService is changed

@@ -27,21 +27,21 @@
       creates: "files/kilo-wg-exporter.yaml"
 
 - hosts: tier2hosts
-  remote_user: sanem
+  remote_user: khainguyen
   become_user: root
   become: true
   gather_facts: true
 
   vars:
-    sinfonia_tier1_url: "http://192.168.245.31:5000"
+    sinfonia_tier1_url: "http://192.168.245.30:5000"
     sinfonia_tier2_url: "{{ hostvars[inventory_hostname].sinfonia_tier2_url }}"
     sinfonia_tier2_zone: "{{ hostvars[inventory_hostname].sinfonia_tier2_zone }}"
     sinfonia_recipes: "RECIPES"
     enable_ufw: false
     override_resolv_conf: true
 
-  #environment:
-  #  K8S_AUTH_KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+  # environment:
+  #   K8S_AUTH_KUBECONFIG: /etc/rancher/k3s/k3s.yaml
 
   tasks:
   - import_tasks: tasks/ubuntu.yml
@@ -76,6 +76,5 @@
             ingress:
               className: traefik
             image:
-              repository: sivasaianem/sinfonia-tier2
-              tag: 2
-              pullPolicy: Always
+              repository: k2nt/sinfonia-tier2
+              tag: 46

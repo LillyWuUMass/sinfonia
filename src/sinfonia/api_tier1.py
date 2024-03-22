@@ -55,7 +55,7 @@ class CloudletsView(MethodView):
             
             resources = cloudlet.resources
             unix_time = int(time())
-            uuid = cloudlet.uuid
+            endpoint = cloudlet.endpoint
             carbon_intensity = resources.get('carbon_intensity_gco2_kwh', '')
             energy_consumption = resources.get('energy_use_joules', '')
             carbon_emission = resources.get('carbon_emission_gco2', '')
@@ -63,7 +63,7 @@ class CloudletsView(MethodView):
             
             csv_writer.writerow([
                 unix_time, 
-                uuid,
+                endpoint,
                 carbon_intensity, 
                 energy_consumption, 
                 carbon_emission,

@@ -1,0 +1,18 @@
+- hosts: tier2hosts
+  remote_user: khainguyen
+  become_user: khainguyen
+  become: true
+  gather_facts: true
+
+  environment:
+    K8S_AUTH_KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+
+  tasks:
+    - name: Run kubectl command
+      command: kubectl get deploy
+      ignore_errors: true
+      register: kubectl_config_view_output
+
+    - name: Check if kubectl ran successfully
+      debug:
+        msg: "kubectl config view output: {{ kubectl_config_view_output.stdout }}"
