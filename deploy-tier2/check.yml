@@ -5,7 +5,7 @@
   gather_facts: true
 
   environment:
-    K8S_AUTH_KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+    K8S_AUTH_KUBECONFIG: deploy-tier2/k3s.yml
 
   tasks:
     - name: Run kubectl command
@@ -16,3 +16,4 @@
     - name: Check if kubectl ran successfully
       debug:
         msg: "kubectl config view output: {{ kubectl_config_view_output.stdout }}"
+      when: true

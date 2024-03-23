@@ -33,9 +33,14 @@
   gather_facts: true
 
   vars:
-    sinfonia_tier1_url: "http://192.168.245.30:5000"
+    sinfonia_tier1_url: "http://192.168.245.31:5000"
     sinfonia_tier2_url: "{{ hostvars[inventory_hostname].sinfonia_tier2_url }}"
+    sinfonia_tier2_latitude: 0.0
+    sinfonia_tier2_longitude: 0.0
     sinfonia_tier2_zone: "{{ hostvars[inventory_hostname].sinfonia_tier2_zone }}"
+    sinfonia_kubeconfig: "deploy-tier2/k3s.yml"
+    sinfonia_kubecontext: ""
+    sinfonia_prometheus: "http://kube-prometheus-stack-prometheus.monitoring.svc:9090"
     sinfonia_recipes: "RECIPES"
     enable_ufw: false
     override_resolv_conf: true
@@ -48,14 +53,14 @@
   - import_tasks: tasks/k3s.yml
   - import_tasks: tasks/kube-prometheus-stack.yml
   - import_tasks: tasks/kilo.yml
-    # - import_tasks: tasks/nvidia_gpu_operator.yml
-    # - import_tasks: tasks/kubevirt.yml
+  # - import_tasks: tasks/nvidia_gpu_operator.yml
+  # - import_tasks: tasks/kubevirt.yml
 
   #- name: configure storage...
 
   - name: deploy sinfonia-tier2
     kubernetes.core.k8s:
-      kubeconfig: /etc/rancher/k3s/k3s.yaml
+      kubeconfig: "{{ sinfonia_kubeconfig }}"
       state: present
       resource_definition:
         apiVersion: helm.cattle.io/v1
@@ -70,11 +75,15 @@
           valuesContent: |-
             sinfoniaTier1Url: "{{ sinfonia_tier1_url }}"
             sinfoniaTier2Url: "{{ sinfonia_tier2_url }}"
+            sinfoniaTier2Latitude: "{{ sinfonia_tier2_latitude }}"
+            sinfoniaTier2Longitude: "{{ sinfonia_tier2_longitude }}"
             sinfoniaTier2Zone: "{{ sinfonia_tier2_zone }}"
+            sinfoniaKubeConfig: "{{ sinfonia_kubeconfig }}"
+            sinfoniaKubeContext: "{{ sinfonia_kubecontext }}"
+            sinfoniaPrometheus: "{{ sinfonia_prometheus }}"
             sinfoniaRecipes: "{{ sinfonia_recipes }}"
-            sinfoniaTier2Recipes: "{{ sinfonia_tier2_zone }}"
             ingress:
               className: traefik
             image:
               repository: k2nt/sinfonia-tier2
-              tag: 46
+              tag: 47

@@ -1,0 +1,3 @@
+- name: change folder permission of /sys/class/powercap/intel-rapl
+  ansible.builtin.command:
+    cmd: chmod -R 755 /sys/class/powercap/intel-rapl
