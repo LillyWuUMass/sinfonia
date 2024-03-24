@@ -38,7 +38,7 @@
     sinfonia_tier2_latitude: 0.0
     sinfonia_tier2_longitude: 0.0
     sinfonia_tier2_zone: "{{ hostvars[inventory_hostname].sinfonia_tier2_zone }}"
-    sinfonia_kubeconfig: "deploy-tier2/k3s.yml"
+    sinfonia_kubeconfig: ""
     sinfonia_kubecontext: ""
     sinfonia_prometheus: "http://kube-prometheus-stack-prometheus.monitoring.svc:9090"
     sinfonia_recipes: "RECIPES"
@@ -60,7 +60,7 @@
 
   - name: deploy sinfonia-tier2
     kubernetes.core.k8s:
-      kubeconfig: "{{ sinfonia_kubeconfig }}"
+      kubeconfig: /etc/rancher/k3s/k3s.yaml
       state: present
       resource_definition:
         apiVersion: helm.cattle.io/v1
@@ -86,4 +86,4 @@
               className: traefik
             image:
               repository: k2nt/sinfonia-tier2
-              tag: 47
+              tag: dev.6

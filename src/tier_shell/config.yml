@@ -16,7 +16,7 @@ logging:
 
 tier1:
   timeout_seconds: 15
-  port: 5000
+  port: 5123
   root_url: http://localhost
   api_path: api/v1
 

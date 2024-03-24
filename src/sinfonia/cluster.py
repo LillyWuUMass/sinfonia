@@ -74,9 +74,12 @@ class Cluster:
 
     @classmethod
     def connect(cls, kubeconfig: str = "", kubecontext: str = "") -> Cluster:
+        kcfg = "" if not kubeconfig else kubeconfig
+        kctx = "" if not kubecontext else kubecontext
+        
         return cls(
-            kubectl=kubectl[f"--kubeconfig={kubeconfig}", f"--context={kubecontext}"],
-            helm=helm[f"--kubeconfig={kubeconfig}", f"--kube-context={kubecontext}"],
+            kubectl=kubectl[f"--kubeconfig={kcfg}", f"--context={kctx}"],
+            helm=helm[f"--kubeconfig={kcfg}", f"--kube-context={kctx}"],
         )
 
     @tunnel_public_key.default

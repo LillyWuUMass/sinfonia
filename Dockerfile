@@ -47,8 +47,6 @@ RUN poetry build && /venv/bin/pip install dist/*.whl
 
 FROM base as final
 
-WORKDIR /app
-
 # Environment dependencies
 COPY --from=builder /usr/local/bin /usr/local/bin
 COPY --from=builder /venv /venv
@@ -56,13 +54,13 @@ COPY --from=builder /venv /venv
 # Carbon data
 # This is purely for testing carbon replay and not a part of Sinfonia itself
 # It would be better if we pull carbon replay from an independent source, but oh well
-COPY --from=builder src/sinfonia/carbon/trace/data ./src/sinfonia/carbon/trace/data
+COPY src/sinfonia/carbon/trace/data /app/src/sinfonia/carbon/trace/data
 
-# kubeconfig
-COPY deploy-tier2/k3s.yml deploy-tier2/k3s.yml
+# # kubeconfig
+# COPY deploy-tier2/k3s.yml /app/deploy-tier2/k3s.yml
 
 # Application recipes
-COPY RECIPES RECIPES
+COPY RECIPES /app/RECIPES
 
 # VOLUME ["/RECIPES"]
 # ENV SINFONIA_RECIPES=/RECIPES

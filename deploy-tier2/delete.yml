@@ -5,7 +5,7 @@
   gather_facts: true
 
   environment:
-    K8S_AUTH_KUBECONFIG: deploy-tier2/k3s.yml
+    K8S_AUTH_KUBECONFIG: /etc/rancher/k3s/k3s.yaml
 
   tasks:
     - name: Delete Tier 2 deployments

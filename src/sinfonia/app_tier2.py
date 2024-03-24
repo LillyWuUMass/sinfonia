@@ -37,7 +37,7 @@ from .geo_location import GeoLocation
 
 
 class Tier2DefaultConfig:
-    KUBECONFIG: str = "deploy-tier2/k3s.yml"
+    # KUBECONFIG: str = ""
     TIER1_URLS = ["http://192.168.245.31:5000"]
     TIER2_URL = "http://192.168.245.31:5001"
     # TIER2_LATITUDE = 0.0
@@ -72,7 +72,7 @@ def tier2_app_factory(**args) -> connexion.FlaskApp:
 
     # Connect to local kubernetes cluster
     cluster = Cluster.connect(
-        flask_app.config.get("KUBECONFIG"), flask_app.config.get("KUBECONTEXT", "")
+        flask_app.config.get("KUBECONFIG", ""), flask_app.config.get("KUBECONTEXT", "")
     )
     cluster.prometheus_url = (
         URL(flask_app.config["PROMETHEUS"]) / "api" / "v1" / "query"

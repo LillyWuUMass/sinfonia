@@ -96,8 +96,6 @@ class DeployView(MethodView):
         candidates: Iterable[Cloudlet] = islice(
             tier1_best_match(matchers, client_info, requested, available), max_results
         )
-        
-        logger.info(f'candidates\n{candidates}')
 
         # fire off deployment requests
         requests = [
