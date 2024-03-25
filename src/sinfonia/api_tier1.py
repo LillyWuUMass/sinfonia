@@ -93,15 +93,22 @@ class DeployView(MethodView):
 
         matchers = current_app.config["match_functions"]
         available: List[Cloudlet] = list(current_app.config["cloudlets"].values())
+        
+        logger.debug(f"available size: {len(available)}")
+        
         candidates: Iterable[Cloudlet] = islice(
             tier1_best_match(matchers, client_info, requested, available), max_results
         )
+        
+        # logger.debug(f"candidates size: {len(list(candidates))}")
 
         # fire off deployment requests
         requests = [
             cloudlet.deploy_async(requested.uuid, client_info)
             for cloudlet in candidates
         ]
+
+        # logger.debug(f"{list(candidates)[0].endpoint}/{requested.uuid}/{client_info.publickey.urlsafe}")
 
         # gather the results,
         # - interleave results from cloudlets in case any returned more than requested.
