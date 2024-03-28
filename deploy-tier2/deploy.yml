@@ -35,8 +35,8 @@
   vars:
     sinfonia_tier1_url: "http://192.168.245.31:5000"
     sinfonia_tier2_url: "{{ hostvars[inventory_hostname].sinfonia_tier2_url }}"
-    sinfonia_tier2_latitude: 0.0
-    sinfonia_tier2_longitude: 0.0
+    sinfonia_tier2_latitude: "{{ hostvars[inventory_hostname].sinfonia_tier2_latitude }}"
+    sinfonia_tier2_longitude: "{{ hostvars[inventory_hostname].sinfonia_tier2_longitude }}"
     sinfonia_tier2_zone: "{{ hostvars[inventory_hostname].sinfonia_tier2_zone }}"
     sinfonia_kubeconfig: ""
     sinfonia_kubecontext: ""
