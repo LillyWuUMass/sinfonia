@@ -74,17 +74,12 @@ def match_by_network(
     """
     
     logger.debug("[matchers_carbon_intensity] Network matcher")
-    logger.debug(f"[matchers_carbon_intensity] Client IP Address: {client_info.ipaddress}")
 
     # Used to jump the loop whenever a cloudlet can be removed from the list
     class DropCloudlet(Exception):
         pass
 
-    for cloudlet in cloudlets[:]:
-        logger.debug(f"[matchers_carbon_intensity] {cloudlet.rejected_clients}")
-        logger.debug(f"[matchers_carbon_intensity] {cloudlet.local_networks}")
-        logger.debug(f"[matchers_carbon_intensity] {cloudlet.accepted_clients}")
-        
+    for cloudlet in cloudlets[:]:        
         try:
             for network in cloudlet.rejected_clients:
                 if client_info.ipaddress in network:
@@ -96,13 +91,13 @@ def match_by_network(
                     logger.debug("[matchers_network] Network (%s)", cloudlet.name)
                     cloudlets.remove(cloudlet)
                     yield cloudlet
+                    continue
 
             for network in cloudlet.accepted_clients:
                 if client_info.ipaddress not in network:
                     logger.debug("[matchers_network] Cloudlet (%s) will not accept client", cloudlet.name)
                     raise DropCloudlet
                 
-            logger.debug(f"yielding {cloudlet.endpoint}")
             yield cloudlet
             cloudlets.remove(cloudlet)
         except DropCloudlet:

@@ -16,6 +16,7 @@ from attrs import define
 from flask import request
 from wireguard_tools import WireguardKey
 
+from src.domain.logger import get_default_logger
 from .geo_location import GeoLocation
 
 
@@ -41,9 +42,15 @@ class ClientInfo:
             if request.remote_addr is None:
                 raise ValueError
             client_ipaddress = ip_address(request.remote_addr)
-
+            
+        client_latitude = request.headers.get("ClientLatitude", None)
+        client_longitude = request.headers.get("ClientLongitude", None)
+        
         try:
-            client_location = GeoLocation.from_request_or_addr(client_ipaddress)
+            if client_latitude and client_longitude:
+                client_location = GeoLocation(client_latitude, client_longitude)
+            else:
+                client_location = GeoLocation.from_request_or_addr(client_ipaddress)
         except ValueError:
             client_location = None
 
