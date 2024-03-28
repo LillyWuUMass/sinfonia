@@ -65,7 +65,7 @@ class CloudletsView(MethodView):
                 unix_time, 
                 endpoint,
                 carbon_intensity, 
-                energy_consumption, 
+                energy_consumption,
                 carbon_emission,
                 cpu_ratio
             ])

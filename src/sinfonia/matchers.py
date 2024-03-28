@@ -119,8 +119,8 @@ def match_by_location(
 ) -> Iterator[Cloudlet]:
     """Yields any geographically close cloudlets"""
     
-    logger.debug("[matchers_location] Location matcher")
-    logger.debug(f"[matchers_location] Client location {client_info.location}")
+    logger.debug("[matchers_location] location matcher")
+    logger.debug(f"[matchers_location] client location {client_info.location}")
     
     if client_info.location is None:
         return
@@ -129,19 +129,22 @@ def match_by_location(
 
     for cloudlet in cloudlets:
         distance = cloudlet.distance_from(client_info.location)
+        logger.debug(f"[matchers_location] {cloudlet.endpoint} - loc {cloudlet.locations} - {distance}")
         if distance is not None:
             by_distance.append((distance, cloudlet))
 
     if not by_distance:
         return
+    
+    MAX_DIST_KM = 1000.0
 
     by_distance.sort(key=itemgetter(0))
-    for distance, cloudlet in by_distance:
-        logger.info(
-            "distance (%s) %d km, %.3f minRTT",
-            cloudlet.name,
-            distance,
-            _estimated_rtt(distance),
+    for distance_km, cloudlet in by_distance:
+        if distance_km > MAX_DIST_KM:
+            break
+        
+        logger.debug(
+            f"[matchers_location] {cloudlet.name} {distance_km:.3g} km, { _estimated_rtt(distance_km):.3g} minRTT"
         )
         cloudlets.remove(cloudlet)
         yield cloudlet
