@@ -27,7 +27,7 @@
       creates: "files/kilo-wg-exporter.yaml"
 
 - hosts: tier2hosts
-  remote_user: khainguyen
+  remote_user: sanem
   become_user: root
   become: true
   gather_facts: true
@@ -85,5 +85,5 @@
             ingress:
               className: traefik
             image:
-              repository: k2nt/sinfonia-tier2
+              repository: sivasaianem/sinfonia-tier2
               tag: dev.6

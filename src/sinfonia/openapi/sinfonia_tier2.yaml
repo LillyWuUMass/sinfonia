@@ -123,6 +123,19 @@ paths:
       responses:
         "200":
           description: "is ready"
+  '/carbon_trace_timestamp':
+    post:
+      summary: Common trace start timestamp for all cloudlets
+      parameters:
+        - in: query
+          name: carbon_trace_timestamp
+          schema:
+            type: integer
+          description: Timestamp to manipulate trace clock
+          required: true
+      responses:
+        "200":
+          description: "set"
             
 components:
   schemas:

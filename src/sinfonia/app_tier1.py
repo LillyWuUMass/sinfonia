@@ -29,11 +29,12 @@ from .app_common import (
     port_option,
     recipes_option,
     version_option,
+    carbon_trace_timestamp_option,
 )
 from .cloudlets import Cloudlet
 from .cloudlets import load as cloudlets_load
 from .deployment_repository import DeploymentRepository
-from .jobs import scheduler, start_expire_cloudlets_job
+from .jobs import scheduler, start_expire_cloudlets_job, start_broadcasting_job
 from .matchers import Tier1MatchFunction, get_match_function_plugins
 from .openapi import load_spec
 
@@ -129,6 +130,7 @@ def wsgi_app_factory(**args) -> connexion.FlaskApp:
     scheduler.init_app(flask_app)
     scheduler.start()
     start_expire_cloudlets_job()
+    start_broadcasting_job()
 
     # handle running behind reverse proxy (should this be made configurable?)
     flask_app.wsgi_app = ProxyFix(flask_app.wsgi_app)
@@ -176,7 +178,8 @@ def tier1_server(
         is_eager=True,
         help="Show available best match functions",
     ),
+    carbon_trace_timestamp: int = carbon_trace_timestamp_option,
 ):
     """Run Sinfonia Tier1 with Flask's builtin server (for development)"""
-    app = wsgi_app_factory(cloudlets=cloudlets, recipes=recipes, matchers=matchers)
+    app = wsgi_app_factory(cloudlets=cloudlets, recipes=recipes, matchers=matchers, carbon_trace_timestamp=carbon_trace_timestamp)
     app.run(port=port)

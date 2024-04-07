@@ -332,6 +332,21 @@ class Cloudlet:
         if self.last_update is not None:
             summary["last_update"] = str(self.last_update)
         return summary
+    
+    def set_carbon_trace_timestamp(self, carbon_trace_timestamp: int) -> dict:
+        """Set carbon_trace_timestamp on this cloudlet"""
+        
+        def send(url, params) -> Future:
+            """Send a post request to carbon_trace_timestamp endpoint on this cloudlet"""
+            try:
+                r = requests.post(url, params=params)
+                r.raise_for_status()
+                return
+            except Exception as e:
+                logger.exception(f"cloudlet Exception occurred {str(e)}")
+                
+        request_url = URL(str(self.endpoint).replace('/deploy', '')) / "carbon_trace_timestamp"
+        send(str(request_url), {"carbon_trace_timestamp": carbon_trace_timestamp})
 
 
 def load(stream):

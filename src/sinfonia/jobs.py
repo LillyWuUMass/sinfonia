@@ -17,13 +17,17 @@ from requests.exceptions import RequestException
 from yarl import URL
 from time import time
 from datetime import datetime, timedelta
+import rapl
+
+from .cloudlets import Cloudlet
 
 from src.lib.time.unit import TimeUnit
 
 from src.domain.logger import get_default_logger
 
 from src.sinfonia.carbon import CarbonReport
-from src.sinfonia.carbon.trace import get_carbon_report
+from src.sinfonia.carbon.trace import get_carbon_report, get_average_energy_between_samples
+from src.sinfonia.carbon.unit_conv import joules_to_kilowatt_hours
 
 
 logger = get_default_logger()
@@ -82,8 +86,17 @@ def report_to_tier1_endpoints():
     resources: Dict = cluster.get_resources()
     
     # Inject carbon metrics
-    carbon_report = get_carbon_report(tier2_zone, int(time()))
-    resources.update(carbon_report.to_dict())
+    # carbon_report = get_carbon_report(tier2_zone, int(time()))
+    if 'CARBON_TRACE_TIMESTAMP' in config:
+        carbon_report = get_carbon_report(tier2_zone, config["CARBON_TRACE_TIMESTAMP"])
+    
+        if not 'rapl_energy_sample' in config:
+            config['rapl_energy_sample'] = rapl.RAPLMonitor.sample()
+            
+        carbon_report.energy_use_joules = get_average_energy_between_samples(config['rapl_energy_sample'], rapl.RAPLMonitor.sample())
+        carbon_report.carbon_emission_gco2 = carbon_report.carbon_intensity_gco2_kwh * joules_to_kilowatt_hours(carbon_report.energy_use_joules)
+        
+        resources.update(carbon_report.to_dict())
 
     logger.debug("Reporting %s", str(resources))
 
@@ -115,5 +128,38 @@ def start_reporting_job():
         max_instances=1,
         coalesce=True,
         id="report_to_tier1",
+        replace_existing=True,
+    )
+    
+
+def broadcast_carbon_trace_timestamp_to_tier2s():
+    config = scheduler.app.config
+
+    cloudlets = list(config["cloudlets"].values())
+    
+    curr_timestamp = config["CARBON_TRACE_TIMESTAMP"]
+    for cloudlet in cloudlets:
+        logger.info(f"Setting carbon_trace_timestamp on {cloudlet.name}")
+        cloudlet.set_carbon_trace_timestamp(curr_timestamp)
+        
+    new_timestamp = curr_timestamp + 300
+    config["CARBON_TRACE_TIMESTAMP"] = new_timestamp
+    # TODO
+    assert scheduler.app.config["CARBON_TRACE_TIMESTAMP"] == new_timestamp
+
+    
+def start_broadcasting_job():
+    config = scheduler.app.config
+    if not config["CARBON_TRACE_TIMESTAMP"]:
+        return
+    
+    logger.info("Broadcasting latest carbontrace_start to all the Tier2s")
+    scheduler.add_job(
+        func=broadcast_carbon_trace_timestamp_to_tier2s,
+        trigger="interval",
+        seconds=90,
+        max_instances=1,
+        coalesce=True,
+        id="broadcast_carbon_trace_timestamp_to_tier2s",
         replace_existing=True,
     )

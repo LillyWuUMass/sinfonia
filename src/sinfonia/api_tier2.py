@@ -23,8 +23,9 @@ from src.sinfonia.carbon.trace import get_carbon_report
 
 class CarbonGet(BaseModel):
     tspad: int = 0
+    carbon_trace_timestamp: int = 0
     
-    @validator('tspad')
+    @validator('tspad', 'carbon_trace_timestamp')
     def _check_non_negative(cls, v):
         if v < 0:
             raise ValueError('tspad must be non-negative')
@@ -41,8 +42,19 @@ class CarbonView(MethodView):
         timestamp = int(time.time()) + req.tspad
         zone = current_app.config['TIER2_ZONE']
         return get_carbon_report(zone, timestamp)
-    
-    
+
+
+class CarbonTraceTimestampView(MethodView):
+    def post(self):
+        try:
+            req = CarbonGet(**request.args)
+        except ValueError as e:
+            raise ProblemException(400, "Error", f"Failed to parse request {e!r}")
+        
+        current_app.config['CARBON_TRACE_TIMESTAMP'] = req.carbon_trace_timestamp
+        return NoContent, 200
+
+
 class LivezView(MethodView):
     def search(self):
         return NoContent, 200
