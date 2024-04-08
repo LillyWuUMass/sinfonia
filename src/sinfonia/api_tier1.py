@@ -65,7 +65,7 @@ class CloudletsView(MethodView):
                 unix_time, 
                 endpoint,
                 carbon_intensity, 
-                energy_consumption, 
+                energy_consumption,
                 carbon_emission,
                 cpu_ratio
             ])
@@ -88,13 +88,12 @@ class DeployView(MethodView):
         try:
             requested = DeploymentRecipe.from_uuid(uuid)
             client_info = ClientInfo.from_request(application_key)
+            logger.debug(f"[client] info {client_info}")
         except ValueError:
             raise ProblemException(400, "Bad Request", "Incorrectly formatted request")
 
         matchers = current_app.config["match_functions"]
         available: List[Cloudlet] = list(current_app.config["cloudlets"].values())
-        
-        logger.debug(f"available size: {len(available)}")
         
         candidates: Iterable[Cloudlet] = islice(
             tier1_best_match(matchers, client_info, requested, available), max_results

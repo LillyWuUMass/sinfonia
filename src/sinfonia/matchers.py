@@ -74,17 +74,12 @@ def match_by_network(
     """
     
     logger.debug("[matchers_carbon_intensity] Network matcher")
-    logger.debug(f"[matchers_carbon_intensity] Client IP Address: {client_info.ipaddress}")
 
     # Used to jump the loop whenever a cloudlet can be removed from the list
     class DropCloudlet(Exception):
         pass
 
-    for cloudlet in cloudlets[:]:
-        logger.debug(f"[matchers_carbon_intensity] {cloudlet.rejected_clients}")
-        logger.debug(f"[matchers_carbon_intensity] {cloudlet.local_networks}")
-        logger.debug(f"[matchers_carbon_intensity] {cloudlet.accepted_clients}")
-        
+    for cloudlet in cloudlets[:]:        
         try:
             for network in cloudlet.rejected_clients:
                 if client_info.ipaddress in network:
@@ -96,13 +91,13 @@ def match_by_network(
                     logger.debug("[matchers_network] Network (%s)", cloudlet.name)
                     cloudlets.remove(cloudlet)
                     yield cloudlet
+                    continue
 
             for network in cloudlet.accepted_clients:
                 if client_info.ipaddress not in network:
                     logger.debug("[matchers_network] Cloudlet (%s) will not accept client", cloudlet.name)
                     raise DropCloudlet
                 
-            logger.debug(f"yielding {cloudlet.endpoint}")
             yield cloudlet
             cloudlets.remove(cloudlet)
         except DropCloudlet:
@@ -124,9 +119,6 @@ def match_by_location(
 ) -> Iterator[Cloudlet]:
     """Yields any geographically close cloudlets"""
     
-    logger.debug("[matchers_location] Location matcher")
-    logger.debug(f"[matchers_location] Client location {client_info.location}")
-    
     if client_info.location is None:
         return
 
@@ -139,15 +131,14 @@ def match_by_location(
 
     if not by_distance:
         return
+    
+    MAX_DIST_KM = 1000.0
 
     by_distance.sort(key=itemgetter(0))
-    for distance, cloudlet in by_distance:
-        logger.info(
-            "distance (%s) %d km, %.3f minRTT",
-            cloudlet.name,
-            distance,
-            _estimated_rtt(distance),
-        )
+    for distance_km, cloudlet in by_distance:
+        if distance_km > MAX_DIST_KM:
+            break
+        
         cloudlets.remove(cloudlet)
         yield cloudlet
 

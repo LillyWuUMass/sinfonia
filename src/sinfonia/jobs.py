@@ -97,6 +97,9 @@ def report_to_tier1_endpoints():
         carbon_report.carbon_emission_gco2 = carbon_report.carbon_intensity_gco2_kwh * joules_to_kilowatt_hours(carbon_report.energy_use_joules)
         
         resources.update(carbon_report.to_dict())
+    
+    # Inject location data
+    locations = [scheduler.app.config["TIER2_GEOLOCATION"].coordinate]
 
     logger.debug("Reporting %s", str(resources))
 
@@ -109,6 +112,7 @@ def report_to_tier1_endpoints():
                     "uuid": str(tier2_uuid),
                     "endpoint": str(tier2_endpoint),
                     "resources": resources,
+                    "locations": locations,
                     },
                 )
         except RequestException:

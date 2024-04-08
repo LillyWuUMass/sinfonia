@@ -40,8 +40,8 @@ class Tier2DefaultConfig:
     # KUBECONFIG: str = ""
     TIER1_URLS = ["http://192.168.245.31:5000"]
     TIER2_URL = "http://192.168.245.31:5001"
-    # TIER2_LATITUDE = 0.0
-    # TIER2_LONGITUDE = 0.0
+    TIER2_LATITUDE = 42.340382
+    TIER2_LONGITUDE = -72.496819
     TIER2_ZONE = "AU-SA"
     RECIPES: str | Path | URL = "RECIPES"
     PROMETHEUS: str = "http://10.43.217.221:9090"
@@ -61,10 +61,12 @@ def tier2_app_factory(**args) -> connexion.FlaskApp:
     cmdargs = {k.upper(): v for k, v in args.items() if v}
     flask_app.config.from_mapping(cmdargs)
 
-    tier2_lat = float(flask_app.config.get("TIER2_LATITUDE", 0.0))
-    tier2_long = float(flask_app.config.get("TIER2_LONGITUDE", 0.0))
-    flask_app.config["TIER2_GEO_LOCATION"] = GeoLocation(tier2_lat, tier2_long)
-
+    tier2_lat = flask_app.config.get("TIER2_LATITUDE", None)
+    tier2_long = flask_app.config.get("TIER2_LONGITUDE", None)
+    
+    if tier2_lat is not None and tier2_long is not None:
+        flask_app.config["TIER2_GEOLOCATION"] = GeoLocation(tier2_lat, tier2_long)
+        
     flask_app.config["UUID"] = uuid4()
     flask_app.config["deployment_repository"] = DeploymentRepository(
         flask_app.config["RECIPES"]

@@ -245,7 +245,8 @@ class Cloudlet:
         
         locations = [
             GeoLocation.from_tuple(coord) for coord in request_body.get("locations", [])
-        ]
+            ]
+        
         accepted_clients = request_body.get("accepted_clients")
         rejected_clients = request_body.get("rejected_clients")
         resources = request_body.get("resources")

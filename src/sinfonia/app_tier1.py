@@ -53,7 +53,7 @@ class Tier1DefaultConfig:
     # We are setting match carbon as the single filter
     # MATCHERS declaration can be found in poetry's pyproject.toml
     # MATCHERS: list[str] = ["network", "location", "random"]
-    MATCHERS: list[str] = ["network"] # "carbon-intensity"
+    MATCHERS: list[str] = ["network", "carbon-intensity"] # "carbon-intensity"
     RECIPES: str | Path | URL = "RECIPES"
 
     # These are initialized by the wsgi app factory from the config
