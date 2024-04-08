@@ -17,10 +17,10 @@
         name: sinfonia-tier2
       register: checkDeleteDeployment
 
-    - name: Check if deployments were deleted
-      debug:
-        msg: Deployment successfully deleted
-      when: checkDeleteDeployment is changed
+    # - name: Check if deployments were deleted
+    #   debug:
+    #     msg: Deployment successfully deleted
+    #   when: checkDeleteDeployment is changed
 
     - name: Delete Tier 2 services
       kubernetes.core.k8s:
@@ -31,7 +31,7 @@
         name: sinfonia-tier2
       register: checkDeleteService
 
-    - name: Check if services were deleted
-      debug:
-        msg: Service successfully deleted
-      when: checkDeleteService is changed
+    # - name: Check if services were deleted
+    #   debug:
+    #     msg: Service successfully deleted
+    #   when: checkDeleteService is changed
