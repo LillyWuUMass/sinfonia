@@ -4,13 +4,6 @@
     dest: ./latency.py
     mode: '0755'
 
-# This is really NOT a good idea security-wise, but for now it works
-- name: copy inventory file
-  ansible.builtin.copy:
-    src: inv.yaml
-    dest: ./inv.yaml
-    mode: '0755'
-
 - name: set latency simulation for tier2 services
   ansible.builtin.command:
     cmd: python3 latency.py

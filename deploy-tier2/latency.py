@@ -10,13 +10,6 @@ LATENCY_VARIANCE = 0.05
 NETWORK_INTERFACES = ['eno1', 'kilo0']
 
 
-# newport_ri = (41.49008, -71.312796)
-# cleveland_oh = (41.499498, -81.695391)
-# adelaide = (-34.921230, 138.599503)
-# amherst = (42.340382, -72.496819)
-# print(geopy.distance.distance(adelaide, amherst).km)
-
-
 with open("inv.yaml", "r") as f:
     inv = yaml.safe_load(f)
     
@@ -48,14 +41,14 @@ with open("inv.yaml", "r") as f:
                 'add',
                 'dev',
                 f'{itf}',
-                'root', 
-                'netem', 
+                'root',
+                'netem',
                 'delay',
                 f'{latency_ms}ms',
-                f'{latency_variance_ms}ms'
+                f'{latency_variance_ms}ms',
                 ])
             print(cmd)
-            subprocess.run(cmd)
+            # subprocess.run(cmd)
             time.sleep(1)
         
         # print(host, dist_km, host_coordinate, latency_ms, latency_variance_ms)
