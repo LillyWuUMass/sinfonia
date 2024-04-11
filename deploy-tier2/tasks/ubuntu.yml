@@ -30,9 +30,3 @@
     executable: pip3
     name: openshift
     state: present
-
-- name: install dependencies for latency task
-  ansible.builtin.pip:
-    executable: pip3
-    name: geopy
-    state: present

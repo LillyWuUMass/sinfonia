@@ -1,9 +1,56 @@
+- name: copy latency reset script
+  ansible.builtin.copy:
+    src: scripts/latency_reset.py
+    dest: ./latency_reset.py
+    mode: '0755'
+
+- name: remove previous latency simulations
+  ansible.builtin.command:
+    cmd: python3 latency_reset.py
+
+- name: install dependencies for latency tasks
+  ansible.builtin.pip:
+    executable: pip3
+    name: geopy
+    state: present
+
 - name: copy latency script
   ansible.builtin.copy:
-    src: latency.py
+    src: scripts/latency.py
     dest: ./latency.py
     mode: '0755'
 
+- name: SINFONIA_TIER2_LATITUDE
+  command: "echo $SINFONIA_TIER2_LATITUDE"
+  ignore_errors: true
+  register: sinfonia_tier2_latitude_output
+
+- name: SINFONIA_TIER3_LATITUDE
+  command: "echo $SINFONIA_TIER3_LATITUDE"
+  ignore_errors: true
+  register: sinfonia_tier3_latitude_output
+
+- name: print SINFONIA_TIER2_LATITUDE
+  debug:
+    msg: "{{ sinfonia_tier2_latitude_output.stdout }}"
+  when: true
+
+- name: print SINFONIA_TIER3_LATITUDE
+  debug:
+    msg: "{{ sinfonia_tier3_latitude_output.stdout }}"
+  when: true
+
 - name: set latency simulation for tier2 services
+  # environment:
+  #   SINFONIA_TIER2_LATITUDE: "{{ sinfonia_tier2_latitude }}"
+  #   SINFONIA_TIER2_LONGITUDE: "{{ sinfonia_tier2_longitude }}"
+  #   SINFONIA_TIER3_LATITUDE: "{{ sinfonia_tier3_latitude }}"
+  #   SINFONIA_TIER3_LONGITUDE: "{{ sinfonia_tier3_longitude }}"
   ansible.builtin.command:
     cmd: python3 latency.py
+  register: latency_output
+
+- name: print latency stdout
+  debug:
+    msg: "{{ latency_output.stdout }}"
+  when: true

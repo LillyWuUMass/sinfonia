@@ -38,6 +38,8 @@
     sinfonia_tier2_latitude: "{{ hostvars[inventory_hostname].sinfonia_tier2_latitude }}"
     sinfonia_tier2_longitude: "{{ hostvars[inventory_hostname].sinfonia_tier2_longitude }}"
     sinfonia_tier2_zone: "{{ hostvars[inventory_hostname].sinfonia_tier2_zone }}"
+    sinfonia_tier3_latitude: "42.340382"
+    sinfonia_tier3_longitude: "-72.496819"
     sinfonia_kubeconfig: ""
     sinfonia_kubecontext: ""
     sinfonia_prometheus: "http://kube-prometheus-stack-prometheus.monitoring.svc:9090"
@@ -45,8 +47,13 @@
     enable_ufw: false
     override_resolv_conf: true
 
-  # environment:
-  #   K8S_AUTH_KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+
+  environment:
+    SINFONIA_TIER2_LATITUDE: "{{ sinfonia_tier2_latitude }}"
+    SINFONIA_TIER2_LONGITUDE: "{{ sinfonia_tier2_longitude }}"
+    SINFONIA_TIER3_LATITUDE: "{{ sinfonia_tier3_latitude }}"
+    SINFONIA_TIER3_LONGITUDE: "{{ sinfonia_tier3_longitude }}"
+    # K8S_AUTH_KUBECONFIG: /etc/rancher/k3s/k3s.yaml
 
   tasks:
   - import_tasks: tasks/ubuntu.yml
@@ -54,6 +61,7 @@
   - import_tasks: tasks/kube-prometheus-stack.yml
   - import_tasks: tasks/kilo.yml
   - import_tasks: tasks/latency.yml
+  - import_tasks: tasks/carbon.yml
   # - import_tasks: tasks/nvidia_gpu_operator.yml
   # - import_tasks: tasks/kubevirt.yml
 
@@ -79,6 +87,8 @@
             sinfoniaTier2Latitude: "{{ sinfonia_tier2_latitude }}"
             sinfoniaTier2Longitude: "{{ sinfonia_tier2_longitude }}"
             sinfoniaTier2Zone: "{{ sinfonia_tier2_zone }}"
+            sinfoniaTier3Latitude: "{{ sinfonia_tier3_latitude }}"
+            sinfoniaTier3Longitude: "{{ sinfonia_tier3_longitude }}"
             sinfoniaKubeConfig: "{{ sinfonia_kubeconfig }}"
             sinfoniaKubeContext: "{{ sinfonia_kubecontext }}"
             sinfoniaPrometheus: "{{ sinfonia_prometheus }}"

@@ -31,6 +31,16 @@
         name: sinfonia-tier2
       register: checkDeleteService
 
+    - name: copy latency reset script
+      ansible.builtin.copy:
+        src: scripts/latency_reset.py
+        dest: ./latency_reset.py
+        mode: '0755'
+
+    - name: remove previous latency simulations
+      ansible.builtin.command:
+        cmd: python3 latency_reset.py
+
     # - name: Check if services were deleted
     #   debug:
     #     msg: Service successfully deleted
