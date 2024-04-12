@@ -37,7 +37,6 @@ from .geo_location import GeoLocation
 
 
 class Tier2DefaultConfig:
-    # KUBECONFIG: str = ""
     TIER1_URLS = ["http://192.168.245.31:5000"]
     TIER2_URL = "http://192.168.245.31:5001"
     TIER2_LATITUDE = 42.340382
@@ -51,28 +50,50 @@ def tier2_app_factory(**args) -> connexion.FlaskApp:
     """Sinfonia Tier 2 API server"""
     app = connexion.FlaskApp(__name__, specification_dir="openapi/")
 
+    # load configurations
+    
     flask_app = app.app
     flask_app.config.from_object(Tier2DefaultConfig)
     flask_app.config.from_envvar("SINFONIA_SETTINGS", silent=True)
     flask_app.config.from_prefixed_env(prefix="SINFONIA")
-    if flask_app.config.get("TIER1_URL"):
-        flask_app.config["TIER1_URLS"] = [flask_app.config["TIER1_URL"]]
-
     cmdargs = {k.upper(): v for k, v in args.items() if v}
     flask_app.config.from_mapping(cmdargs)
-
-    tier2_lat = flask_app.config.get("TIER2_LATITUDE", None)
-    tier2_long = flask_app.config.get("TIER2_LONGITUDE", None)
     
-    if tier2_lat is not None and tier2_long is not None:
-        flask_app.config["TIER2_GEOLOCATION"] = GeoLocation(tier2_lat, tier2_long)
+    
+    # tier1 url
+    
+    tier1_url = flask_app.config.get("TIER1_URL")
+    if tier1_url is not None:
+        flask_app.config["TIER1_URLS"] = [tier1_url]
+
+    # geolocation
+
+    tier2_latitude = flask_app.config.get("TIER2_LATITUDE", None)
+    tier2_longitude = flask_app.config.get("TIER2_LONGITUDE", None)
+    
+    if tier2_latitude is None or tier2_longitude is None:
+        raise ValueError("missing tier2 geolocation data")
+        
+    flask_app.config["TIER2_GEOLOCATION"] = GeoLocation(
+        flask_app.config.get("TIER2_LATITUDE", None), 
+        flask_app.config.get("TIER2_LONGITUDE", None)
+        )
+    
+    # zone / carbon trace
+    
+    tier2_zone = flask_app.config.get("TIER2_ZONE")
+    if tier2_zone is None:
+        raise ValueError("missing tier2 zone data")
+    
+    # uuid
         
     flask_app.config["UUID"] = uuid4()
     flask_app.config["deployment_repository"] = DeploymentRepository(
         flask_app.config["RECIPES"]
     )
 
-    # Connect to local kubernetes cluster
+    # connect to local kubernetes cluster
+    
     cluster = Cluster.connect(
         flask_app.config.get("KUBECONFIG", ""), flask_app.config.get("KUBECONTEXT", "")
     )
@@ -81,18 +102,18 @@ def tier2_app_factory(**args) -> connexion.FlaskApp:
     )
     flask_app.config["K8S_CLUSTER"] = cluster
     
-    # Print runtime environment
+    # print runtime environment
 
-    # Start background jobs to expire deployments and report to Tier1
+    # start background jobs to expire deployments and report to tier1
     scheduler.init_app(flask_app)
     scheduler.start()
     start_expire_deployments_job()
     start_reporting_job()
 
-    # Handle running behind reverse proxy (should this be made configurable?)
+    # handle running behind reverse proxy (should this be made configurable?)
     flask_app.wsgi_app = ProxyFix(flask_app.wsgi_app)
 
-    # Add Tier 2 APIs
+    # add Tier 2 APIs
     app.add_api(
         load_spec(app.specification_dir / "sinfonia_tier2.yaml"),
         resolver=MethodViewResolver("src.sinfonia.api_tier2"),
