@@ -1,4 +1,7 @@
-from src.sinfonia.carbon.trace import get_carbon_report
+from src.sinfonia.carbon.trace.fetch import fetch_from_github
 
 
-print(get_carbon_report('AU-SA', 0))
+TRACE_GITHUB_REPO_URL = "https://github.com/k2nt/k2nt.github.io/blob/main/projects/sinfonia/carbon_traces"
+TIER2_ZONE = "US-SW-AZPS"
+
+fetch_from_github(TIER2_ZONE, TRACE_GITHUB_REPO_URL)

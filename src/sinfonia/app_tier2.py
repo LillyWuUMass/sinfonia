@@ -34,6 +34,7 @@ from .deployment_repository import DeploymentRepository
 from .jobs import scheduler, start_expire_deployments_job, start_reporting_job
 from .openapi import load_spec
 from .geo_location import GeoLocation
+from .carbon.trace.fetch import fetch_from_github
 
 
 class Tier2DefaultConfig:
@@ -42,6 +43,7 @@ class Tier2DefaultConfig:
     TIER2_LATITUDE = 42.340382
     TIER2_LONGITUDE = -72.496819
     TIER2_ZONE = "AU-SA"
+    TRACE_GITHUB_REPO_URL = "https://github.com/k2nt/k2nt.github.io/blob/main/projects/sinfonia/carbon_traces"
     RECIPES: str | Path | URL = "RECIPES"
     PROMETHEUS: str = "http://10.43.217.221:9090"
     
@@ -85,6 +87,12 @@ def tier2_app_factory(**args) -> connexion.FlaskApp:
     if tier2_zone is None:
         raise ValueError("missing tier2 zone data")
     
+    tier2_repo_url = flask_app.config.get("TRACE_GITHUB_REPO_URL")
+    if tier2_repo_url is None:
+        raise ValueError("missing carbon trace repo url")
+    
+    fetch_from_github(tier2_zone, tier2_repo_url)
+    
     # uuid
         
     flask_app.config["UUID"] = uuid4()
@@ -105,15 +113,18 @@ def tier2_app_factory(**args) -> connexion.FlaskApp:
     # print runtime environment
 
     # start background jobs to expire deployments and report to tier1
+    
     scheduler.init_app(flask_app)
     scheduler.start()
     start_expire_deployments_job()
     start_reporting_job()
 
     # handle running behind reverse proxy (should this be made configurable?)
+    
     flask_app.wsgi_app = ProxyFix(flask_app.wsgi_app)
 
-    # add Tier 2 APIs
+    # add tier 2 api
+    
     app.add_api(
         load_spec(app.specification_dir / "sinfonia_tier2.yaml"),
         resolver=MethodViewResolver("src.sinfonia.api_tier2"),

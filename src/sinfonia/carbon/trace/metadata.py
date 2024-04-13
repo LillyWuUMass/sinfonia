@@ -6,13 +6,14 @@ from pathlib import Path
 import pandas as pd
 
 
+CARBON_TRACE_FILE_PATH = Path("carbon-trace-data/trace.csv")
+
+
 @dataclass(init=True, frozen=True)
 class MetaData:
     start_date_unix: int
     end_date_unix: int
-
-
-DATA_PATH = Path("src/sinfonia/carbon/trace/data")
+    
 
 # Automatically generated fields
 _SUPPORTED_ZONES: List[str] = []
@@ -22,7 +23,7 @@ _METADATA: Dict[str, MetaData] = {}
 def _prepare_metadata():
     global _SUPPORTED_ZONES, _METADATA
 
-    for p in DATA_PATH.glob("*.csv"):
+    for p in CARBON_TRACE_FILE_PATH.glob("*.csv"):
         zone = p.stem
         _SUPPORTED_ZONES.append(zone)
         h = pd.read_csv(p)
