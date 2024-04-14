@@ -21,6 +21,7 @@ from werkzeug.serving import get_interface_ip
 from yarl import URL
 from zeroconf import ServiceInfo, Zeroconf
 
+from .carbon import simulation as carbon_simulation
 from .app_common import (
     OptionalBool,
     OptionalPath,
@@ -34,7 +35,6 @@ from .deployment_repository import DeploymentRepository
 from .jobs import scheduler, start_expire_deployments_job, start_reporting_job
 from .openapi import load_spec
 from .geo_location import GeoLocation
-from .carbon.trace.fetch import fetch_from_github
 
 
 class Tier2DefaultConfig:
@@ -91,7 +91,7 @@ def tier2_app_factory(**args) -> connexion.FlaskApp:
     if tier2_repo_url is None:
         raise ValueError("missing carbon trace repo url")
     
-    fetch_from_github(tier2_zone, tier2_repo_url)
+    carbon_simulation.fetch.from_github(tier2_zone, tier2_repo_url)
     
     # uuid
         

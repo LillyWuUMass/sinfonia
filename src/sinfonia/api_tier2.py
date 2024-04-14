@@ -18,7 +18,7 @@ from pydantic import BaseModel, validator
 
 from src.domain.logger import get_default_logger
 
-from src.sinfonia.carbon.trace import get_carbon_report
+from src.sinfonia.carbon.simulation import get_carbon_report
 
 
 class CarbonGet(BaseModel):

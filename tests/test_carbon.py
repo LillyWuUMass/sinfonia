@@ -1,4 +1,4 @@
-from src.sinfonia.carbon.trace.fetch import fetch_from_github
+from src.sinfonia.carbon.simulation.fetch import fetch_from_github
 
 
 TRACE_GITHUB_REPO_URL = "https://github.com/k2nt/k2nt.github.io/blob/main/projects/sinfonia/carbon_traces"

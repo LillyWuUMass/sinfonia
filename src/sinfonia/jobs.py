@@ -22,8 +22,7 @@ from src.lib.time.unit import TimeUnit
 
 from src.domain.logger import get_default_logger
 
-from src.sinfonia.carbon import CarbonReport
-from src.sinfonia.carbon.trace import get_carbon_report
+from .carbon import report as carbon_report
 
 
 logger = get_default_logger()
@@ -76,14 +75,13 @@ def report_to_tier1_endpoints():
 
     tier2_uuid = config["UUID"]
     tier2_endpoint = URL(config["TIER2_URL"]) / "api/v1/deploy"
-    tier2_zone = config["TIER2_ZONE"]
 
     cluster = config["K8S_CLUSTER"]
     resources: Dict = cluster.get_resources()
     
     # Inject carbon metrics
-    carbon_report = get_carbon_report(tier2_zone, int(time()))
-    resources.update(carbon_report.to_dict())
+    r = carbon_report.from_simulation(time.time())
+    resources.update(r.to_dict())
     
     # Inject location data
     locations = [scheduler.app.config["TIER2_GEOLOCATION"].coordinate]
