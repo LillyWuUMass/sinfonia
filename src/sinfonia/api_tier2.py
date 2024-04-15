@@ -17,14 +17,14 @@ from flask.views import MethodView
 from pydantic import BaseModel, validator
 
 from src.domain.logger import get_default_logger
-
-from src.sinfonia.carbon.simulation import get_carbon_report
+from src.sinfonia.carbon import report as carbon_report
 
 
 class CarbonGet(BaseModel):
     tspad: int = 0
+    carbon_trace_timestamp: int = 0
     
-    @validator('tspad')
+    @validator('tspad', 'carbon_trace_timestamp')
     def _check_non_negative(cls, v):
         if v < 0:
             raise ValueError('tspad must be non-negative')
@@ -37,12 +37,24 @@ class CarbonView(MethodView):
             req = CarbonGet(**request.args)
         except ValueError as e:
             raise ProblemException(400, "Error", f"Failed to parse request {e!r}")
+        
+        if 'CARBON_TRACE_TIMESTAMP' not in current_app.config:
+            return ProblemException(400, f"carbon trace timestamp not yet recorded")
+        
+        return carbon_report.from_simulation(current_app.config['CARBON_TRACE_TIMESTAMP'])
 
-        timestamp = int(time.time()) + req.tspad
-        zone = current_app.config['TIER2_ZONE']
-        return get_carbon_report(zone, timestamp)
-    
-    
+
+class CarbonTraceTimestampView(MethodView):
+    def post(self):
+        try:
+            req = CarbonGet(**request.args)
+        except ValueError as e:
+            raise ProblemException(400, "Error", f"Failed to parse request {e!r}")
+        
+        current_app.config['CARBON_TRACE_TIMESTAMP'] = req.carbon_trace_timestamp
+        return NoContent, 200
+
+
 class LivezView(MethodView):
     def search(self):
         return NoContent, 200

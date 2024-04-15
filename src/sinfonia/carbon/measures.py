@@ -25,3 +25,14 @@ def get_average_energy_use_joules(period_seconds: float = 1) -> float:
         eu += diff.average_power(package=domain.name)
 
     return eu
+
+
+def get_average_energy_between_samples(sample1, sample2):
+    diff = sample2 - sample1
+    
+    eu = 0
+    for d in diff.domains:
+        domain = diff.domains[d]
+        eu += diff.average_power(package=domain.name)
+
+    return eu

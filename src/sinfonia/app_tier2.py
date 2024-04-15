@@ -21,7 +21,9 @@ from werkzeug.serving import get_interface_ip
 from yarl import URL
 from zeroconf import ServiceInfo, Zeroconf
 
-from .carbon import simulation as carbon_simulation
+from src.domain.logger import get_default_logger
+
+from .carbon.simulation.fetch import from_github as fetch_carbon_trace_from_github
 from .app_common import (
     OptionalBool,
     OptionalPath,
@@ -40,9 +42,9 @@ from .geo_location import GeoLocation
 class Tier2DefaultConfig:
     TIER1_URLS = ["http://192.168.245.31:5000"]
     TIER2_URL = "http://192.168.245.31:5001"
-    TIER2_LATITUDE = 42.340382
-    TIER2_LONGITUDE = -72.496819
-    TIER2_ZONE = "AU-SA"
+    TIER2_LATITUDE = 33.448376
+    TIER2_LONGITUDE = -112.074036
+    TIER2_ZONE = "US-SW-AZPS"
     TRACE_GITHUB_REPO_URL = "https://github.com/k2nt/k2nt.github.io/blob/main/projects/sinfonia/carbon_traces"
     RECIPES: str | Path | URL = "RECIPES"
     PROMETHEUS: str = "http://10.43.217.221:9090"
@@ -91,7 +93,7 @@ def tier2_app_factory(**args) -> connexion.FlaskApp:
     if tier2_repo_url is None:
         raise ValueError("missing carbon trace repo url")
     
-    carbon_simulation.fetch.from_github(tier2_zone, tier2_repo_url)
+    fetch_carbon_trace_from_github(tier2_zone, tier2_repo_url)
     
     # uuid
         

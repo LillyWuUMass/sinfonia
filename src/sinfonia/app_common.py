@@ -42,3 +42,5 @@ recipes_option: OptionalStr = typer.Option(
     help="Location of Sinfonia deployment recipes [default: RECIPES]",
     show_default=False,
 )
+
+carbon_trace_timestamp_option: int = typer.Option(1635840000, help="Start timestamp for carbon traces in tier2")
