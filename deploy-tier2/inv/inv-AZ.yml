@@ -1,0 +1,40 @@
+tier2hosts:
+  hosts:
+    # Flagstaff, AZ
+    obelix32:
+      ansible_host: "192.168.245.32"
+      sinfonia_tier2_url: "http://192.168.245.32:30051"
+      sinfonia_tier2_zone: "US-SW-AZPS"
+      sinfonia_tier2_latitude: "33.448376"
+      sinfonia_tier2_longitude: "-112.074036"
+
+    # Roosevelt dam, AZ
+    obelix33:
+      ansible_host: "192.168.245.33"
+      sinfonia_tier2_url: "http://192.168.245.33:30051"
+      sinfonia_tier2_zone: "US-SW-SRP"
+      sinfonia_tier2_latitude: "33.670093"
+      sinfonia_tier2_longitude: "-111.160221"
+
+    # Tucson, AZ
+    obelix34:
+      ansible_host: "192.168.245.34"
+      sinfonia_tier2_url: "http://192.168.245.34:30051"
+      sinfonia_tier2_zone: "US-SW-TEPC"
+      sinfonia_tier2_latitude: "32.248814"
+      sinfonia_tier2_longitude: "-110.987419"
+
+    # obelix35:
+    #   ansible_host: "192.168.245.35"
+    #   sinfonia_tier2_url: "http://192.168.245.35:30051"
+    #   sinfonia_tier2_zone: "CA-ON"
+    #   sinfonia_tier2_latitude: "43.651070"
+    #   sinfonia_tier2_longitude: "-79.347015"
+
+    # Wilcox, AZ
+    obelix36:
+      ansible_host: "192.168.245.36"
+      sinfonia_tier2_url: "http://192.168.245.36:30051"
+      sinfonia_tier2_zone: "US-SW-WALC"
+      sinfonia_tier2_latitude: "32.252853"
+      sinfonia_tier2_longitude: "-109.832008"
