@@ -38,8 +38,8 @@
     sinfonia_tier2_latitude: "{{ hostvars[inventory_hostname].sinfonia_tier2_latitude }}"
     sinfonia_tier2_longitude: "{{ hostvars[inventory_hostname].sinfonia_tier2_longitude }}"
     sinfonia_tier2_zone: "{{ hostvars[inventory_hostname].sinfonia_tier2_zone }}"
-    sinfonia_tier3_latitude: "42.340382"
-    sinfonia_tier3_longitude: "-72.496819"
+    sinfonia_tier3_latitude: "33.448376"
+    sinfonia_tier3_longitude: "-112.074036"
     sinfonia_kubeconfig: ""
     sinfonia_kubecontext: ""
     sinfonia_prometheus: "http://kube-prometheus-stack-prometheus.monitoring.svc:9090"
@@ -97,4 +97,4 @@
               className: traefik
             image:
               repository: k2nt/sinfonia-tier2
-              tag: dev.10
+              tag: stable.4
