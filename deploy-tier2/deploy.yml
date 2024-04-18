@@ -33,6 +33,7 @@
   gather_facts: true
 
   vars:
+    sinfonia_hostname: "{{ inventory_hostname }}"
     sinfonia_tier1_url: "http://192.168.245.31:5000"
     sinfonia_tier2_url: "{{ hostvars[inventory_hostname].sinfonia_tier2_url }}"
     sinfonia_tier2_latitude: "{{ hostvars[inventory_hostname].sinfonia_tier2_latitude }}"
@@ -74,6 +75,7 @@
           repo: https://k2nt.github.io/projects/sinfonia/helm
           targetNamespace: default
           valuesContent: |-
+            sinfoniaHostName: "{{ sinfonia_hostname }}"
             sinfoniaTier1Url: "{{ sinfonia_tier1_url }}"
             sinfoniaTier2Url: "{{ sinfonia_tier2_url }}"
             sinfoniaTier2Latitude: "{{ sinfonia_tier2_latitude }}"
@@ -86,5 +88,5 @@
             ingress:
               className: traefik
             image:
-              repository: sivasaianem/sinfonia-tier2
-              tag: dev.6
+              repository: k2nt/sinfonia-tier2
+              tag: stable.4

@@ -17,16 +17,12 @@ from requests.exceptions import RequestException
 from yarl import URL
 from time import time
 from datetime import datetime, timedelta
-import rapl
-
-from .cloudlets import Cloudlet
 
 from src.lib.time.unit import TimeUnit
 
 from src.domain.logger import get_default_logger
 
-from src.sinfonia.carbon import CarbonReport
-from src.sinfonia.carbon.trace import get_carbon_report, get_average_energy_between_samples
+from src.sinfonia.carbon import 
 from src.sinfonia.carbon.unit_conv import joules_to_kilowatt_hours
 
 
@@ -81,21 +77,18 @@ def report_to_tier1_endpoints():
     tier2_uuid = config["UUID"]
     tier2_endpoint = URL(config["TIER2_URL"]) / "api/v1/deploy"
     tier2_zone = config["TIER2_ZONE"]
+    
+    print(config)
+    logger.info(config)
+    
+    node = config["HOST_NAME"]
 
     cluster = config["K8S_CLUSTER"]
     resources: Dict = cluster.get_resources()
     
     # Inject carbon metrics
-    # carbon_report = get_carbon_report(tier2_zone, int(time()))
     if 'CARBON_TRACE_TIMESTAMP' in config:
-        carbon_report = get_carbon_report(tier2_zone, config["CARBON_TRACE_TIMESTAMP"])
-    
-        if not 'rapl_energy_sample' in config:
-            config['rapl_energy_sample'] = rapl.RAPLMonitor.sample()
-            
-        carbon_report.energy_use_joules = get_average_energy_between_samples(config['rapl_energy_sample'], rapl.RAPLMonitor.sample())
-        carbon_report.carbon_emission_gco2 = carbon_report.carbon_intensity_gco2_kwh * joules_to_kilowatt_hours(carbon_report.energy_use_joules)
-        
+        carbon_report = get_carbon_report(tier2_zone, node, config["CARBON_TRACE_TIMESTAMP"])    
         resources.update(carbon_report.to_dict())
     
     # Inject location data

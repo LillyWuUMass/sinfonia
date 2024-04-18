@@ -1,7 +1,7 @@
 from dataclasses import dataclass, asdict
 
 from .measures import (
-    get_average_energy_use_joules
+    get_energy_from_obelix_power_monitor
 )
 
 

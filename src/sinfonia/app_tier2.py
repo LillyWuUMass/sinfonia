@@ -43,6 +43,7 @@ class Tier2DefaultConfig:
     TIER2_LATITUDE = 42.340382
     TIER2_LONGITUDE = -72.496819
     TIER2_ZONE = "AU-SA"
+    HOST_NAME = "obelix32"
     RECIPES: str | Path | URL = "RECIPES"
     PROMETHEUS: str = "http://10.43.217.221:9090"
     
@@ -82,6 +83,9 @@ def tier2_app_factory(**args) -> connexion.FlaskApp:
     flask_app.config["K8S_CLUSTER"] = cluster
     
     # Print runtime environment
+    print("APP CONFIG \n\n")
+    print(flask_app.config)
+    print("\n\nAPP CONFIG ")
 
     # Start background jobs to expire deployments and report to Tier1
     scheduler.init_app(flask_app)

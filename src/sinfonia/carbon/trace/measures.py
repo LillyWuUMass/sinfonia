@@ -6,7 +6,7 @@ import pandas as pd
 
 from src.sinfonia.carbon import (
     CarbonReport,
-    get_average_energy_use_joules,
+    get_energy_from_obelix_power_monitor,
     )
 
 from src.sinfonia.carbon.unit_conv import joules_to_kilowatt_hours
@@ -32,7 +32,7 @@ def get_average_carbon_intensity_gco2_kwh(zone: str, timestamp: int) -> float:
     return get_carbon_trace(zone, timestamp)["carbon_intensity_avg"]
 
 
-def get_carbon_report(zone: str, timestamp: int) -> CarbonReport:
+def get_carbon_report(zone: str, obelix_node: str, timestamp: int) -> CarbonReport:
     """Return system carbon report given zone and timestamp.
     
     Args:
@@ -48,22 +48,12 @@ def get_carbon_report(zone: str, timestamp: int) -> CarbonReport:
     timestamp = m.start_date_unix + incr
     
     ci = get_average_carbon_intensity_gco2_kwh(zone, timestamp)
-    # eu = get_average_energy_use_joules()
-    # ce = ci * joules_to_kilowatt_hours(eu)
+    eu = get_energy_from_obelix_power_monitor(obelix_node)
+    ce = ci * joules_to_kilowatt_hours(eu)
     
     return CarbonReport(
         carbon_intensity_gco2_kwh=ci,
-        energy_use_joules=0,
-        carbon_emission_gco2=0,
-        )
+        energy_use_joules=eu,
+        carbon_emission_gco2=ce,
+    )
 
-
-def get_average_energy_between_samples(sample1, sample2):
-    diff = sample2 - sample1
-    
-    eu = 0
-    for d in diff.domains:
-        domain = diff.domains[d]
-        eu += diff.average_power(package=domain.name)
-
-    return eu
