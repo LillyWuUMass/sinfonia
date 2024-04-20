@@ -23,7 +23,7 @@ from zeroconf import ServiceInfo, Zeroconf
 
 from src.domain.logger import get_default_logger
 
-from .carbon.simulation.fetch import from_github as fetch_carbon_trace_from_github
+from .carbon.simulation import carbon_trace
 from .app_common import (
     OptionalBool,
     OptionalPath,
@@ -93,7 +93,7 @@ def tier2_app_factory(**args) -> connexion.FlaskApp:
     if tier2_repo_url is None:
         raise ValueError("missing carbon trace repo url")
     
-    fetch_carbon_trace_from_github(tier2_zone, tier2_repo_url)
+    carbon_trace.fetch_from_github(tier2_zone, tier2_repo_url)
     
     # uuid
         
@@ -111,8 +111,6 @@ def tier2_app_factory(**args) -> connexion.FlaskApp:
         URL(flask_app.config["PROMETHEUS"]) / "api" / "v1" / "query"
     )
     flask_app.config["K8S_CLUSTER"] = cluster
-    
-    # print runtime environment
 
     # start background jobs to expire deployments and report to tier1
     
@@ -132,10 +130,6 @@ def tier2_app_factory(**args) -> connexion.FlaskApp:
         resolver=MethodViewResolver("src.sinfonia.api_tier2"),
         validate_responses=True,
     )
-
-    @app.route("/")
-    def index():
-        return ""
 
     return app
 

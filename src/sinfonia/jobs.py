@@ -26,7 +26,7 @@ from src.lib.time.unit import TimeUnit
 from src.domain.logger import get_default_logger
 
 from .carbon import report as carbon_report
-from .carbon import measures as carbon_measures
+from .carbon.measures import intel_rapl as carbon_measures
 from src.sinfonia.carbon.unit_conv import joules_to_kilowatt_hours
 
 

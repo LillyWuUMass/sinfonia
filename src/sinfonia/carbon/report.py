@@ -1,6 +1,6 @@
 from dataclasses import dataclass, asdict
 
-from .measures import get_average_energy_use_joules
+from .measures.intel_rapl import get_average_energy_use_joules
 from .unit_conv import joules_to_kilowatt_hours
 from .simulation.measures import get_average_carbon_intensity_gco2_kwh
 from .simulation.metadata import MetaData, get_metadata
