@@ -20,32 +20,33 @@
     dest: ./latency.py
     mode: '0755'
 
-- name: SINFONIA_TIER2_LATITUDE
-  command: "echo $SINFONIA_TIER2_LATITUDE"
-  ignore_errors: true
-  register: sinfonia_tier2_latitude_output
+# - name: SINFONIA_TIER2_LATITUDE
+#   command: "echo $SINFONIA_TIER2_LATITUDE"
+#   ignore_errors: true
+#   register: sinfonia_tier2_latitude_output
 
-- name: SINFONIA_TIER3_LATITUDE
-  command: "echo $SINFONIA_TIER3_LATITUDE"
-  ignore_errors: true
-  register: sinfonia_tier3_latitude_output
+# - name: SINFONIA_TIER3_LATITUDE
+#   command: "echo $SINFONIA_TIER3_LATITUDE"
+#   ignore_errors: true
+#   register: sinfonia_tier3_latitude_output
 
-- name: print SINFONIA_TIER2_LATITUDE
-  debug:
-    msg: "{{ sinfonia_tier2_latitude_output.stdout }}"
-  when: true
+# - name: print SINFONIA_TIER2_LATITUDE
+#   debug:
+#     msg: "{{ sinfonia_tier2_latitude_output.stdout }}"
+#   when: true
 
-- name: print SINFONIA_TIER3_LATITUDE
-  debug:
-    msg: "{{ sinfonia_tier3_latitude_output.stdout }}"
-  when: true
+# - name: print SINFONIA_TIER3_LATITUDE
+#   debug:
+#     msg: "{{ sinfonia_tier3_latitude_output.stdout }}"
+#   when: true
 
 - name: set latency simulation for tier2 services
-  # environment:
-  #   SINFONIA_TIER2_LATITUDE: "{{ sinfonia_tier2_latitude }}"
-  #   SINFONIA_TIER2_LONGITUDE: "{{ sinfonia_tier2_longitude }}"
-  #   SINFONIA_TIER3_LATITUDE: "{{ sinfonia_tier3_latitude }}"
-  #   SINFONIA_TIER3_LONGITUDE: "{{ sinfonia_tier3_longitude }}"
+  environment:
+    SINFONIA_TIER2_LATITUDE: "{{ sinfonia_tier2_latitude }}"
+    SINFONIA_TIER2_LONGITUDE: "{{ sinfonia_tier2_longitude }}"
+    SINFONIA_TIER3_LATITUDE: "{{ sinfonia_tier3_latitude }}"
+    SINFONIA_TIER3_LONGITUDE: "{{ sinfonia_tier3_longitude }}"
+    EXPERIMENT_TRANSITION_LATENCY_MS: "{{ experiment_transition_latency_ms }}"
   ansible.builtin.command:
     cmd: python3 latency.py
   register: latency_output

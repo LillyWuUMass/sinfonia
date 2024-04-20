@@ -1,8 +1,6 @@
 import os
-import time
 import subprocess
 
-import yaml
 import geopy.distance
 
 
@@ -12,16 +10,19 @@ NETWORK_INTERFACES = ['eno1', 'kilo0']
 
     
 client_coordinate = (
-    os.environ['SINFONIA_TIER3_LATITUDE'],
-    os.environ['SINFONIA_TIER3_LONGITUDE']
+    float(os.environ['SINFONIA_TIER3_LATITUDE']),
+    float(os.environ['SINFONIA_TIER3_LONGITUDE'])
     )
-print(client_coordinate)
+print("client", client_coordinate)
 
 host_coordinate = (
-    os.environ['SINFONIA_TIER2_LATITUDE'],
-    os.environ['SINFONIA_TIER2_LONGITUDE'],
+    float(os.environ['SINFONIA_TIER2_LATITUDE']),
+    float(os.environ['SINFONIA_TIER2_LONGITUDE']),
     )
-print(host_coordinate)
+print("host", host_coordinate)
+
+transition_latency_ms = float(os.environ['EXPERIMENT_TRANSITION_LATENCY_MS'])
+print("transition latency (ms)", transition_latency_ms)
 
 dist_km = geopy.distance.distance(client_coordinate, host_coordinate).km
 print(dist_km)
@@ -40,8 +41,7 @@ for itf in NETWORK_INTERFACES:
         'root',
         'netem',
         'delay',
-        f'{latency_ms}ms',
-        f'{latency_variance_ms}ms',
+        f'{latency_ms + transition_latency_ms}ms',
         ])
     subprocess.run(cmd)
     print(cmd)

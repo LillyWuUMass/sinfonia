@@ -21,3 +21,4 @@ logs
 ### ENV
 
 src/tier_shell/config.yml
+trace.csv

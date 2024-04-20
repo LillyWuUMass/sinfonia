@@ -47,7 +47,7 @@ class ClientInfo:
         client_longitude = request.headers.get("ClientLongitude", None)
         
         try:
-            if client_latitude and client_longitude:
+            if client_latitude is not None and client_longitude is not None:
                 client_location = GeoLocation(client_latitude, client_longitude)
             else:
                 client_location = GeoLocation.from_request_or_addr(client_ipaddress)

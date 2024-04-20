@@ -73,7 +73,7 @@ def match_by_network(
     Also removes cloudlets that explicitly blacklist the client address
     """
     
-    logger.debug("[matchers_carbon_intensity] Network matcher")
+    logger.debug("[matchers] Network matcher")
 
     # Used to jump the loop whenever a cloudlet can be removed from the list
     class DropCloudlet(Exception):
@@ -83,19 +83,19 @@ def match_by_network(
         try:
             for network in cloudlet.rejected_clients:
                 if client_info.ipaddress in network:
-                    logger.debug("[matchers_network] Cloudlet (%s) would reject client", cloudlet.name)
+                    logger.debug("[matchers] Cloudlet (%s) would reject client", cloudlet.name)
                     raise DropCloudlet
 
             for network in cloudlet.local_networks:
                 if client_info.ipaddress in network:
-                    logger.debug("[matchers_network] Network (%s)", cloudlet.name)
+                    logger.debug("[matchers] Network (%s)", cloudlet.name)
                     cloudlets.remove(cloudlet)
                     yield cloudlet
                     continue
 
             for network in cloudlet.accepted_clients:
                 if client_info.ipaddress not in network:
-                    logger.debug("[matchers_network] Cloudlet (%s) will not accept client", cloudlet.name)
+                    logger.debug("[matchers] Cloudlet (%s) will not accept client", cloudlet.name)
                     raise DropCloudlet
                 
             yield cloudlet
@@ -119,7 +119,10 @@ def match_by_location(
 ) -> Iterator[Cloudlet]:
     """Yields any geographically close cloudlets"""
     
+    logger.debug("[matchers] Location matcher")
+    
     if client_info.location is None:
+        logger.warning(f"[matcher] client info location None")
         return
 
     by_distance = []
@@ -130,6 +133,7 @@ def match_by_location(
             by_distance.append((distance, cloudlet))
 
     if not by_distance:
+        logger.warning(f"[matcher] by distance None")
         return
     
     MAX_DIST_KM = 1000.0
@@ -137,9 +141,10 @@ def match_by_location(
     by_distance.sort(key=itemgetter(0))
     for distance_km, cloudlet in by_distance:
         if distance_km > MAX_DIST_KM:
-            break
+            cloudlets.remove(cloudlet)
+            continue
         
-        cloudlets.remove(cloudlet)
+        logger.debug(f"[matcher] yield {cloudlet}")
         yield cloudlet
 
 
@@ -150,7 +155,7 @@ def match_random(
 ) -> Iterator[Cloudlet]:
     """Shuffle anything that is left and return in randomized order"""
     
-    logger.debug("[matchers_carbon_intensity] Random matcher")
+    logger.debug("[matchers] Random matcher")
     
     random.shuffle(cloudlets)
     for cloudlet in cloudlets[:]:
@@ -187,7 +192,9 @@ def match_carbon_intensity(
 ) -> Iterator[Cloudlet]:
     """Yields cloudlet recommendations based on lowest carbon intensity level"""
     
-    logger.debug("[matchers_carbon_intensity] Carbon intensity matcher")
+    logger.debug("[matchers] Carbon intensity matcher")
+    # for c in cloudlets:
+    #     logger.debug(f"[matchers] {c.endpoint} {c.resources['carbon_intensity_gco2_kwh']}")
     
     # Sort cloudlets by lowest carbon intensity level
     cloudlets = sorted(cloudlets, key=lambda c: c.resources['carbon_intensity_gco2_kwh'])

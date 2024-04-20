@@ -57,6 +57,8 @@ COPY --from=builder /venv /venv
 # VOLUME ["/RECIPES"]
 # ENV SINFONIA_RECIPES=/RECIPES
 
+COPY RECIPES /app/RECIPES
+
 EXPOSE 5000
 
 ENTRYPOINT ["/venv/bin/sinfonia-tier1"]

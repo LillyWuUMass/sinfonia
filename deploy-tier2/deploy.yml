@@ -38,12 +38,13 @@
     sinfonia_tier2_latitude: "{{ hostvars[inventory_hostname].sinfonia_tier2_latitude }}"
     sinfonia_tier2_longitude: "{{ hostvars[inventory_hostname].sinfonia_tier2_longitude }}"
     sinfonia_tier2_zone: "{{ hostvars[inventory_hostname].sinfonia_tier2_zone }}"
-    sinfonia_tier3_latitude: "33.448376"
-    sinfonia_tier3_longitude: "-112.074036"
+    sinfonia_tier3_latitude: "30.209041"
+    sinfonia_tier3_longitude: "-81.592600"
     sinfonia_kubeconfig: ""
     sinfonia_kubecontext: ""
     sinfonia_prometheus: "http://kube-prometheus-stack-prometheus.monitoring.svc:9090"
     sinfonia_recipes: "RECIPES"
+    experiment_transition_latency_ms: "{{ hostvars[inventory_hostname].experiment_transition_latency_ms }}"
     enable_ufw: false
     override_resolv_conf: true
 
