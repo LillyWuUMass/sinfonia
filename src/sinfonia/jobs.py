@@ -92,7 +92,7 @@ def report_to_tier1_endpoints():
         if not 'rapl_energy_sample' in config:
             config['rapl_energy_sample'] = rapl.RAPLMonitor.sample()
             
-        r.energy_use_joules = carbon_measures.get_average_energy_between_samples(config['rapl_energy_sample'], rapl.RAPLMonitor.sample())
+        r.energy_use_joules = carbon_measures.sample_energy_between_samples(config['rapl_energy_sample'], rapl.RAPLMonitor.sample())
         r.carbon_emission_gco2 = r.carbon_intensity_gco2_kwh * joules_to_kilowatt_hours(r.energy_use_joules)
         
         resources.update(r.to_dict())

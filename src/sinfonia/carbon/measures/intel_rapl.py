@@ -3,7 +3,7 @@ import time
 import rapl
 
 
-def get_average_energy_use_joules(period_seconds: float = 1) -> float:
+def sample_energy_watts(t_sec: float = 1) -> float:
     """Get instantaneous system energy use in Joules via Intel RAPL.
     
     Args:
@@ -14,7 +14,7 @@ def get_average_energy_use_joules(period_seconds: float = 1) -> float:
     """
     # Measure system energy use over the specified period
     s1 = rapl.RAPLMonitor.sample()
-    time.sleep(period_seconds)
+    time.sleep(t_sec)
     s2 = rapl.RAPLMonitor.sample()
 
     diff = s2 - s1
@@ -27,7 +27,7 @@ def get_average_energy_use_joules(period_seconds: float = 1) -> float:
     return eu
 
 
-def get_average_energy_between_samples(sample1, sample2):
+def sample_energy_between_samples(sample1, sample2):
     diff = sample2 - sample1
     
     eu = 0

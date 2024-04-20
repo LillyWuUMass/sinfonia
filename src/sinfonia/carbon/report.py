@@ -1,6 +1,6 @@
 from dataclasses import dataclass, asdict
 
-from .measures.intel_rapl import get_average_energy_use_joules
+from .measures.intel_rapl import sample_energy_watts
 from .unit_conv import joules_to_kilowatt_hours
 from .simulation.measures import get_average_carbon_intensity_gco2_kwh
 from .simulation.metadata import MetaData, get_metadata
@@ -37,7 +37,7 @@ def from_simulation(timestamp: int):
     timestamp = m.start_date_unix + incr
     
     ci = get_average_carbon_intensity_gco2_kwh(timestamp)
-    eu = get_average_energy_use_joules()
+    eu = sample_energy_watts()
     ce = ci * joules_to_kilowatt_hours(eu)
     
     return CarbonReport(
