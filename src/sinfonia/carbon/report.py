@@ -1,7 +1,7 @@
 from dataclasses import dataclass, asdict
 
 from .measures import intel_rapl, obelix
-from .unit_conv import watts_to_kwh
+from .unit_conv import joules_to_kwh
 from .simulation.measures import get_average_carbon_intensity_gco2_kwh
 from .simulation.metadata import MetaData, get_metadata
 
@@ -15,7 +15,7 @@ logger = get_default_logger()
 class CarbonReport():
     """Contains carbon reporting data."""
     carbon_intensity_gco2_kwh: float
-    energy_use_watts: float
+    energy_use_joules: float
     carbon_emission_gco2: float
     
     def to_dict(self):
@@ -52,16 +52,16 @@ def from_simulation(
     
     eu = 0
     if method == 'rapl':
-        eu = intel_rapl.sample_energy_watts()
+        eu = intel_rapl.sample_energy_joules()
     elif method == 'obelix':
-        eu = obelix.sample_energy_watts(node_name, t_sec)
+        eu = obelix.sample_energy_joules(node_name, t_sec)
         
-    # eu = sample_energy_watts()
-    ce = ci * watts_to_kwh(eu, t_sec)
+    # eu = sample_energy_joules()
+    ce = ci * joules_to_kwh(eu, t_sec)
     
     return CarbonReport(
         carbon_intensity_gco2_kwh=ci,
-        energy_use_watts=eu,
+        energy_use_joules=eu,
         carbon_emission_gco2=ce,
         )
     

@@ -3,7 +3,7 @@ import time
 import rapl
 
 
-def sample_energy_watts(t_sec: float = 1) -> float:
+def sample_energy_joules(t_sec: float = 1) -> float:
     """Get instantaneous system energy use in Joules via Intel RAPL.
     
     Args:

@@ -200,7 +200,7 @@ components:
         carbon_intensity_gco2_kwh:
           type: number
           format: float
-        energy_use_watts:
+        energy_use_joules:
           type: number
           format: float
         carbon_emission_gco2:

@@ -57,7 +57,7 @@ class CloudletsView(MethodView):
             unix_time = int(time())
             endpoint = cloudlet.endpoint
             carbon_intensity = resources.get('carbon_intensity_gco2_kwh', '')
-            energy_consumption = resources.get('energy_use_watts', '')
+            energy_consumption = resources.get('energy_use_joules', '')
             carbon_emission = resources.get('carbon_emission_gco2', '')
             cpu_ratio = resources.get('cpu_ratio', '')
             
