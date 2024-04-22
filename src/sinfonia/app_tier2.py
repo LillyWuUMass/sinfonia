@@ -48,6 +48,9 @@ class Tier2DefaultConfig:
     TRACE_GITHUB_REPO_URL = "https://github.com/k2nt/k2nt.github.io/blob/main/projects/sinfonia/carbon_traces"
     RECIPES: str | Path | URL = "RECIPES"
     PROMETHEUS: str = "http://10.43.217.221:9090"
+    REPORT_TO_TIER1_INTERVAL_SECONDS = 15
+    OBELIX_NODE_NAME = "obelix31"
+    EXPERIMENT_POWER_MEASURE_METHOD = "obelix"
     
 
 def tier2_app_factory(**args) -> connexion.FlaskApp:

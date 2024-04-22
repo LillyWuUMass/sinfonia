@@ -9,6 +9,7 @@
 #
 
 from typing import Dict
+import time
 
 import rapl
 import pendulum
@@ -16,18 +17,9 @@ import requests
 from flask_apscheduler import APScheduler
 from requests.exceptions import RequestException
 from yarl import URL
-from time import time
-from datetime import datetime, timedelta
-
-from .cloudlets import Cloudlet
-
-from src.lib.time.unit import TimeUnit
-
-from src.domain.logger import get_default_logger
 
 from .carbon import report as carbon_report
-from .carbon.measures import intel_rapl as carbon_measures
-from src.sinfonia.carbon.unit_conv import joules_to_kilowatt_hours
+from src.domain.logger import get_default_logger
 
 
 logger = get_default_logger()
@@ -85,17 +77,13 @@ def report_to_tier1_endpoints():
     resources: Dict = cluster.get_resources()
     
     # Inject carbon metrics
-    # carbon_report = get_carbon_report(tier2_zone, int(time()))
-    if 'CARBON_TRACE_TIMESTAMP' in config:
-        r = carbon_report.from_simulation(config["CARBON_TRACE_TIMESTAMP"])
-    
-        if not 'rapl_energy_sample' in config:
-            config['rapl_energy_sample'] = rapl.RAPLMonitor.sample()
-            
-        r.energy_use_joules = carbon_measures.sample_energy_between_samples(config['rapl_energy_sample'], rapl.RAPLMonitor.sample())
-        r.carbon_emission_gco2 = r.carbon_intensity_gco2_kwh * joules_to_kilowatt_hours(r.energy_use_joules)
-        
-        resources.update(r.to_dict())
+    r = carbon_report.from_simulation(
+        config["OBELIX_NODE_NAME"],
+        config["EXPERIMENT_POWER_MEASURE_METHOD"],
+        config["REPORT_TO_TIER1_INTERVAL_SECONDS"],
+        int(time.time()),
+        )
+    resources.update(r.to_dict())
     
     # Inject location data
     locations = [scheduler.app.config["TIER2_GEOLOCATION"].coordinate]
@@ -127,7 +115,7 @@ def start_reporting_job():
     scheduler.add_job(
         func=report_to_tier1_endpoints,
         trigger="interval",
-        seconds=15,
+        seconds=config["REPORT_TO_TIER1_INTERVAL_SECONDS"],
         max_instances=1,
         coalesce=True,
         id="report_to_tier1",

@@ -1,10 +1,12 @@
-def joules_to_kilowatt_hours(joules: float) -> float:
-    """Convert energy use in Joules to kilowatt-hours.
+def watts_to_kwh(w: float, t_sec: float = 1) -> float:
+    """Convert energy use in Watts to kWh
     
     Args:
-        joules - float: Energy use in Joules
-        
+        watts - float: Energy use in Watts
+        t_sec - float: Duration of work in seconds [default: 1]
     Returns:
         float: Energy use in kilowatt-hours
     """
-    return joules / 3.6e6
+    kilowatts = w / 1000.0
+    hours = t_sec / 3600.0
+    return kilowatts * hours

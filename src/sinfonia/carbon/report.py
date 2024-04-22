@@ -1,23 +1,33 @@
 from dataclasses import dataclass, asdict
 
-from .measures.intel_rapl import sample_energy_watts
-from .unit_conv import joules_to_kilowatt_hours
+from .measures import intel_rapl, obelix
+from .unit_conv import watts_to_kwh
 from .simulation.measures import get_average_carbon_intensity_gco2_kwh
 from .simulation.metadata import MetaData, get_metadata
+
+from src.domain.logger import get_default_logger
+
+
+logger = get_default_logger()
 
 
 @dataclass(init=True)
 class CarbonReport():
     """Contains carbon reporting data."""
     carbon_intensity_gco2_kwh: float
-    energy_use_joules: float
+    energy_use_watts: float
     carbon_emission_gco2: float
     
     def to_dict(self):
         return asdict(self)
     
     
-def from_simulation(timestamp: int):
+def from_simulation(
+        node_name: str,
+        method: str,
+        t_sec: int,
+        timestamp: int
+) -> CarbonReport:
     """Return simulated carbon report given a timestamp.
     
     Carbon report is drawn from predefined carbon trace dataset.
@@ -27,6 +37,8 @@ def from_simulation(timestamp: int):
     timestamp is returned.
     
     Args:
+        method: Either 'obelix' or 'rapl' 
+        t_sec: Interval (seconds) to sample energy
         timestamp - int: Timestamp to get carbon trace
     
     Returns:
@@ -37,12 +49,19 @@ def from_simulation(timestamp: int):
     timestamp = m.start_date_unix + incr
     
     ci = get_average_carbon_intensity_gco2_kwh(timestamp)
-    eu = sample_energy_watts()
-    ce = ci * joules_to_kilowatt_hours(eu)
+    
+    eu = 0
+    if method == 'rapl':
+        eu = intel_rapl.sample_energy_watts()
+    elif method == 'obelix':
+        eu = obelix.sample_energy_watts(node_name, t_sec)
+        
+    # eu = sample_energy_watts()
+    ce = ci * watts_to_kwh(eu, t_sec)
     
     return CarbonReport(
         carbon_intensity_gco2_kwh=ci,
-        energy_use_joules=eu,
+        energy_use_watts=eu,
         carbon_emission_gco2=ce,
         )
     
