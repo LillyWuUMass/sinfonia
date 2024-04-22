@@ -147,7 +147,7 @@ def start_broadcasting_job():
     scheduler.add_job(
         func=broadcast_carbon_trace_timestamp_to_tier2s,
         trigger="interval",
-        seconds=90,
+        seconds=config["EXPERIMENT_BROADCAST_TIMESTAMP_INTERVAL_SECONDS"],
         max_instances=1,
         coalesce=True,
         id="broadcast_carbon_trace_timestamp_to_tier2s",

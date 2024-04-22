@@ -46,25 +46,16 @@ logger = get_default_logger()
 
 
 class Tier1DefaultConfig:
-    CLOUDLETS: str | Path | None = None
-
     # MATCHERS serve as filter
     # Default is network -> location -> random -> cloudlet recommendations
     # We are setting match carbon as the single filter
     # MATCHERS declaration can be found in poetry's pyproject.toml
     # MATCHERS: list[str] = ["network", "location", "random"]
     MATCHERS: list[str] = ["network", "location", "carbon-intensity"] # "carbon-intensity"
-    RECIPES: str | Path | URL = "RECIPES"
-
-    # These are initialized by the wsgi app factory from the config
-    # cloudlets: dict[UUID, Cloudlet] = {}                           # CLOUDLETS
-    # executor = Executor(flask_app)
-    # geolite2_reader = geolite2.reader()
-    # match_functions: list[Tier1MatchFunction] = []                 # MATCHERS
-    # deployment_repository: DeploymentRepository | None = None      # RECIPES
-    
-    # How long before removing cloudlet due to inactivity
+    CLOUDLETS: str | Path | None = None
+    RECIPES: str | Path | URL = "RECIPES"    
     CLOUDLET_EXPIRY_SECONDS = TimeUnit.MINUTE
+    EXPERIMENT_BROADCAST_TIMESTAMP_INTERVAL_SECONDS = 60
 
 
 def load_cloudlets_conf(cloudlets_conf: str | Path | None) -> dict[UUID, Cloudlet]:
