@@ -9,9 +9,7 @@
 #
 
 from typing import Dict
-import time
 
-import rapl
 import pendulum
 import requests
 from flask_apscheduler import APScheduler
@@ -77,13 +75,14 @@ def report_to_tier1_endpoints():
     resources: Dict = cluster.get_resources()
     
     # Inject carbon metrics
-    r = carbon_report.from_simulation(
-        config["OBELIX_NODE_NAME"],
-        config["EXPERIMENT_POWER_MEASURE_METHOD"],
-        config["REPORT_TO_TIER1_INTERVAL_SECONDS"],
-        int(time.time()),
-        )
-    resources.update(r.to_dict())
+    if "CARBON_TRACE_TIMESTAMP" in config:
+        r = carbon_report.from_simulation(
+            node_name=config["OBELIX_NODE_NAME"],
+            method=config["EXPERIMENT_POWER_MEASURE_METHOD"],
+            t_sec=config["REPORT_TO_TIER1_INTERVAL_SECONDS"],
+            timestamp=config["CARBON_TRACE_TIMESTAMP"],
+            )
+        resources.update(r.to_dict())
     
     # Inject location data
     locations = [scheduler.app.config["TIER2_GEOLOCATION"].coordinate]

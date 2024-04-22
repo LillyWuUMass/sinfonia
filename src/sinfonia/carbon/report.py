@@ -37,6 +37,7 @@ def from_simulation(
     timestamp is returned.
     
     Args:
+        node_name: Name of current machine
         method: Either 'obelix' or 'rapl' 
         t_sec: Interval (seconds) to sample energy
         timestamp - int: Timestamp to get carbon trace

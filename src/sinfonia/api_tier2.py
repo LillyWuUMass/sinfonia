@@ -32,16 +32,18 @@ class CarbonGet(BaseModel):
 
 
 class CarbonView(MethodView):
-    def search(self):
-        try:
-            req = CarbonGet(**request.args)
-        except ValueError as e:
-            raise ProblemException(400, "Error", f"Failed to parse request {e!r}")
+    def search(self):        
+        config = current_app.config
         
-        if 'CARBON_TRACE_TIMESTAMP' not in current_app.config:
-            return ProblemException(400, f"carbon trace timestamp not yet recorded")
+        if 'CARBON_TRACE_TIMESTAMP' not in config:
+            raise ProblemException(400, f"carbon trace timestamp not yet recorded")
         
-        return carbon_report.from_simulation(current_app.config['CARBON_TRACE_TIMESTAMP'])
+        return carbon_report.from_simulation(
+            node_name=config["OBELIX_NODE_NAME"],
+            method=config["EXPERIMENT_POWER_MEASURE_METHOD"],
+            t_sec=config["REPORT_TO_TIER1_INTERVAL_SECONDS"],
+            timestamp=config["CARBON_TRACE_TIMESTAMP"],
+            )
 
 
 class CarbonTraceTimestampView(MethodView):
