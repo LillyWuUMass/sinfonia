@@ -317,6 +317,7 @@ class Cloudlet:
         closest = None
         for cloudlet_location in self.locations:
             distance = cloudlet_location - location
+            print("DEUGGG", distance)
             if closest is None or distance < closest:
                 closest = distance
         return closest

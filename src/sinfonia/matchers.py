@@ -134,6 +134,7 @@ def match_by_location(
 
     if not by_distance:
         logger.warning(f"[matcher] by distance None")
+        logger.warning(f"[matcher] client location {client_info.location}")
         return
     
     MAX_DIST_KM = 1000.0

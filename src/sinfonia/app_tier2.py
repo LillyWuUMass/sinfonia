@@ -42,10 +42,10 @@ from .geo_location import GeoLocation
 
 class Tier2DefaultConfig:
     TIER1_URLS = ["http://192.168.245.31:5000"]
-    TIER2_URL = "http://192.168.245.31:5001"
-    TIER2_LATITUDE = 33.448376
-    TIER2_LONGITUDE = -112.074036
-    TIER2_ZONE = "US-SW-AZPS"
+    TIER2_URL = "http://192.168.245.31:30051"
+    TIER2_LATITUDE = 30.332184
+    TIER2_LONGITUDE = -81.655647
+    TIER2_ZONE = "US-FLA-JEA"
     TRACE_GITHUB_REPO_URL = "https://github.com/k2nt/k2nt.github.io/blob/main/projects/sinfonia/carbon_traces"
     RECIPES: str | Path | URL = "RECIPES"
     PROMETHEUS: str = "http://10.43.217.221:9090"
@@ -182,7 +182,7 @@ cli = typer.Typer()
 @cli.command()
 def tier2_server(
     version: OptionalBool = version_option,
-    port: int = typer.Option(5001, help="Port to listen for requests"),
+    port: int = typer.Option(30051, help="Port to listen for requests"),
     recipes: OptionalStr = recipes_option,
     kubeconfig: OptionalPath = typer.Option(
         None,

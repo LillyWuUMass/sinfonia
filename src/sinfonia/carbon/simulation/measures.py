@@ -5,6 +5,11 @@ import pandas as pd
 
 from .metadata import CARBON_TRACE_FILE_PATH
 
+from src.domain.logger import get_default_logger
+
+logger = get_default_logger()
+
+
 
 def get_carbon_trace(timestamp: int) -> Dict:
     """Return carbon trace given zone and timestamp."""

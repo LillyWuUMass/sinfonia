@@ -132,7 +132,7 @@ def broadcast_carbon_trace_timestamp_to_tier2s():
         logger.debug(f"Setting carbon trace timestamp {curr_timestamp} on {cloudlet.name}")
         cloudlet.set_carbon_trace_timestamp(curr_timestamp)
         
-    new_timestamp = curr_timestamp + 300
+    new_timestamp = curr_timestamp + config["EXPERIMENT_TICK_RATE_SECONDS"]
     config["CARBON_TRACE_TIMESTAMP"] = new_timestamp
     # TODO
     assert scheduler.app.config["CARBON_TRACE_TIMESTAMP"] == new_timestamp

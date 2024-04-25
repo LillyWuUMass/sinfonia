@@ -44,6 +44,7 @@ class CloudletsView(MethodView):
             return "Bad Request, missing UUID", 400
 
         cloudlet = Cloudlet.new_from_api(body)
+        # logger.debug(f"[CloudletsView] cloudlet locations {cloudlet.locations}")
         
         # Create 'logs' folder if not exists
         if not os.path.exists('logs'):

@@ -209,8 +209,13 @@ spec:
                 self.recipe.chart_ref,
             )
 
-    def asdict(self) -> dict[str, Any]:
+    def asdict(self, default_endpoint = "") -> dict[str, Any]:
         status = "Deployed" if self.is_deployed() else "Expired"
+        
+        endpoint = str(self.cluster.tunnel_endpoint)
+        if not endpoint:
+            endpoint = default_endpoint
+        
         return {
             "DeploymentName": self.name,
             "UUID": str(self.recipe.uuid),
@@ -220,7 +225,7 @@ spec:
             "TunnelConfig": {
                 "publicKey": str(self.cluster.tunnel_public_key),
                 "allowedIPs": ["0.0.0.0/0"],
-                "endpoint": str(self.cluster.tunnel_endpoint),
+                "endpoint": endpoint,
                 "address": [str(self.client_ip)],
                 "dns": [
                     str(self.cluster.kubedns_address),

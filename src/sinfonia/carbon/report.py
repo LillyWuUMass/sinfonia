@@ -3,7 +3,6 @@ from dataclasses import dataclass, asdict
 from .measures import intel_rapl, obelix
 from .unit_conv import joules_to_kwh
 from .simulation.measures import get_average_carbon_intensity_gco2_kwh
-from .simulation.metadata import MetaData, get_metadata
 
 from src.domain.logger import get_default_logger
 
@@ -12,7 +11,7 @@ logger = get_default_logger()
 
 
 @dataclass(init=True)
-class CarbonReport():
+class CarbonReport:
     """Contains carbon reporting data."""
     carbon_intensity_gco2_kwh: float
     energy_use_joules: float
@@ -44,11 +43,7 @@ def from_simulation(
     
     Returns:
         CarbonReport: Carbon trace
-    """
-    m: MetaData = get_metadata()
-    incr = timestamp % (m.end_date_unix - m.start_date_unix)
-    timestamp = m.start_date_unix + incr
-    
+    """    
     ci = get_average_carbon_intensity_gco2_kwh(timestamp)
     
     eu = 0
@@ -57,7 +52,6 @@ def from_simulation(
     elif method == 'obelix':
         eu = obelix.sample_energy_joules(node_name, t_sec)
         
-    # eu = sample_energy_joules()
     ce = ci * joules_to_kwh(eu, t_sec)
     
     return CarbonReport(

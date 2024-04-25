@@ -29,7 +29,6 @@ from .app_common import (
     port_option,
     recipes_option,
     version_option,
-    carbon_trace_timestamp_option,
 )
 from .cloudlets import Cloudlet
 from .cloudlets import load as cloudlets_load
@@ -54,8 +53,10 @@ class Tier1DefaultConfig:
     MATCHERS: list[str] = ["network", "location", "carbon-intensity"] # "carbon-intensity"
     CLOUDLETS: str | Path | None = None
     RECIPES: str | Path | URL = "RECIPES"    
-    CLOUDLET_EXPIRY_SECONDS = TimeUnit.MINUTE
-    EXPERIMENT_BROADCAST_TIMESTAMP_INTERVAL_SECONDS = 60
+    CLOUDLET_EXPIRY_SECONDS = 60
+    EXPERIMENT_BROADCAST_TIMESTAMP_INTERVAL_SECONDS = 1
+    EXPERIMENT_TICK_RATE_SECONDS = 12
+    CARBON_TRACE_TIMESTAMP = 1672545600
 
 
 def load_cloudlets_conf(cloudlets_conf: str | Path | None) -> dict[UUID, Cloudlet]:
@@ -169,8 +170,7 @@ def tier1_server(
         is_eager=True,
         help="Show available best match functions",
     ),
-    carbon_trace_timestamp: int = carbon_trace_timestamp_option,
 ):
     """Run Sinfonia Tier1 with Flask's builtin server (for development)"""
-    app = wsgi_app_factory(cloudlets=cloudlets, recipes=recipes, matchers=matchers, carbon_trace_timestamp=carbon_trace_timestamp)
+    app = wsgi_app_factory(cloudlets=cloudlets, recipes=recipes, matchers=matchers)
     app.run(port=port)
