@@ -18,7 +18,7 @@ from connexion.exceptions import ProblemException
 from flask import current_app, request
 from flask.views import MethodView
 import csv
-from time import time
+import time
 
 from .client_info import ClientInfo
 from .cloudlets import Cloudlet
@@ -26,12 +26,13 @@ from .deployment_recipe import DeploymentRecipe
 from .matchers import tier1_best_match
 
 from src.domain.logger import get_default_logger
+from src.lib.time.utils import unix_time_now
 
 
 # don't try to deploy to more than MAX_RESULTS cloudlets at a time
 MAX_RESULTS = 3
 # Whenever a cloudlet reports to tier1, the carbon metrics are appended to this csv
-CLOUDLET_CARBON_HISTORY_CSV = "logs/cloudlets_carbon_history.csv"
+CLOUDLET_CARBON_HISTORY_CSV = f"logs/cloudlets_carbon_history.csv"
 
 
 logger = get_default_logger()
@@ -55,7 +56,7 @@ class CloudletsView(MethodView):
             csv_writer = csv.writer(file)
             
             resources = cloudlet.resources
-            unix_time = int(time())
+            unix_time = unix_time_now()
             endpoint = cloudlet.endpoint
             carbon_intensity = resources.get('carbon_intensity_gco2_kwh', '')
             energy_consumption = resources.get('energy_use_joules', '')
@@ -83,32 +84,30 @@ class CloudletsView(MethodView):
 
 class DeployView(MethodView):
     def post(self, uuid, application_key, results=1):
+        config = current_app.config
+        
         # set number of returned results between 1 and MAX_RESULTS
         max_results = max(1, min(results, MAX_RESULTS))
 
         try:
             requested = DeploymentRecipe.from_uuid(uuid)
             client_info = ClientInfo.from_request(application_key)
-            logger.debug(f"[client] info {client_info}")
+            logger.debug(f"[DeployView] POST client_info {client_info}")
         except ValueError:
             raise ProblemException(400, "Bad Request", "Incorrectly formatted request")
 
-        matchers = current_app.config["match_functions"]
-        available: List[Cloudlet] = list(current_app.config["cloudlets"].values())
+        matchers = config["match_functions"]
+        available: List[Cloudlet] = list(config["cloudlets"].values())
         
         candidates: Iterable[Cloudlet] = islice(
             tier1_best_match(matchers, client_info, requested, available), max_results
         )
-        
-        # logger.debug(f"candidates size: {len(list(candidates))}")
 
         # fire off deployment requests
         requests = [
             cloudlet.deploy_async(requested.uuid, client_info)
             for cloudlet in candidates
         ]
-
-        # logger.debug(f"{list(candidates)[0].endpoint}/{requested.uuid}/{client_info.publickey.urlsafe}")
 
         # gather the results,
         # - interleave results from cloudlets in case any returned more than requested.
@@ -126,6 +125,11 @@ class DeployView(MethodView):
         # all requests failed?
         if not results:
             raise ProblemException(500, "Error", "Something went wrong")
+        
+        # start new log for new loadtest
+        global CLOUDLET_CARBON_HISTORY_CSV
+        CLOUDLET_CARBON_HISTORY_CSV = f"logs/{unix_time_now()}.csv"
+        logger.debug(f"[DeployView] POST changing log location to {CLOUDLET_CARBON_HISTORY_CSV}")
 
         return results
 

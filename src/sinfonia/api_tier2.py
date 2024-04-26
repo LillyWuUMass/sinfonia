@@ -41,11 +41,11 @@ class CarbonView(MethodView):
         
         r = carbon_report.from_simulation(
             node_name=config["OBELIX_NODE_NAME"],
-            method=config["EXPERIMENT_POWER_MEASURE_METHOD"],
+            method=config["POWER_MEASURE_METHOD"],
             t_sec=config["REPORT_TO_TIER1_INTERVAL_SECONDS"],
             timestamp=config["CARBON_TRACE_TIMESTAMP"],
             )
-        logger.debug(f"[CarbonView] ts {config['CARBON_TRACE_TIMESTAMP']} -- ci {r.carbon_intensity_gco2_kwh}")
+        logger.debug(f"[CarbonView] {config['OBELIX_NODE_NAME']} -- ts {config['CARBON_TRACE_TIMESTAMP']} -- ci {r.carbon_intensity_gco2_kwh}")
         return r
 
 

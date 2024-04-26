@@ -1,0 +1,11 @@
+tier2hosts:
+  hosts:
+    obelix32:
+      ansible_host: "192.168.245.32"
+      sinfonia_tier2_url: "http://192.168.245.32:30051"
+      sinfonia_tier2_zone: "US-FLA-JEA"
+      sinfonia_tier2_latitude: "30.332184"
+      sinfonia_tier2_longitude: "-81.655647"
+      experiment_transition_latency_ms: "0.0
+      
+    "
