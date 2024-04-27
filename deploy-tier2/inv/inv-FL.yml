@@ -43,3 +43,4 @@ tier2hosts:
       sinfonia_tier2_latitude: "27.950575"
       sinfonia_tier2_longitude: "-82.457176"
       experiment_transition_latency_ms: "13.93"
+      

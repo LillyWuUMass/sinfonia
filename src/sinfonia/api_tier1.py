@@ -62,6 +62,7 @@ class CloudletsView(MethodView):
             energy_consumption = resources.get('energy_use_joules', '')
             carbon_emission = resources.get('carbon_emission_gco2', '')
             cpu_ratio = resources.get('cpu_ratio', '')
+            mem_ratio = resources.get('mem_ratio', '')
             
             csv_writer.writerow([
                 unix_time, 
@@ -69,7 +70,8 @@ class CloudletsView(MethodView):
                 carbon_intensity, 
                 energy_consumption,
                 carbon_emission,
-                cpu_ratio
+                cpu_ratio,
+                mem_ratio,
             ])
             
         cloudlets = current_app.config["cloudlets"]

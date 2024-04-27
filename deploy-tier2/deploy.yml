@@ -44,7 +44,7 @@
     sinfonia_kubecontext: ""
     sinfonia_prometheus: "http://kube-prometheus-stack-prometheus.monitoring.svc:9090"
     sinfonia_recipes: "RECIPES"
-    obelix_node_name: "{{ inventory_hostname }}"
+    experiment_obelix_node_name: "{{ inventory_hostname }}"
     experiment_transition_latency_ms: "{{ hostvars[inventory_hostname].experiment_transition_latency_ms }}"
     enable_ufw: false
     override_resolv_conf: true
@@ -95,9 +95,9 @@
             sinfoniaKubeContext: "{{ sinfonia_kubecontext }}"
             sinfoniaPrometheus: "{{ sinfonia_prometheus }}"
             sinfoniaRecipes: "{{ sinfonia_recipes }}"
-            obelixNodeName: "{{ obelix_node_name }}"
+            experimentObelixNodeName: "{{ experiment_obelix_node_name }}"
             ingress:
               className: traefik
             image:
               repository: k2nt/sinfonia-tier2
-              tag: dev.14
+              tag: stable.8
