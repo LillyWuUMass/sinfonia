@@ -46,6 +46,7 @@
     sinfonia_recipes: "RECIPES"
     experiment_obelix_node_name: "{{ inventory_hostname }}"
     experiment_transition_latency_ms: "{{ hostvars[inventory_hostname].experiment_transition_latency_ms }}"
+    experiment_power_measure_method: "rapl"
     enable_ufw: false
     override_resolv_conf: true
 
@@ -62,7 +63,7 @@
   - import_tasks: tasks/k3s.yml
   - import_tasks: tasks/kube-prometheus-stack.yml
   - import_tasks: tasks/kilo.yml
-  - import_tasks: tasks/latency.yml
+  # - import_tasks: tasks/latency.yml
   - import_tasks: tasks/carbon.yml
   # - import_tasks: tasks/nvidia_gpu_operator.yml
   # - import_tasks: tasks/kubevirt.yml
@@ -96,6 +97,7 @@
             sinfoniaPrometheus: "{{ sinfonia_prometheus }}"
             sinfoniaRecipes: "{{ sinfonia_recipes }}"
             experimentObelixNodeName: "{{ experiment_obelix_node_name }}"
+            experimentPowerMeasureMethod: "{{ experiment_power_measure_method }}"
             ingress:
               className: traefik
             image:

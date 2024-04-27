@@ -25,7 +25,8 @@ def from_simulation(
         node_name: str,
         method: str,
         t_sec: int,
-        timestamp: int
+        timestamp: int,
+        rapl_sample_interval_seconds: int = 1,
 ) -> CarbonReport:
     """Return simulated carbon report given a timestamp.
     
@@ -48,7 +49,7 @@ def from_simulation(
     
     eu = 0
     if method == 'rapl':
-        eu = intel_rapl.sample_energy_joules()
+        eu = intel_rapl.sample_energy_joules(rapl_sample_interval_seconds)
     elif method == 'obelix':
         eu = obelix.sample_energy_joules(node_name, t_sec)
         

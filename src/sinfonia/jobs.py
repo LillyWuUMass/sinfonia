@@ -81,8 +81,9 @@ def report_to_tier1_endpoints():
             method=config["POWER_MEASURE_METHOD"],
             t_sec=config["REPORT_TO_TIER1_INTERVAL_SECONDS"],
             timestamp=config["CARBON_TRACE_TIMESTAMP"],
+            rapl_sample_interval_seconds=config["RAPL_SAMPLE_INTERVAL_SECONDS"],
             )
-        logger.debug(f"[ReportToTier1Endpoints] {config['OBELIX_NODE_NAME']} -- ts {config['CARBON_TRACE_TIMESTAMP']} -- ci {r.carbon_intensity_gco2_kwh} -- eu {r.energy_use_joules}")
+        logger.debug(f"[ReportToTier1Endpoints] {config['POWER_MEASURE_METHOD']} -- {config['RAPL_SAMPLE_INTERVAL_SECONDS']} sec rapl -- {config['OBELIX_NODE_NAME']} -- ts {config['CARBON_TRACE_TIMESTAMP']} -- ci {r.carbon_intensity_gco2_kwh} -- eu {r.energy_use_joules}")
         resources.update(r.to_dict())
     
     # Inject location data
