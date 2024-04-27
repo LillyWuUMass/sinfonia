@@ -39,7 +39,7 @@
 
     - name: remove previous latency simulations
       ansible.builtin.command:
-        cmd: python3 latency_reset.py
+        cmd: python3 latency_reset.py &
 
     # - name: Check if services were deleted
     #   debug:
