@@ -34,9 +34,9 @@ tier2hosts:
       sinfonia_tier2_longitude: "-82.45843"
 
   # Tallahassee, FL
-    obelix37:
-      ansible_host: "192.168.245.37"
-      sinfonia_tier2_url: "http://192.168.245.37:30051"
+    obelix29:
+      ansible_host: "192.168.245.29"
+      sinfonia_tier2_url: "http://192.168.245.29:30051"
       sinfonia_tier2_zone: "US-FLA-SEC"
       sinfonia_tier2_latitude: "30.4382"
       sinfonia_tier2_longitude: "-84.2806"
