@@ -25,13 +25,6 @@ tier2hosts:
       sinfonia_tier2_latitude: "28.53834"
       sinfonia_tier2_longitude: "-81.37924"
 
-    # obelix35:
-    #   ansible_host: "192.168.245.35"
-    #   sinfonia_tier2_url: "http://192.168.245.35:30051"
-    #   sinfonia_tier2_zone: "CA-ON"
-    #   sinfonia_tier2_latitude: "43.651070"
-    #   sinfonia_tier2_longitude: "-79.347015"
-
     # Tampa, FL
     obelix36:
       ansible_host: "192.168.245.36"
@@ -40,10 +33,10 @@ tier2hosts:
       sinfonia_tier2_latitude: "27.94752"
       sinfonia_tier2_longitude: "-82.45843"
 
-    # Tallahasse, FL
+  # Tallahassee, FL
     obelix37:
       ansible_host: "192.168.245.37"
-      sinfonia_tier2_url: "http://192.168.245.36:30051"
+      sinfonia_tier2_url: "http://192.168.245.37:30051"
       sinfonia_tier2_zone: "US-FLA-SEC"
       sinfonia_tier2_latitude: "30.4382"
       sinfonia_tier2_longitude: "-84.2806"
