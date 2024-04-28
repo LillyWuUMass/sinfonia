@@ -5,7 +5,7 @@
   gather_facts: false
 
   environment:
-    K8S_AUTH_KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+    # K8S_AUTH_KUBECONFIG: /etc/rancher/k3s/k3s.yaml
     RAPL_FOLDER: /nfs/obelix/users1/khainguyen/power_data
     OBELIX_NODE_NAME: "{{ inventory_hostname }}"
 
@@ -23,7 +23,7 @@
         dest: ./rapl_daemon.py
         mode: '0755'
 
-    - name: install dependencies for latency tasks
+    - name: install dependencies
       ansible.builtin.pip:
         executable: pip3
         name: git+https://github.com/wkatsak/py-rapl

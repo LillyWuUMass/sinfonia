@@ -44,7 +44,6 @@ class CarbonView(MethodView):
             method=config["POWER_MEASURE_METHOD"],
             t_sec=config["REPORT_TO_TIER1_INTERVAL_SECONDS"],
             timestamp=config["CARBON_TRACE_TIMESTAMP"],
-            rapl_sample_interval_seconds=config["RAPL_SAMPLE_INTERVAL_SECONDS"]
             )
         logger.debug(f"[CarbonView] {config['OBELIX_NODE_NAME']} -- ts {config['CARBON_TRACE_TIMESTAMP']} -- ci {r.carbon_intensity_gco2_kwh}")
         return r

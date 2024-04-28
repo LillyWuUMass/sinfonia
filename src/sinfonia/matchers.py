@@ -36,8 +36,8 @@ CURRENT_PATH = os.path.abspath(__file__)
 PROJECT_PATH = os.path.dirname(CURRENT_PATH)
 LOG_PATH = f"{PROJECT_PATH}/logs"
 
-CARBON_INTENSITY_LOG_FILE_PATH = f"{LOG_PATH}/carbon_intensity.csv"
-CARBON_INTENSITY_CSV_HEADER = ['timestamp', 'names', 'carbon_intensity_gco2_per_kwh']
+# CARBON_INTENSITY_LOG_FILE_PATH = f"{LOG_PATH}/carbon_intensity.csv"
+# CARBON_INTENSITY_CSV_HEADER = ['timestamp', 'names', 'carbon_intensity_gco2_per_kwh']
 
 # Type definition for a Sinfonia Tier1 match function
 Tier1MatchFunction = Callable[
@@ -165,25 +165,25 @@ def match_random(
         yield cloudlet
 
 
-def _append_to_csv(path: str, header: List[Any], row: List[Any]):
-    """Append a row to a CSV file"""
-    # Create logs folder if it does not exist
-    os.makedirs(LOG_PATH, exist_ok=True)
+# def _append_to_csv(path: str, header: List[Any], row: List[Any]):
+#     """Append a row to a CSV file"""
+#     # Create logs folder if it does not exist
+#     os.makedirs(LOG_PATH, exist_ok=True)
 
-    # If CSV file does not exist then create one and append header
-    if os.path.exists(path):
-        with open(path, mode='w', newline='') as file:
-            writer = csv.writer(file)
-            writer.writerow(header)
+#     # If CSV file does not exist then create one and append header
+#     if os.path.exists(path):
+#         with open(path, mode='w', newline='') as file:
+#             writer = csv.writer(file)
+#             writer.writerow(header)
 
-    # Check that the given row has the correct number of elements
-    if len(header) != len(row):
-        raise Exception(f"Row contains incorrect number of elements. Expected {len(header)} found {len(row)}")
+#     # Check that the given row has the correct number of elements
+#     if len(header) != len(row):
+#         raise Exception(f"Row contains incorrect number of elements. Expected {len(header)} found {len(row)}")
 
-    # Append row to CSV
-    with open(path, mode='a', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(row)
+#     # Append row to CSV
+#     with open(path, mode='a', newline='') as file:
+#         writer = csv.writer(file)
+#         writer.writerow(row)
 
 
 def match_carbon_intensity(
@@ -202,14 +202,14 @@ def match_carbon_intensity(
 
     # Append decision to persistent log
     # This is for debugging purposes only
-    timestamp = int(time.time())
-    names = [c.name for c in cloudlets]
-    carbon_intensity = [c.resources['carbon_intensity_gco2_kwh'] for c in cloudlets]
-    _append_to_csv(
-        path=CARBON_INTENSITY_LOG_FILE_PATH,
-        header=CARBON_INTENSITY_CSV_HEADER,
-        row=[timestamp, names, carbon_intensity]
-    )
+    # timestamp = int(time.time())
+    # names = [c.name for c in cloudlets]
+    # carbon_intensity = [c.resources['carbon_intensity_gco2_kwh'] for c in cloudlets]
+    # _append_to_csv(
+    #     path=CARBON_INTENSITY_LOG_FILE_PATH,
+    #     header=CARBON_INTENSITY_CSV_HEADER,
+    #     row=[timestamp, names, carbon_intensity]
+    # )
 
     # Yield cloudlets
     for cloudlet in cloudlets:

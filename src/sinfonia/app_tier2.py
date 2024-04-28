@@ -52,9 +52,8 @@ class Tier2DefaultConfig:
         
     # Experiment
     REPORT_TO_TIER1_INTERVAL_SECONDS = 15
-    RAPL_SAMPLE_INTERVAL_SECONDS = 1
-    OBELIX_NODE_NAME = "obelix31"
-    POWER_MEASURE_METHOD = "obelix"
+    OBELIX_NODE_NAME = "obelix32"
+    POWER_MEASURE_METHOD = "rapl"
     
 
 def tier2_app_factory(**args) -> connexion.FlaskApp:
