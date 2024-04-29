@@ -102,4 +102,4 @@
               className: traefik
             image:
               repository: k2nt/sinfonia-tier2
-              tag: stable.10
+              tag: dev.16
