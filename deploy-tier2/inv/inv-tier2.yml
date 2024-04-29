@@ -19,5 +19,5 @@ tier2hosts:
     obelix36:
       ansible_host: "192.168.245.36"
 
-    obelix37:
-      ansible_host: "192.168.245.37"
+    obelix29:
+      ansible_host: "192.168.245.29"

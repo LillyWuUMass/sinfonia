@@ -16,7 +16,6 @@
       register: command_output
       failed_when: command_output.rc not in [0, 1]
 
-
     - name: copy rapl daemon script
       ansible.builtin.copy:
         src: scripts/rapl_daemon.py
