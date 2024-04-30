@@ -1,0 +1,21 @@
+---
+- name: check tier2 systems
+  hosts: tier2hosts
+  gather_facts: no
+
+  tasks:
+    - name: get resource utilization
+      command: kubectl top po -A
+      register: resu_output
+
+    - name: print resource utilization
+      debug:
+        msg: "{{ resu_output.stdout_lines }}"
+
+    - name: check latency injection
+      command: tc qdisc show dev eno1
+      register: latency_output
+
+    - name: print resource utilization
+      debug:
+        msg: "{{ latency_output.stdout_lines }}"
