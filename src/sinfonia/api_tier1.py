@@ -53,7 +53,7 @@ class CloudletsView(MethodView):
         
         # Record cloudlet carbon history
         with open(CLOUDLET_CARBON_HISTORY_CSV, 'a') as file:
-            csv_writer = csv.writer(file)
+            csv_writer = csv.writer(file, quoting=csv.QUOTE_NONNUMERIC)
             
             resources = cloudlet.resources
             unix_time = unix_time_now()
