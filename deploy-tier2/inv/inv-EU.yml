@@ -5,38 +5,38 @@ tier2hosts:
       ansible_host: "192.168.245.32"
       sinfonia_tier2_url: "http://192.168.245.32:30051"
       sinfonia_tier2_zone: "CH"
-      sinfonia_tier2_latitude: "46.95103"
-      sinfonia_tier2_longitude: "7.44369"
+      sinfonia_tier2_latitude: "46.94809"
+      sinfonia_tier2_longitude: "7.44744"
 
     # Graz, Austria
     obelix33:
       ansible_host: "192.168.245.33"
       sinfonia_tier2_url: "http://192.168.245.33:30051"
       sinfonia_tier2_zone: "AT"
-      sinfonia_tier2_latitude: "47.07132"
-      sinfonia_tier2_longitude: "15.43410"
+      sinfonia_tier2_latitude: "47.0679"
+      sinfonia_tier2_longitude: "15.4417"
 
     # Lyon, France
     obelix34:
       ansible_host: "192.168.245.34"
       sinfonia_tier2_url: "http://192.168.245.34:30051"
       sinfonia_tier2_zone: "FR"
-      sinfonia_tier2_latitude: "45.74495"
-      sinfonia_tier2_longitude: "4.87078"
+      sinfonia_tier2_latitude: "45.74846"
+      sinfonia_tier2_longitude: "4.84671"
 
     # Milan, Italy
     obelix36:
       ansible_host: "192.168.245.36"
       sinfonia_tier2_url: "http://192.168.245.36:30051"
       sinfonia_tier2_zone: "IT-NO"
-      sinfonia_tier2_latitude: "45.46257"
-      sinfonia_tier2_longitude: "9.17063"
+      sinfonia_tier2_latitude: "45.55307"
+      sinfonia_tier2_longitude: "9.18344"
 
     # Munich, Germany
     obelix29:
       ansible_host: "192.168.245.29"
       sinfonia_tier2_url: "http://192.168.245.29:30051"
       sinfonia_tier2_zone: "DE"
-      sinfonia_tier2_latitude: "48.13256"
-      sinfonia_tier2_longitude: "11.54207"
+      sinfonia_tier2_latitude: "48.137076"
+      sinfonia_tier2_longitude: "11.573377"
       
