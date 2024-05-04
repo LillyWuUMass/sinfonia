@@ -1,0 +1,48 @@
+tier2hosts:
+  hosts:
+    # Albuquerque, NM
+    obelix32:
+      ansible_host: "192.168.245.32"
+      sinfonia_tier2_url: "http://192.168.245.32:30051"
+      sinfonia_tier2_zone: "US-NW-BPAT"
+      sinfonia_tier2_latitude: "35.1107"
+      sinfonia_tier2_longitude: "-106.6099"
+
+    # Phoenix, AZ
+    obelix33:
+      ansible_host: "192.168.245.33"
+      sinfonia_tier2_url: "http://192.168.245.33:30051"
+      sinfonia_tier2_zone: "US-NW-CHPD"
+      sinfonia_tier2_latitude: "33.4494"
+      sinfonia_tier2_longitude: "-112.0747"
+
+    # Colorado Springs, CO
+    obelix34:
+      ansible_host: "192.168.245.34"
+      sinfonia_tier2_url: "http://192.168.245.34:30051"
+      sinfonia_tier2_zone: "US-NW-DOPD"
+      sinfonia_tier2_latitude: "38.8634"
+      sinfonia_tier2_longitude: "-104.7919"
+
+    # obelix35:
+    #   ansible_host: "192.168.245.35"
+    #   sinfonia_tier2_url: "http://192.168.245.35:30051"
+    #   sinfonia_tier2_zone: "CA-ON"
+    #   sinfonia_tier2_latitude: "43.651070"
+    #   sinfonia_tier2_longitude: "-79.347015"
+
+    # Las Cruces, NM
+    obelix36:
+      ansible_host: "192.168.245.36"
+      sinfonia_tier2_url: "http://192.168.245.36:30051"
+      sinfonia_tier2_zone: "US-NW-GCPD"
+      sinfonia_tier2_latitude: "46.814289"
+      sinfonia_tier2_longitude: "-117.880097"
+
+    # Salt Lake City, UT
+    obelix29:
+      ansible_host: "192.168.245.29"
+      sinfonia_tier2_url: "http://192.168.245.29:30051"
+      sinfonia_tier2_zone: "US-FLA-SEC"
+      sinfonia_tier2_latitude: "40.7547"
+      sinfonia_tier2_longitude: "-111.8926"
