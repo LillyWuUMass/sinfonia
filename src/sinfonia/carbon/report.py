@@ -1,7 +1,11 @@
 from dataclasses import dataclass, asdict
+from enum import IntEnum
 
-from .measures import intel_rapl, obelix
+from pathlib import Path
+
+from .meter import intel_rapl, obelix
 from .unit_conv import joules_to_kwh
+from .types import EnergyReportMethodType
 from .simulation.measures import get_average_carbon_intensity_gco2_kwh
 
 from src.domain.logger import get_default_logger
@@ -22,9 +26,9 @@ class CarbonReport:
     
     
 def from_simulation(
-        node_name: str,
-        method: str,
-        t_sec: int,
+        method: EnergyReportMethodType | int,
+        energy_csv_path: str | Path,
+        period_seconds: int,
         timestamp: int,
 ) -> CarbonReport:
     """Return simulated carbon report given a timestamp.
@@ -36,23 +40,24 @@ def from_simulation(
     timestamp is returned.
     
     Args:
-        node_name: Name of current machine
-        method: Either 'obelix' or 'rapl' 
-        t_sec: Interval (seconds) to sample energy
-        timestamp - int: Timestamp to get carbon trace
+        method - ReportMethod | int: Specify the mechanism to sample energy
+        timestamp - int: Unix timestamp to get carbon trace
     
     Returns:
         CarbonReport: Carbon trace
     """    
     ci = get_average_carbon_intensity_gco2_kwh(timestamp)
     
-    eu = 0
-    if method == 'rapl':
-        eu = intel_rapl.sample_energy_joules(node_name, t_sec)
-    elif method == 'obelix':
-        eu = obelix.sample_energy_joules(node_name, t_sec)
+    match method:
+        case EnergyReportMethodType.RAPL:
+            eu = intel_rapl.sample_energy_joules(energy_csv_path, period_seconds)
+        case EnergyReportMethodType.OBELIX:
+            eu = obelix.sample_energy_joules()
+        case _:
+            logger.warning("no energy report method specified")
+            eu = 0
         
-    ce = ci * joules_to_kwh(eu, t_sec)
+    ce = ci * joules_to_kwh(eu)
     
     return CarbonReport(
         carbon_intensity_gco2_kwh=ci,

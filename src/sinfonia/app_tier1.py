@@ -34,14 +34,11 @@ from .app_common import (
 from .cloudlets import Cloudlet
 from .cloudlets import load as cloudlets_load
 from .deployment_repository import DeploymentRepository
-from .daemons import energy_report
 from .jobs import scheduler, start_expire_cloudlets_job, start_broadcasting_job
 from .matchers import Tier1MatchFunction, get_match_function_plugins
 from .openapi import load_spec
 
-from src.lib.time import TimeUnit
 from src.domain.logger import get_default_logger
-from src.domain import daemon_registry
 
 
 logger = get_default_logger()
@@ -59,8 +56,6 @@ class Tier1DefaultConfig:
     CLOUDLET_EXPIRY_SECONDS = 60
     EXPERIMENT_BROADCAST_TIMESTAMP_INTERVAL_SECONDS = 1
     EXPERIMENT_TICK_RATE_SECONDS = 12
-    CARBON_ENERGY_REPORT_PATH = './carbon-data/energy.csv'
-    CARBON_ENERGY_REPORT_RESET_INTERVAL_SECONDS = TimeUnit.DAY
     CARBON_TRACE_TIMESTAMP = 1672546320  # 1672549200 - 12 * 240
     # 2023-01-03 00:00:00 1672704000 / 1672704000 - (12*180) = 1672701840
     
@@ -131,16 +126,6 @@ def wsgi_app_factory(**args) -> connexion.FlaskApp:
     scheduler.start()
     start_expire_cloudlets_job()
     start_broadcasting_job()
-    
-    # start daemons
-    daemon_registry.register(
-        energy_report, 
-        {
-            "path": flask_app.config["CARBON_ENERGY_REPORT_PATH"],
-            "reset_interval_seconds": flask_app.config["CARBON_ENERGY_REPORT_RESET_INTERVAL_SECONDS"],
-        }
-        )
-    daemon_registry.start()
 
     # handle running behind reverse proxy (should this be made configurable?)
     flask_app.wsgi_app = ProxyFix(flask_app.wsgi_app)

@@ -22,7 +22,7 @@ tier1:
 
 tier2:
   timeout_seconds: 15
-  port: 5001
+  port: 30051
   root_url: http://192.168.245.31
   api_path: api/v1
   # port: 80

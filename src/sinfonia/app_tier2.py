@@ -22,9 +22,8 @@ from werkzeug.serving import get_interface_ip
 from yarl import URL
 from zeroconf import ServiceInfo, Zeroconf
 
-from src.domain.logger import get_default_logger
-
 from .carbon.simulation import carbon_trace
+from .carbon.types import EnergyReportMethodType
 from .app_common import (
     OptionalBool,
     OptionalPath,
@@ -34,15 +33,20 @@ from .app_common import (
     version_option,
 )
 from .cluster import Cluster
+from .daemons import energy_report
 from .deployment_repository import DeploymentRepository
 from .jobs import scheduler, start_expire_deployments_job, start_reporting_job
 from .openapi import load_spec
 from .geo_location import GeoLocation
 
+from src.domain import daemon_registry
+from src.domain.logger import get_default_logger
+from src.lib.time import TimeUnit
+
 
 class Tier2DefaultConfig:
     TIER1_URLS = ["http://192.168.245.31:5000"]
-    TIER2_URL = "http://192.168.245.31:30051"
+    TIER2_URL = "http://192.168.245.31:5001"
     TIER2_LATITUDE = 30.332184
     TIER2_LONGITUDE = -81.655647
     TIER2_ZONE = "US-FLA-JEA"
@@ -50,10 +54,14 @@ class Tier2DefaultConfig:
     RECIPES: str | Path | URL = "RECIPES"
     PROMETHEUS: str = "http://10.43.217.221:9090"
         
+    # Energy
+    CARBON_ENERGY_REPORT_PATH = './carbon-data/energy.csv'
+    CARBON_ENERGY_REPORT_RESET_INTERVAL_SECONDS = TimeUnit.DAY
+        
     # Experiment
     REPORT_TO_TIER1_INTERVAL_SECONDS = 15
     OBELIX_NODE_NAME = "obelix32"
-    POWER_MEASURE_METHOD = "rapl"
+    POWER_MEASURE_METHOD = EnergyReportMethodType.RAPL
     
 
 def tier2_app_factory(**args) -> connexion.FlaskApp:
@@ -124,9 +132,18 @@ def tier2_app_factory(**args) -> connexion.FlaskApp:
     scheduler.start()
     start_expire_deployments_job()
     start_reporting_job()
+    
+    # start daemons
+    daemon_registry.register(
+        energy_report, 
+        {
+            "path": flask_app.config["CARBON_ENERGY_REPORT_PATH"],
+            "reset_interval_seconds": flask_app.config["CARBON_ENERGY_REPORT_RESET_INTERVAL_SECONDS"],
+        }
+        )
+    daemon_registry.start()
 
     # handle running behind reverse proxy (should this be made configurable?)
-    
     flask_app.wsgi_app = ProxyFix(flask_app.wsgi_app)
 
     # add tier 2 api
@@ -184,7 +201,7 @@ cli = typer.Typer()
 @cli.command()
 def tier2_server(
     version: OptionalBool = version_option,
-    port: int = typer.Option(30051, help="Port to listen for requests"),
+    port: int = typer.Option(5001, help="Port to listen for requests"),
     recipes: OptionalStr = recipes_option,
     kubeconfig: OptionalPath = typer.Option(
         None,
