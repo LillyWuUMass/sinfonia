@@ -1,7 +1,7 @@
-from enum import IntEnum
+from enum import Enum
 
 
-class EnergyReportMethodType(IntEnum):
-    RAPL = 0
-    OBELIX = 1
+class EnergyReportMethodType(Enum):
+    RAPL = "rapl"
+    OBELIX = "obelix"
     

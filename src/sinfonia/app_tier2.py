@@ -45,8 +45,9 @@ from src.lib.time import TimeUnit
 
 
 class Tier2DefaultConfig:
+    # Sinfonia
     TIER1_URLS = ["http://192.168.245.31:5000"]
-    TIER2_URL = "http://192.168.245.31:5001"
+    TIER2_URL = "http://192.168.245.31:30051"
     TIER2_LATITUDE = 30.332184
     TIER2_LONGITUDE = -81.655647
     TIER2_ZONE = "US-FLA-JEA"
@@ -54,7 +55,7 @@ class Tier2DefaultConfig:
     RECIPES: str | Path | URL = "RECIPES"
     PROMETHEUS: str = "http://10.43.217.221:9090"
         
-    # Energy
+    # Carbon
     CARBON_ENERGY_REPORT_PATH = './carbon-data/energy.csv'
     CARBON_ENERGY_REPORT_RESET_INTERVAL_SECONDS = TimeUnit.DAY
         
@@ -140,7 +141,7 @@ def tier2_app_factory(**args) -> connexion.FlaskApp:
             "path": flask_app.config["CARBON_ENERGY_REPORT_PATH"],
             "reset_interval_seconds": flask_app.config["CARBON_ENERGY_REPORT_RESET_INTERVAL_SECONDS"],
         }
-        )
+    )
     daemon_registry.start()
 
     # handle running behind reverse proxy (should this be made configurable?)
@@ -201,7 +202,7 @@ cli = typer.Typer()
 @cli.command()
 def tier2_server(
     version: OptionalBool = version_option,
-    port: int = typer.Option(5001, help="Port to listen for requests"),
+    port: int = typer.Option(30051, help="Port to listen for requests"),
     recipes: OptionalStr = recipes_option,
     kubeconfig: OptionalPath = typer.Option(
         None,

@@ -26,7 +26,7 @@ class CarbonReport:
     
     
 def from_simulation(
-        method: EnergyReportMethodType | int,
+        method: EnergyReportMethodType | str,
         energy_csv_path: str | Path,
         period_seconds: int,
         timestamp: int,
@@ -40,7 +40,9 @@ def from_simulation(
     timestamp is returned.
     
     Args:
-        method - ReportMethod | int: Specify the mechanism to sample energy
+        method - ReportMethod | str: Specify the mechanism to sample energy
+        energy_csv_path: str | Path
+        period_seconds: int - Period to sample energy
         timestamp - int: Unix timestamp to get carbon trace
     
     Returns:
@@ -48,13 +50,14 @@ def from_simulation(
     """    
     ci = get_average_carbon_intensity_gco2_kwh(timestamp)
     
+    method = EnergyReportMethodType(method)
     match method:
         case EnergyReportMethodType.RAPL:
             eu = intel_rapl.sample_energy_joules(energy_csv_path, period_seconds)
         case EnergyReportMethodType.OBELIX:
             eu = obelix.sample_energy_joules()
         case _:
-            logger.warning("no energy report method specified")
+            logger.warning("energy method not supported")
             eu = 0
         
     ce = ci * joules_to_kwh(eu)
