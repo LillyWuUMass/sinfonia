@@ -66,5 +66,5 @@ def from_simulation(
         carbon_intensity_gco2_kwh=ci,
         energy_use_joules=eu,
         carbon_emission_gco2=ce,
-        )
+    )
     

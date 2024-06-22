@@ -19,7 +19,10 @@ def energy_report(
         path - str | Path: File location to save energy data
         sample_interval_seconds - float: Number of seconds over which to measure energy use [default: 1]
     """
-    f = open(Path(path), 'w', encoding='utf-8')
+    path = Path(path)
+    path.parent.mkdir(mode=755, parents=True)
+    
+    f = open(path, 'w', encoding='utf-8')
     writer = csv.writer(f)
     writer.writerow(['timestamp', 'average_joules', 'summation_joules'])
     last_reset_ts = int(time.time())
@@ -49,5 +52,3 @@ def energy_report(
         
         writer.writerow([ts, eu_avg, eu_sum])
         f.flush()
-
-

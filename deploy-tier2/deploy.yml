@@ -103,4 +103,7 @@
               className: traefik
             image:
               repository: k2nt/sinfonia-tier2
-              tag: stable.15
+              imagePullPolicy: Always
+              tag: dev.18
+            securityContext:
+              privileged: true

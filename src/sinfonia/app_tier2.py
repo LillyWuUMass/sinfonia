@@ -44,6 +44,9 @@ from src.domain.logger import get_default_logger
 from src.lib.time import TimeUnit
 
 
+logger = get_default_logger()
+
+
 class Tier2DefaultConfig:
     # Sinfonia
     TIER1_URLS = ["http://192.168.245.31:5000"]
@@ -135,6 +138,8 @@ def tier2_app_factory(**args) -> connexion.FlaskApp:
     start_reporting_job()
     
     # start daemons
+    
+    logger.info(f"Starting carbon energy daemon and creating energy report at {flask_app.config['CARBON_ENERGY_REPORT_PATH']} ...")
     daemon_registry.register(
         energy_report, 
         {
