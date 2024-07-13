@@ -104,6 +104,6 @@
             image:
               repository: k2nt/sinfonia-tier2
               imagePullPolicy: Always
-              tag: dev.18
+              tag: dev.101
             securityContext:
               privileged: true

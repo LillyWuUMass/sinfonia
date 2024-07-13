@@ -20,7 +20,7 @@ def energy_report(
         sample_interval_seconds - float: Number of seconds over which to measure energy use [default: 1]
     """
     path = Path(path)
-    path.parent.mkdir(mode=755, parents=True)
+    path.parent.mkdir(mode=755, parents=True, exist_ok=True)
     
     f = open(path, 'w', encoding='utf-8')
     writer = csv.writer(f)

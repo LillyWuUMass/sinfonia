@@ -49,14 +49,14 @@ logger = get_default_logger()
 
 class Tier2DefaultConfig:
     # Sinfonia
-    TIER1_URLS = ["http://192.168.245.31:5000"]
-    TIER2_URL = "http://192.168.245.31:30051"
+    TIER1_URLS = ["http://192.168.245.26:5000"]
+    TIER2_URL = "http://192.168.245.26:5001"
     TIER2_LATITUDE = 30.332184
     TIER2_LONGITUDE = -81.655647
     TIER2_ZONE = "US-FLA-JEA"
     TRACE_GITHUB_REPO_URL = "https://github.com/k2nt/k2nt.github.io/blob/main/projects/sinfonia/carbon_traces"
     RECIPES: str | Path | URL = "RECIPES"
-    PROMETHEUS: str = "http://10.43.217.221:9090"
+    PROMETHEUS: str = "http://10.43.247.5:9090"
         
     # Carbon
     CARBON_ENERGY_REPORT_PATH = './carbon-data/energy.csv'
