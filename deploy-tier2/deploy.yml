@@ -32,6 +32,7 @@
   become: true
   gather_facts: true
 
+  # Configurations for Sinfonia deployment
   vars:
     sinfonia_tier1_url: "http://192.168.245.26:5000"
     sinfonia_tier2_url: "{{ hostvars[inventory_hostname].sinfonia_tier2_url }}"
@@ -102,5 +103,7 @@
               className: traefik
             image:
               repository: k2nt/sinfonia-tier2
-              tag: dev.100
-            
+              imagePullPolicy: Always
+              tag: dev.18
+            securityContext:
+              privileged: true

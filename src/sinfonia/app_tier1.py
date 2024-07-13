@@ -8,6 +8,7 @@
 
 from __future__ import annotations
 
+import signal
 import sys
 from pathlib import Path
 from uuid import UUID
@@ -37,7 +38,6 @@ from .jobs import scheduler, start_expire_cloudlets_job, start_broadcasting_job
 from .matchers import Tier1MatchFunction, get_match_function_plugins
 from .openapi import load_spec
 
-from src.lib.time import TimeUnit
 from src.domain.logger import get_default_logger
 
 
@@ -130,7 +130,7 @@ def wsgi_app_factory(**args) -> connexion.FlaskApp:
     # handle running behind reverse proxy (should this be made configurable?)
     flask_app.wsgi_app = ProxyFix(flask_app.wsgi_app)
 
-    # Add Tier1 APIs
+    # add Tier1 APIs
     app.add_api(
         load_spec(app.specification_dir / "sinfonia_tier1.yaml"),
         resolver=MethodViewResolver("src.sinfonia.api_tier1"),

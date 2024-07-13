@@ -31,7 +31,7 @@ def sample_energy_joules(t_sec: float = 1) -> float:
     for d in diff.domains:
         domain = diff.domains[d]
         eu_avg += diff.average_power(package=domain.name)
-        eu_sum += diff.energy(package=domain.name, unit=3)
+        eu_sum += diff.energy(package=domain.name, unit=rapl.JOULES)
 
     return eu_avg, eu_sum
 
