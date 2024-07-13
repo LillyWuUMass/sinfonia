@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2022 Carnegie Mellon University
 # SPDX-License-Identifier: MIT
 
-FROM python:3.10-slim as base
+FROM python:3.10-slim AS base
 
 LABEL org.opencontainers.image.description='Discovery and deployment for edge-native applications' \
       org.opencontainers.image.source='https://github.com/cmusatyalab/sinfonia' \
@@ -15,7 +15,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 WORKDIR /app
 
-FROM base as builder
+FROM base AS builder
 
 ENV KUBECTL_VERSION=v1.23.2 \
     HELM_VERSION=v3.8.0
@@ -45,7 +45,7 @@ COPY src ./src
 COPY tests ./tests
 RUN poetry build && /venv/bin/pip install dist/*.whl
 
-FROM base as final
+FROM base AS final
 
 # Environment dependencies
 COPY --from=builder /usr/local/bin /usr/local/bin
@@ -60,10 +60,8 @@ COPY --from=builder /venv /venv
 # COPY deploy-tier2/k3s.yml /app/deploy-tier2/k3s.yml
 
 # Application recipes
-COPY RECIPES /app/RECIPES
-
-# VOLUME ["/RECIPES"]
-# ENV SINFONIA_RECIPES=/RECIPES
+VOLUME ["/RECIPES"]
+ENV SINFONIA_RECIPES=/RECIPES
 
 EXPOSE 5001
 

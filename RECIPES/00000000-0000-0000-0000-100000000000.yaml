@@ -1,0 +1,9 @@
+description: |-
+  Resnet50 image classification application using the NVIDIA Triton Inference Server
+chart: https://k2nt.github.io/projects/sinfonia/helm/imgc-resnet50-onnx
+version: 0.1.0
+values:
+  fullnameOverride: imgc-resnet-onnx
+  image:
+    modelRepositoryPath: /nfs/obelix/users1/khainguyen/triton-pg/model_repository
+restricted: false

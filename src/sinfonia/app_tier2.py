@@ -184,7 +184,7 @@ cli = typer.Typer()
 @cli.command()
 def tier2_server(
     version: OptionalBool = version_option,
-    port: int = typer.Option(30051, help="Port to listen for requests"),
+    port: int = typer.Option(5001, help="Port to listen for requests"),
     recipes: OptionalStr = recipes_option,
     kubeconfig: OptionalPath = typer.Option(
         None,

@@ -33,7 +33,7 @@
   gather_facts: true
 
   vars:
-    sinfonia_tier1_url: "http://192.168.245.31:5000"
+    sinfonia_tier1_url: "http://192.168.245.26:5000"
     sinfonia_tier2_url: "{{ hostvars[inventory_hostname].sinfonia_tier2_url }}"
     sinfonia_tier2_latitude: "{{ hostvars[inventory_hostname].sinfonia_tier2_latitude }}"
     sinfonia_tier2_longitude: "{{ hostvars[inventory_hostname].sinfonia_tier2_longitude }}"
@@ -43,7 +43,7 @@
     sinfonia_kubeconfig: ""
     sinfonia_kubecontext: ""
     sinfonia_prometheus: "http://kube-prometheus-stack-prometheus.monitoring.svc:9090"
-    sinfonia_recipes: "RECIPES"
+    sinfonia_recipes: "/nfs/obelix/users1/khainguyen/sinfonia/RECIPES"
     experiment_obelix_node_name: "{{ inventory_hostname }}"
     experiment_transition_latency_ms: "{{ hostvars[inventory_hostname].experiment_transition_latency_ms }}"
     experiment_power_measure_method: "rapl"
@@ -102,4 +102,5 @@
               className: traefik
             image:
               repository: k2nt/sinfonia-tier2
-              tag: stable.12
+              tag: dev.100
+            
