@@ -215,3 +215,12 @@ def match_carbon_intensity(
     for cloudlet in cloudlets:
         cloudlets.remove(cloudlet)
         yield cloudlet
+
+
+def match_carbon_resu_aware(
+    client_info: ClientInfo,
+    deployment_recipe: DeploymentRecipe,
+    cloudlets: list[Cloudlet],
+) -> Iterator[Cloudlet]:
+    """
+    """

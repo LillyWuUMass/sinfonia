@@ -16,7 +16,7 @@ tier2hosts:
     obelix26:
       ansible_host: "192.168.245.26"
       sinfonia_tier2_url: "http://192.168.245.26:30051"
-      sinfonia_tier2_zone: "US-FLA-FPC"
+      sinfonia_tier2_zone: "US-NW-BPAT"
       sinfonia_tier2_latitude: "-34.921230"
       sinfonia_tier2_longitude: "138.599503"
 

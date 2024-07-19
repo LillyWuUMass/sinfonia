@@ -45,6 +45,7 @@
     sinfonia_kubecontext: ""
     sinfonia_prometheus: "http://kube-prometheus-stack-prometheus.monitoring.svc:9090"
     sinfonia_recipes: "/nfs/obelix/users1/khainguyen/sinfonia/RECIPES"
+    sinfonia_recipes_mount_path: "/RECIPES"
     experiment_obelix_node_name: "{{ inventory_hostname }}"
     experiment_transition_latency_ms: "{{ hostvars[inventory_hostname].experiment_transition_latency_ms }}"
     experiment_power_measure_method: "rapl"
@@ -97,6 +98,7 @@
             sinfoniaKubeContext: "{{ sinfonia_kubecontext }}"
             sinfoniaPrometheus: "{{ sinfonia_prometheus }}"
             sinfoniaRecipes: "{{ sinfonia_recipes }}"
+            sinfoniaRecipesMountPath: "{{ sinfonia_recipes_mount_path }}"
             experimentObelixNodeName: "{{ experiment_obelix_node_name }}"
             experimentPowerMeasureMethod: "{{ experiment_power_measure_method }}"
             ingress:
