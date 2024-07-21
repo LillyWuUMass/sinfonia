@@ -65,9 +65,9 @@ def tier1_best_match(
 
 
 def match_by_network(
-    client_info: ClientInfo,
-    _deployment_recipe: DeploymentRecipe,
-    cloudlets: list[Cloudlet],
+        client_info: ClientInfo,
+        deployment_recipe: DeploymentRecipe,
+        cloudlets: list[Cloudlet],
 ) -> Iterator[Cloudlet]:
     """Yields any cloudlets that claim to be local.
     Also removes cloudlets that explicitly blacklist the client address
@@ -113,9 +113,9 @@ def _estimated_rtt(distance_in_km):
 
 
 def match_by_location(
-    client_info: ClientInfo,
-    _deployment_recipe: DeploymentRecipe,
-    cloudlets: list[Cloudlet],
+        client_info: ClientInfo,
+        deployment_recipe: DeploymentRecipe,
+        cloudlets: list[Cloudlet],
 ) -> Iterator[Cloudlet]:
     """Yields any geographically close cloudlets"""
     
@@ -150,9 +150,9 @@ def match_by_location(
 
 
 def match_random(
-    _client_info: ClientInfo,
-    _deployment_recipe: DeploymentRecipe,
-    cloudlets: list[Cloudlet],
+        client_info: ClientInfo,
+        deployment_recipe: DeploymentRecipe,
+        cloudlets: list[Cloudlet],
 ) -> Iterator[Cloudlet]:
     """Shuffle anything that is left and return in randomized order"""
     
@@ -187,9 +187,9 @@ def match_random(
 
 
 def match_carbon_intensity(
-    _client_info: ClientInfo,
-    _deployment_recipe: DeploymentRecipe,
-    cloudlets: list[Cloudlet],
+        client_info: ClientInfo,
+        deployment_recipe: DeploymentRecipe,
+        cloudlets: list[Cloudlet],
 ) -> Iterator[Cloudlet]:
     """Yields cloudlet recommendations based on lowest carbon intensity level"""
     
@@ -218,9 +218,9 @@ def match_carbon_intensity(
 
 
 def match_carbon_resu_aware(
-    client_info: ClientInfo,
-    deployment_recipe: DeploymentRecipe,
-    cloudlets: list[Cloudlet],
+        client_info: ClientInfo,
+        deployment_recipe: DeploymentRecipe,
+        cloudlets: list[Cloudlet],
 ) -> Iterator[Cloudlet]:
     """
     """
