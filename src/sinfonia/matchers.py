@@ -13,10 +13,8 @@ by defining 'sinfonia_tier1_matchers' setuptools entry points.
 
 from __future__ import annotations
 
-import csv
 import os
 import random
-import time
 from operator import itemgetter
 from typing import Callable, Iterator, List, Sequence, Any
 
@@ -25,6 +23,7 @@ from importlib_metadata import EntryPoint, entry_points
 from .client_info import ClientInfo
 from .cloudlets import Cloudlet
 from .deployment_recipe import DeploymentRecipe
+from .helm_chart import HelmChart, HelmResource
 
 from src.domain.logger import get_default_logger
 
@@ -224,3 +223,24 @@ def match_carbon_resu_aware(
 ) -> Iterator[Cloudlet]:
     """
     """
+    chart = HelmChart(deployment_recipe.chart_ref)
+    resu_req = chart.get_resource_request()
+    
+    # Sort cloudlet by lowest carbon intensity
+    cloudlets = sorted(cloudlets, key=lambda c: c.resources['carbon_intensity_gco2_kwh'])
+    
+    for c in cloudlets:
+        cpu_count = c.resources["cpu_count"]
+        mem_count = c.resources["mem_count"]
+        cpu_ratio = c.resources["cpu_ratio"]
+        mem_ratio = c.resources["mem_ratio"]
+        added_cpu = resu_req.cpu / cpu_count
+        added_mem = resu_req.memory_mi / mem_count
+        
+        # Drop cloudlets that does not have enough resources to deploy application
+        if cpu_ratio + added_cpu > 1.0 or mem_ratio + added_mem > 1.0:
+            logger.warning[f"[matcher] reject {c.endpoint}: not enough resources"]
+            continue
+        
+        cloudlets.remove(c)
+        yield c

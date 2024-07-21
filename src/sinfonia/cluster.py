@@ -10,6 +10,7 @@
 
 from __future__ import annotations
 
+import psutil
 import ipaddress
 import json
 import math
@@ -43,6 +44,8 @@ logger = get_default_logger()
 
 
 RESOURCE_QUERIES = {
+    "cpu_request": "sum(kube_pod_container_resource_requests_cpu_cores) by (namespace, pod)",
+    "mem_request": "sum(kube_pod_container_resource_requests_memory_bytes) by (namespace, pod) / 1024 / 1024",  # megabytes
     "cpu_ratio": 'sum(rate(node_cpu_seconds_total{mode!="idle"}[1m])) / sum(node:node_num_cpu:sum)',  # noqa
     "mem_ratio": "sum(1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) / count(node_memory_MemTotal_bytes)",  # noqa
     "net_rx_rate": "instance:node_network_receive_bytes_excluding_lo:rate5m",
@@ -216,6 +219,9 @@ class Cluster:
             except (RequestException, AssertionError, ValueError):
                 logger.exception(f"Failed to retrieve {resource}")
                 pass
+            
+        resources["cpu_count"] = psutil.cpu_count(logical=True)
+        resources["mem_count"] = psutil.virtual_memory().total / (1024 * 1024)  # bytes to megabytes
 
         return resources
 

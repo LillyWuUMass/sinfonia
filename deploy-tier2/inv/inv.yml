@@ -13,12 +13,20 @@ tier2hosts:
     #   sinfonia_tier2_zone: "AU-SA"
     #   sinfonia_tier2_latitude: "43.65107"
     #   sinfonia_tier2_longitude: "-79.347015"
+
     obelix26:
       ansible_host: "192.168.245.26"
       sinfonia_tier2_url: "http://192.168.245.26:30051"
       sinfonia_tier2_zone: "US-NW-BPAT"
       sinfonia_tier2_latitude: "-34.921230"
       sinfonia_tier2_longitude: "138.599503"
+
+    # obelix137:
+    #   ansible_host: "192.168.245.137"
+    #   sinfonia_tier2_url: "http://192.168.245.137:30051"
+    #   sinfonia_tier2_zone: "US-NW-BPAT"
+    #   sinfonia_tier2_latitude: "-34.921230"
+    #   sinfonia_tier2_longitude: "138.599503"
 
     # obelix33:
     #   ansible_host: "192.168.245.33"

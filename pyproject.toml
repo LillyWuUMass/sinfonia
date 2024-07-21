@@ -86,7 +86,8 @@ tier-shell = "tier_shell.main:app"
 network = "src.sinfonia.matchers:match_by_network"
 location = "src.sinfonia.matchers:match_by_location"
 random = "src.sinfonia.matchers:match_random"
-carbon-intensity = "src.sinfonia.matchers:match_carbon_intensity"
+carbon-aware = "src.sinfonia.matchers:match_carbon_intensity"
+carbon-resu-aware = "src.sinfonia.matchers:match_carbon_resu_aware"
 
 [tool.black]
 target-version = ["py37"]
