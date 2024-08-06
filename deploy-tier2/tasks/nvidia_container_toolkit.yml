@@ -1,0 +1,76 @@
+- name: Install NVIDIA Container Toolkit
+  shell: |
+    curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | sudo gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg \
+    && curl -s -L https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list | \
+    sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' | \
+    tee /etc/apt/sources.list.d/nvidia-container-toolkit.list \
+    && apt-get update \
+    && apt-get install -y nvidia-container-toolkit
+  args:
+    executable: /bin/bash
+
+- name: Restart docker
+  service:
+    name: docker
+    state: restarted
+
+- name: Install Helm
+  shell: |
+    curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+  args:
+    executable: /bin/bash
+
+# - name: Create Helm values file
+#   copy:
+#     dest: /tmp/values.yaml
+#     content: |
+#       image:
+#         repository: nvidia/cuda
+#         tag: "11.0-base"
+#         pullPolicy: IfNotPresent
+
+#       resources:
+#         limits:
+#           nvidia.com/gpu: 1
+
+# - name: Create Helm chart deployment file
+#   copy:
+#     dest: /tmp/deployment.yaml
+#     content: |
+#       apiVersion: apps/v1
+#       kind: Deployment
+#       metadata:
+#         name: gpu-app
+#       spec:
+#         replicas: 1
+#         selector:
+#           matchLabels:
+#             app: gpu-app
+#         template:
+#           metadata:
+#             labels:
+#               app: gpu-app
+#           spec:
+#             containers:
+#             - name: gpu-app
+#               image: nvidia/cuda:12.5-base
+#               resources:
+#                 limits:
+#                   nvidia.com/gpu: 1
+#               volumeMounts:
+#               - name: nvidia
+#                 mountPath: /usr/local/nvidia
+#               command: ["/bin/bash"]
+#               args: ["-c", "nvidia-smi; sleep infinity"]
+#             runtimeClassName: nvidia
+#             volumes:
+#             - name: nvidia
+#               hostPath:
+#                 path: /usr/local/nvidia
+#                 type: Directory
+
+# - name: Deploy the Helm chart
+#   shell: |
+#     helm upgrade --install gpu-app -f /tmp/values.yaml /tmp/deployment.yaml
+#   args:
+#     executable: /bin/bash

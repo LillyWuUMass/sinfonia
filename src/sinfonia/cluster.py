@@ -10,7 +10,6 @@
 
 from __future__ import annotations
 
-import psutil
 import ipaddress
 import json
 import math
@@ -31,6 +30,7 @@ from wireguard_tools import WireguardKey
 from yarl import URL
 from io import StringIO
 
+from . import resources
 from .deployment import CLIENT_NETWORK, Deployment
 from .deployment_recipe import DeploymentRecipe
 from .geo_location import GeoLocation
@@ -50,10 +50,11 @@ RESOURCE_QUERIES = {
     "mem_ratio": "sum(1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) / count(node_memory_MemTotal_bytes)",  # noqa
     "net_rx_rate": "instance:node_network_receive_bytes_excluding_lo:rate5m",
     "net_tx_rate": "instance:node_network_transmit_bytes_excluding_lo:rate5m",
-    "gpu_ratio": "sum(DCGM_FI_DEV_GPU_UTIL) / count(DCGM_FI_DEV_GPU_UTIL)",
+    "gpu_ratio": "sum(DCGM_FI_DEV_GPU_UTIL) / count(DCGM_FI_DEV_GPU_UTIL) / 100",  # across all gpus
+    "gpu_power_milliwatts": "sum(DCGM_FI_DEV_POWER_USAGE) * 1000",  # across all gpus
 }
 
-LEASE_DURATION = 15 * TimeUnit.MINUTE
+LEASE_DURATION = TimeUnit.DAY
 
 
 @define
@@ -196,7 +197,7 @@ class Cluster:
             print("Unable to find unique client ip in 32 tries, resampling candidates")
 
     def get_resources(self) -> dict[str, float]:
-        resources: dict[str, float] = {}
+        resu: dict[str, float] = {}
 
         for resource in RESOURCE_QUERIES:
             try:
@@ -214,16 +215,19 @@ class Cluster:
 
                 metric = float(result["data"]["result"][1])
                 if math.isfinite(metric):
-                    resources[resource] = metric
+                    resu[resource] = metric
 
             except (RequestException, AssertionError, ValueError):
                 logger.exception(f"Failed to retrieve {resource}")
                 pass
             
-        resources["cpu_count"] = psutil.cpu_count(logical=True)
-        resources["mem_count"] = psutil.virtual_memory().total / (1024 * 1024)  # bytes to megabytes
-
-        return resources
+        # gpu_power = resources.gpu_power()
+        # if gpu_power != -1:
+        #     resu["gpu_power"] = resources.gpu_power()
+        resu["cpu_count"] = resources.cpu_count()
+        resu["mem_count"] = resources.mem_count()
+        
+        return resu
 
     def _active_peers(self, lease_duration: int) -> Sequence[WireguardKey]:
         try:

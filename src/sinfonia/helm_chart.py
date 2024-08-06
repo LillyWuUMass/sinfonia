@@ -14,7 +14,7 @@ class HelmChart:
     def __init__(self, chart_ref: str):
         self.chart_ref = chart_ref
     
-    def get_helm_chart_values(self):
+    def get_helm_chart_values(self):        
         # Show the default values of the chart
         result = subprocess.run(
             ["helm", "show", "values", str(self.chart_ref)],
@@ -26,10 +26,18 @@ class HelmChart:
 
     def get_resource_request(self):
         values_yaml = self.get_helm_chart_values()
-        values = yaml.safe_load(values_yaml)        
-        req = values["resources"]["requests"]
+        values = yaml.safe_load(values_yaml)   
+        
+        try:     
+            req = values["resources"]["requests"]
+            cpu = float(req['cpu'])
+            memory_mi = float(req['memory'][:-2])
+        except:
+            cpu = 0
+            memory_mi = 0
+            
         return HelmResource(
-            cpu=float(req['cpu']),
-            memory_mi=float(req['memory'][:-2])
+            cpu=cpu,
+            memory_mi=memory_mi
         )
     

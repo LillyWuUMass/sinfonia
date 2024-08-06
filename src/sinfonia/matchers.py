@@ -234,6 +234,7 @@ def match_carbon_resu_aware(
         mem_count = c.resources["mem_count"]
         cpu_ratio = c.resources["cpu_ratio"]
         mem_ratio = c.resources["mem_ratio"]
+        gpu_ratio = c.resources["gpu_ratio"]
         added_cpu = resu_req.cpu / cpu_count
         added_mem = resu_req.memory_mi / mem_count
         

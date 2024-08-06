@@ -29,7 +29,9 @@ from attrs import define, field
 from plumbum import TF
 from wireguard_tools import WireguardKey
 
+from . import resources
 from .deployment_recipe import DeploymentRecipe
+
 
 if TYPE_CHECKING:
     from .cluster import Cluster
@@ -194,7 +196,16 @@ spec:
 
     def helm_install(self) -> None:
         with NamedTemporaryFile(delete=False) as f:
-            f.write(yaml.dump(self.recipe.values).encode("utf-8"))
+            v = self.recipe.values
+            
+            # # THIS IS A HACK TO DIFFERENTIATE GPU/CPU SYSTEM
+            # # PLEASE REVISE AS NEEDED
+            # if resources.has_gpu():
+            #     v["runtimeClassName"] = "nvidia"
+                
+            # print("AAA", v)
+                
+            f.write(yaml.dump(v).encode("utf-8"))
             f.flush()
 
             self.cluster.helm(

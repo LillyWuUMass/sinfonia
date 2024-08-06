@@ -5,5 +5,6 @@ version: 0.1.0
 values:
   fullnameOverride: imgc-resnet-onnx-port30127
   image:
-    modelRepositoryPath: /nfs/obelix/users1/khainguyen/triton-pg/model_repository
+    # modelRepositoryPath: /nfs/obelix/users1/khainguyen/triton-pg/model_repository
+    modelRepositoryPath: /nfs/obelix/users2/liwu/2024/models
 restricted: false

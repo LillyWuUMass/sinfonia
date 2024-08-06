@@ -50,7 +50,7 @@ class Tier1DefaultConfig:
     # We are setting match carbon as the single filter
     # MATCHERS declaration can be found in poetry's pyproject.toml
     # MATCHERS: list[str] = ["network", "location", "random"]
-    MATCHERS: list[str] = ["network", "location", "carbon-intensity"] # "carbon-intensity"
+    MATCHERS: list[str] = ["network", "location", "carbon-aware"]
     CLOUDLETS: str | Path | None = None
     RECIPES: str | Path | URL = "RECIPES"    
     CLOUDLET_EXPIRY_SECONDS = 60

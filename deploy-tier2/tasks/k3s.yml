@@ -81,3 +81,7 @@
   changed_when: False
   register: result
   until: result is success
+
+- name: allow read access to k3s config file
+  ansible.builtin.command:
+    cmd: chmod 755 /etc/rancher/k3s/k3s.yaml

@@ -34,7 +34,7 @@
 
   # Configurations for Sinfonia deployment
   vars:
-    sinfonia_tier1_url: "http://192.168.245.26:5000"
+    sinfonia_tier1_url: "http://192.168.245.28:5000"
     sinfonia_tier2_url: "{{ hostvars[inventory_hostname].sinfonia_tier2_url }}"
     sinfonia_tier2_latitude: "{{ hostvars[inventory_hostname].sinfonia_tier2_latitude }}"
     sinfonia_tier2_longitude: "{{ hostvars[inventory_hostname].sinfonia_tier2_longitude }}"
@@ -51,7 +51,6 @@
     experiment_power_measure_method: "rapl"
     enable_ufw: false
     override_resolv_conf: true
-
 
   environment:
     SINFONIA_TIER2_LATITUDE: "{{ sinfonia_tier2_latitude }}"
@@ -106,6 +105,4 @@
             image:
               repository: k2nt/sinfonia-tier2
               imagePullPolicy: Always
-              tag: dev.101
-            securityContext:
-              privileged: true
+              tag: dev.105
